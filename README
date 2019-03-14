@@ -1,0 +1,100 @@
+Minicomputer v. 1.41
+Industrial Grade Digital Synthesizer
+
+by Malte Steiner
+
+email: steiner@block4.com
+
+Minicomputer is a standalone Linux softwaresynthesizer for
+creating experimental electronic sounds as its often used 
+in but not limited to Industrial music, Glitch, IDM and other electronic genres.
+
+This may contain some bugs but already worked in studio for my project 'Akustikkoppler' 
+and live for 'Notstandskomitee'.
+
+Minicomputer is free open source software under the GPL3 license.
+
+Its split into the engine and an editor.
+
+Dependancies includes:
+
+- Jack
+- FLTK
+- Alsaseq
+- pthreads
+- liblo
+
+and 
+
+- Scons for building
+
+Take care, it can be harsh! Use it on your own risk, you have been warnend!
+
+----------------------------- starting Minicomputer ------------------------
+
+after the installation simply type 
+
+minicomputer 
+
+and it will start the editor application and the synthesis core. By closing the editor window the core engine will be stopped too.
+
+Per default both programs communicate via OSC at the port 7770. If you like to have another one or want several instances you can define the port with the -port parameter:
+
+minicomputer -port 434334
+
+It will be shown at the name in QJackctrl so you know which instances belongs together.
+
+
+----------------------------- building Minicomputer ------------------------
+
+For building Minicomputer just type
+
+scons
+
+Cleaning the buildfiles but the new created programfiles TOO, is done by typing 
+
+scons -c
+
+Installation as root into /usr/local/bin can be done with 
+
+scons install
+
+deinstallation is done as root:
+
+scons -c install
+
+
+So far the target directory is hardcoded in SConstruct file, its the last two lines.
+Data is kept in .miniComputer/ directory in your home folder. For starting you can install the presets with the installpresets.sh script as the user you want to use it later. Be careful this overwrites of course your settings if you have any previous but they are backed up for security.
+
+
+The buildprocess accept parameters for refining architecture optimization:
+
+ 64bit=1
+forces a build for 64bit platforms with the -m64 option
+
+ k8=1
+optimizes for AMD K8 cpus, giving the compilers the -march=k8 -mtune=k8 settings
+
+ k7=1
+optimizes for AMD Athlon XP cpus
+
+ native=1
+sets the native target
+
+So a k8 64bit build looks like
+
+scons 64bit=1 k8=1
+
+further optimization can be switched in common.h but its experimental and results vary
+
+TROUBLESHOOTING:
+
+- 'I have library xyz installed but scons complains about not finding xyz'
+make sure that you have the developer version of the library installed which comes extra and additionally.Usually looks like libxyz.dev
+
+
+A word to package maintainers:
+
+I welcome the inclusion of Minicomputer in repositorys. If you encounter any difficulties please contact me at the email address seen above and we work out a solution.
+
