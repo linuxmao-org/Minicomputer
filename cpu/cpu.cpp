@@ -17,8 +17,13 @@
  */
 
 #include <math.h>
+#include <string.h>
 #include "cpu.h"
 #include "../common.h"
+
+// hooks
+void (*cpuMultiChangeHook)(unsigned value) = NULL;
+void (*cpuProgramChangeHook)(unsigned channel, unsigned value) = NULL;
 
 // variables
 float delayBuffer[_MULTITEMP][96000] __attribute__((aligned(16)));
@@ -953,76 +958,89 @@ tf = (srate * (parameter[currentvoice][50]*morph+parameter[currentvoice][53]*mo)
     }
 }  // end of process function
 
-void cpuHandleMidi(snd_seq_event_t *ev)
+void cpuHandleMidi(const unsigned char *ev, unsigned size)
 {
     unsigned int c = _MULTITEMP;  // channel of incoming data
 
-    switch (ev->type) {  // first check the controllers
+    if (size < 1)
+        return;
+
+    switch (ev[0] & 0xf0) {  // first check the controllers
         // they usually come in hordes
-    case SND_SEQ_EVENT_CONTROLLER: {
-        c = ev->data.control.channel;
+    case 0xb0: {
+        if (size < 3) break;
+        c = ev[0] & 0x0f;
+        int param = ev[1];
+        int value = ev[2];
 #ifdef _DEBUG
         fprintf(stderr, "Control event on Channel %2d: %2d %5d       \r",
-                c, ev->data.control.param, ev->data.control.value);
+                c, param, value);
 #endif
         if (c < _MULTITEMP) {
-            if (ev->data.control.param == 1)
-                modulator[c][16] = ev->data.control.value * 0.007874f;  // /127.f;
-            else if (ev->data.control.param == 12)
-                modulator[c][17] = ev->data.control.value * 0.007874f;  // /127.f;
-            else if (ev->data.control.param == 2)
-                modulator[c][20] = ev->data.control.value * 0.007874f;  // /127.f;
-            else if (ev->data.control.param == 3)
-                modulator[c][21] = ev->data.control.value * 0.007874f;  // /127.f;
-            else if (ev->data.control.param == 4)
-                modulator[c][22] = ev->data.control.value * 0.007874f;  // /127.f;
-            else if (ev->data.control.param == 5)
-                modulator[c][23] = ev->data.control.value * 0.007874f;  // /127.f;
-            else if (ev->data.control.param == 14)
-                modulator[c][24] = ev->data.control.value * 0.007874f;  // /127.f;
-            else if (ev->data.control.param == 15)
-                modulator[c][25] = ev->data.control.value * 0.007874f;  // /127.f;
-            else if (ev->data.control.param == 16)
-                modulator[c][26] = ev->data.control.value * 0.007874f;  // /127.f;
-            else if (ev->data.control.param == 17)
-                modulator[c][27] = ev->data.control.value * 0.007874f;  // /127.f;
+            if (param == 1)
+                modulator[c][16] = value * 0.007874f;  // /127.f;
+            else if (param == 12)
+                modulator[c][17] = value * 0.007874f;  // /127.f;
+            else if (param == 2)
+                modulator[c][20] = value * 0.007874f;  // /127.f;
+            else if (param == 3)
+                modulator[c][21] = value * 0.007874f;  // /127.f;
+            else if (param == 4)
+                modulator[c][22] = value * 0.007874f;  // /127.f;
+            else if (param == 5)
+                modulator[c][23] = value * 0.007874f;  // /127.f;
+            else if (param == 14)
+                modulator[c][24] = value * 0.007874f;  // /127.f;
+            else if (param == 15)
+                modulator[c][25] = value * 0.007874f;  // /127.f;
+            else if (param == 16)
+                modulator[c][26] = value * 0.007874f;  // /127.f;
+            else if (param == 17)
+                modulator[c][27] = value * 0.007874f;  // /127.f;
         }
         break;
     }
-    case SND_SEQ_EVENT_PITCHBEND: {
-        c = ev->data.control.channel;
+    case 0xe0: {
+        if (size < 3) break;
+        c = ev[0] & 0x0f;
+        int value = (ev[1] | (ev[2] << 7)) - 8192;
 #ifdef _DEBUG
         fprintf(stderr, "Pitchbender event on Channel %2d: %5d   \r",
-                c, ev->data.control.value);
+                c, value);
 #endif
         if (c < _MULTITEMP)
-            modulator[c][2] = ev->data.control.value * 0.0001221f;  // /8192.f;
+            modulator[c][2] = value * 0.0001221f;  // /8192.f;
         break;
     }
-    case SND_SEQ_EVENT_CHANPRESS: {
-        c = ev->data.control.channel;
+    case 0xd0: {
+        if (size < 2) break;
+        c = ev[0] & 0x0f;
+        int value = ev[1];
 #ifdef _DEBUG
         fprintf(stderr, "touch event on Channel %2d: %5d   \r",
-                c, ev->data.control.value);
+                c, value);
 #endif
         if (c < _MULTITEMP)
-            modulator[c][15] = (float)ev->data.control.value * 0.007874f;
+            modulator[c][15] = value * 0.007874f;
         break;
     }
 
-    case SND_SEQ_EVENT_NOTEON: {
-        c = ev->data.note.channel;
+    case 0x90: {
+        if (size < 3) break;
+        c = ev[0] & 0x0f;
+        int note = ev[1];
+        int velocity = ev[2];
 #ifdef _DEBUG
         fprintf(stderr, "Note On event on Channel %2d: %5d       \r",
-                c, ev->data.note.note);
+                c, note);
 #endif
         if (c < _MULTITEMP) {
-            if (ev->data.note.velocity > 0) {
-                lastnote[c] = ev->data.note.note;
-                midif[c] = midi2freq[ev->data.note.note];  // lookup the frequency
-                modulator[c][19] = ev->data.note.note * 0.007874f;  // fill the value in as normalized modulator
+            if (velocity > 0) {
+                lastnote[c] = note;
+                midif[c] = midi2freq[note];  // lookup the frequency
+                modulator[c][19] = note * 0.007874f;  // fill the value in as normalized modulator
                 modulator[c][1] =
-                    (float)1.f - (ev->data.note.velocity * 0.007874f);  // fill in the velocity as modulator
+                    (float)1.f - (velocity * 0.007874f);  // fill in the velocity as modulator
                 egStart(c, 0);  // start the engines!
                 if (EGrepeat[c][1] == 0)
                     egStart(c, 1);
@@ -1042,14 +1060,16 @@ void cpuHandleMidi(snd_seq_event_t *ev)
         }
     }
         // ...so its necessary that here follow the noteoff routine
-    case SND_SEQ_EVENT_NOTEOFF: {
-        c = ev->data.note.channel;
+    case 0x80: {
+        if (size < 3) break;
+        c = ev[0] & 0x0f;
+        int note = ev[1];
 #ifdef _DEBUG
         fprintf(stderr, "Note Off event on Channel %2d: %5d      \r",
-                c, ev->data.note.note);
+                c, note);
 #endif
         if (c < _MULTITEMP)
-            if (lastnote[c] == ev->data.note.note) {
+            if (lastnote[c] == note) {
                 egStop(c, 0);
                 if (EGrepeat[c][1] == 0)
                     egStop(c, 1);
@@ -1067,13 +1087,36 @@ void cpuHandleMidi(snd_seq_event_t *ev)
         break;
     }
 
+    case 0xc0: {
+        if (size < 2) break;
+        c = ev[0] & 0x0f;
+        int value = ev[1];
+        #ifdef _DEBUG
+        fprintf(stderr, "Programchange event on Channel %2d:    %5d       \r",
+                c, value);
+        #endif
+        // see if its the control channel
+        if (c == _MULTITEMP) {  // perform multi program change
+            // first a range check
+            if ((value > -1) && (value < 128)) {
+                if (cpuMultiChangeHook) cpuMultiChangeHook(value);
+            }
+        }
+        else if ((c >= 0) && (c < _MULTITEMP)) {
+            // program change on the sounds
+            if ((value > -1) && (value < 128)) {
+                if (cpuProgramChangeHook) cpuProgramChangeHook(c, value);
+            }
+        }
+        break;
+    }
+
 #ifdef _DEBUG
     default: {
 
-        if (ev->type != SND_SEQ_EVENT_CLOCK) {
-            fprintf(stderr, "unknown event %d on Channel %2d: %5d   \r",
-                    ev->type, ev->data.control.channel,
-                    ev->data.control.value);
+        if (ev[0] != 0xf8) {
+            fprintf(stderr, "unknown event %d on Channel %2d          \r",
+                    ev[0] & 0xf0, ev[0] & 0x0f);
         }
     }
 #endif

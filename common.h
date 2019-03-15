@@ -2,12 +2,6 @@
 #define COMMON_H_
 
 // customizable options
-// OSC Port
-#define _OSCPORT "7770"
-
-// disable this when you experience sluggish midi reaction
-//#define _MIDIBLOCK 1
-
 
 // debug output
 //#define _DEBUG

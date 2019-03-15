@@ -19,8 +19,6 @@
 #ifndef CPU_H_
 #define CPU_H_
 
-#include <alsa/asoundlib.h>
-
 // defines
 #define _MODCOUNT 32
 #define _WAVECOUNT 32
@@ -40,9 +38,12 @@ void cpuProcess(unsigned nframes,
                 float *bufferAux1, float *bufferAux2,
                 float **bufferVoices);
 
-void cpuHandleMidi(snd_seq_event_t *ev);
+void cpuHandleMidi(const unsigned char *ev, unsigned size);
 
 int cpuReceiveChoice(int voice, int i, int value);
 int cpuReceiveParameter(int voice, int i, float value);
+
+extern void (*cpuMultiChangeHook)(unsigned value);
+extern void (*cpuProgramChangeHook)(unsigned channel, unsigned value);
 
 #endif

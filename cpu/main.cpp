@@ -19,14 +19,13 @@
 //  gcc -o synthesizer synth2.c -ljack -ffast-math -O3 -march=k8 -mtune=k8 -funit-at-a-time -fpeel-loops -ftracer -funswitch-loops -llo -lasound
 
 #include <jack/jack.h>
-//#include <jack/midiport.h> // later we use the jack midi ports to, but not this time
+#include <jack/midiport.h>
 #include <signal.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include <alsa/asoundlib.h>
 #include <pthread.h>
 #include "cpu.h"
 // some common definitions
@@ -34,74 +33,12 @@
 
 static jack_client_t *client;
 static jack_port_t *port[_MULTITEMP + 4];  // _multitemp * ports + 2 mix and 2 aux
-static snd_seq_t *seq_handle;
-static pthread_t midithread;
+static jack_port_t *midiport;
 /* a flag which will be set by our signal handler when
  * it's time to exit */
 static volatile int quit = 0;
 
 // void midi_action(snd_seq_t *seq_handle);
-
-/** \brief function to create Alsa Midiport
- *
- * \return handle on alsa seq
- */
-static snd_seq_t *open_seq(const char *jackName)
-{
-
-    snd_seq_t *seq_handle;
-    int portid;
-// switch for blocking behaviour for experimenting which one is better
-#ifdef _MIDIBLOCK
-    if (snd_seq_open(&seq_handle, "hw", SND_SEQ_OPEN_INPUT, 0) < 0)
-#else
-    // open Alsa for input, nonblocking mode so it returns
-    if (snd_seq_open(&seq_handle, "hw", SND_SEQ_OPEN_INPUT, SND_SEQ_NONBLOCK) < 0)
-#endif
-    {
-        fprintf(stderr, "Error opening ALSA sequencer.\n");
-        exit(1);
-    }
-    snd_seq_set_client_name(seq_handle, jackName);
-    if ((portid = snd_seq_create_simple_port(seq_handle, jackName, SND_SEQ_PORT_CAP_WRITE | SND_SEQ_PORT_CAP_SUBS_WRITE,
-                                             SND_SEQ_PORT_TYPE_APPLICATION)) < 0) {
-        fprintf(stderr, "Error creating sequencer port.\n");
-        exit(1);
-    }
-    // filter out mididata which is not processed anyway, thanks to Karsten Wiese for the hint
-    snd_seq_client_info_t *info;
-
-
-    snd_seq_client_info_malloc(&info);
-    if (snd_seq_get_client_info(seq_handle, info) != 0) {
-
-        fprintf(stderr, "Error getting info for eventfiltersetup.\n");
-        exit(1);
-    }
-    // its a bit strange, you set what you want to get, not what you want filtered out...
-    // actually Karsten told me so but I got misguided by the term filter
-
-    // snd_seq_client_info_event_filter_add	( info, SND_SEQ_EVENT_SYSEX);
-    // snd_seq_client_info_event_filter_add	( info, SND_SEQ_EVENT_TICK);
-
-    snd_seq_client_info_event_filter_add(info, SND_SEQ_EVENT_NOTEON);
-    snd_seq_client_info_event_filter_add(info, SND_SEQ_EVENT_NOTEOFF);
-    snd_seq_client_info_event_filter_add(info, SND_SEQ_EVENT_PITCHBEND);
-    snd_seq_client_info_event_filter_add(info, SND_SEQ_EVENT_CONTROLLER);
-    snd_seq_client_info_event_filter_add(info, SND_SEQ_EVENT_CHANPRESS);
-
-    // snd_seq_client_info_event_filter_add	( info, SND_SEQ_EVENT_CLOCK);
-    // snd_seq_client_info_event_filter_add	( info, SND_SEQ_EVENT_SONGPOS);
-    // snd_seq_client_info_event_filter_add	( info, SND_SEQ_EVENT_QFRAME);
-    if (snd_seq_set_client_info(seq_handle, info) != 0) {
-
-        fprintf(stderr, "Error setting info for eventfiltersetup.\n");
-        exit(1);
-    }
-    snd_seq_client_info_free(info);
-
-    return (seq_handle);
-}
 
 
 /** @brief the audio processing function from jack
@@ -117,6 +54,12 @@ static snd_seq_t *open_seq(const char *jackName)
  */
 int process(jack_nframes_t nframes, void *arg)
 {
+    void *bufferMidi = jack_port_get_buffer(midiport, nframes);
+    jack_midi_event_t midiEvent;
+    for (uint32_t midiIndex = 0; jack_midi_event_get(&midiEvent, bufferMidi, midiIndex) == 0; ++midiIndex) {
+        cpuHandleMidi(midiEvent.buffer, midiEvent.size);
+    }
+
     float *bufferMixLeft = (float *)jack_port_get_buffer(port[8], nframes);
     float *bufferMixRight = (float *)jack_port_get_buffer(port[9], nframes);
     float *bufferAux1 = (float *)jack_port_get_buffer(port[10], nframes);
@@ -133,61 +76,6 @@ int process(jack_nframes_t nframes, void *arg)
     return 0;  // thanks to Sean Bolton who was the first pointing to a bug when I returned 1
 }
 
-
-/** @brief handling the midi messages in an extra thread
- *
- * @param pointer/handle of alsa midi
- */
-static void *midiprocessor(void *handle)
-{
-    struct sched_param param;
-    int policy;
-    snd_seq_t *seq_handle = (snd_seq_t *)handle;
-    pthread_getschedparam(pthread_self(), &policy, &param);
-
-    policy = SCHED_FIFO;
-    param.sched_priority = 95;
-
-    pthread_setschedparam(pthread_self(), policy, &param);
-
-    /*
-        if (poll(pfd, npfd, 100000) > 0)
-        {
-          midi_action(seq_handle);
-        } */
-
-    snd_seq_event_t *ev;
-#ifdef _DEBUG
-    printf("start\n");
-    fflush(stdout);
-#endif
-
-#ifdef _MIDIBLOCK
-    do {
-#else
-    while (quit == 0) {
-#endif
-        while ((snd_seq_event_input(seq_handle, &ev)) && (quit == 0)) {
-            if (ev != NULL) {
-                cpuHandleMidi(ev);
-                snd_seq_free_event(ev);
-                usleep(10);  // absolutly necessary, otherwise stream of mididata would block the whole computer, sleep for 1ms == 1000 microseconds
-            }  // end of if
-#ifdef _MIDIBLOCK
-            usleep(1000);  // absolutly necessary, otherwise stream of mididata would block the whole computer, sleep for 1ms == 1000 microseconds
-        }
-    } while ((quit == 0) && (done == 0));  // doing it as long we are running was (snd_seq_event_input_pending(seq_handle, 0) > 0);
-#else
-            usleep(100);  // absolutly necessary, otherwise stream of mididata would block the whole computer, sleep for 1ms == 1000 microseconds
-        }  // end of first while, emptying the seqdata queue
-
-        usleep(2000);  // absolutly necessary, otherwise this thread would block the whole computer, sleep for 2ms == 2000 microseconds
-    }  // end of while(quit==0)
-#endif
-    printf("midi thread stopped\n");
-    fflush(stdout);
-    return 0;  // its insisited on this although it should be a void function
-}  // end of midiprocessor
 
 /** @brief the classic c main function
  *
@@ -240,6 +128,9 @@ int cpuStart()
     port[9] = jack_port_register(client, "mix out right", JACK_DEFAULT_AUDIO_TYPE,
                                  JackPortIsOutput | JackPortIsTerminal, 0);
 
+    midiport = jack_port_register(client, "midi", JACK_DEFAULT_MIDI_TYPE,
+                                  JackPortIsInput | JackPortIsTerminal, 0);
+
     // inbuf = jack_port_register(client, "in", JACK_DEFAULT_MIDI_TYPE, JackPortIsInput, 0);
     /* jack is callback based. That means we register
      * a callback function (see process() above)
@@ -255,15 +146,6 @@ int cpuStart()
         return 1;
     }
 
-    // ------------------------ midi init ---------------------------------
-    seq_handle = open_seq(jackName);
-    int npfd = snd_seq_poll_descriptors_count(seq_handle, POLLIN);
-    struct pollfd *pfd = (struct pollfd *)alloca(npfd * sizeof(struct pollfd));
-    snd_seq_poll_descriptors(seq_handle, pfd, npfd, POLLIN);
-
-    // create the thread and tell it to use Midi::work as thread function
-    int err = pthread_create(&midithread, NULL, midiprocessor, seq_handle);
-
     return 0;
 }
 
@@ -278,14 +160,6 @@ void cpuStop()
 
     /* shutdown cont. */
     jack_client_close(client);
-#ifndef _MIDIBLOCK
-    printf("wait for midithread\n");
-    fflush(stdout);
-    /* waiting for the midi thread to shutdown carefully */
-    pthread_join(midithread, NULL);
-#endif
-    /* release Alsa Midi connection */
-    snd_seq_close(seq_handle);
 
     /* done !! */
     printf("close minicomputer\n");

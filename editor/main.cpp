@@ -20,42 +20,21 @@
 #include <cstdlib>
 //#include <unistd.h>
 #include <cstring>
-#include <alsa/asoundlib.h>
+#include <cassert>
 #include <pthread.h>
+#include <jack/ringbuffer.h>
 #include "../common.h"
 #include "../cpu/cpu.h"
 #include "Memory.h"
 #include "syntheditor.h"
 #include "communicate.h"
-snd_seq_t *open_seq();
-snd_seq_t *seq_handle;
 static bool transmit = false;
 // some common definitions
 
 Memory Speicher;
 UserInterface Schaltbrett;
+static jack_ringbuffer_t *ringbuffer = NULL;
 
-/** open an Alsa Midiport for accepting programchanges and later more...
- *
- * @return handle to Alsaseq
- */
-static snd_seq_t *open_seq(const char *midiName)
-{
-    snd_seq_t *seq_handle;
-    int portid;
-
-    if (snd_seq_open(&seq_handle, "hw", SND_SEQ_OPEN_DUPLEX, 0) < 0) {
-        fprintf(stderr, "Error opening ALSA sequencer.\n");
-        exit(1);
-    }
-    snd_seq_set_client_name(seq_handle, midiName);
-    if ((portid = snd_seq_create_simple_port(seq_handle, midiName, SND_SEQ_PORT_CAP_WRITE | SND_SEQ_PORT_CAP_SUBS_WRITE,
-                                             SND_SEQ_PORT_TYPE_APPLICATION)) < 0) {
-        fprintf(stderr, "Error creating sequencer port.\n");
-        exit(1);
-    }
-    return (seq_handle);
-}
 /*
 Fl_Double_Window* make_window() {
   Fl_Double_Window* w;
@@ -100,84 +79,49 @@ void reloadSoundNames()
     Schaltbrett.soundchoice[7]->add(Speicher.getName(0,i).c_str());
   }
 }*/
-/** @brief handling the midi messages in an extra thread
- *
- * the editor only reacts on program changes, note ons and the rest have to go directly to the synthcore, it means midi keyboards need to be connected to the core too
- * @param handle to alsaseq
- */
-static void *midiprocessor(void *handle)
+
+static void cbEditorMultiChange(unsigned value)
 {
-    struct sched_param param;
-    int policy;
-    snd_seq_t *seq_handle = (snd_seq_t *)handle;
-    pthread_getschedparam(pthread_self(), &policy, &param);
+    jack_ringbuffer_t *rb = ringbuffer;
+    unsigned char msg[2] = {1, (unsigned char)value};
+    if (jack_ringbuffer_write_space(rb) >= sizeof(msg))
+        jack_ringbuffer_write(rb, (char *)msg, sizeof(msg));
+}
 
-    policy = SCHED_FIFO;
-    // param.sched_priority = 95;
+static void cbEditorProgramChange(unsigned channel, unsigned value)
+{
+    jack_ringbuffer_t *rb = ringbuffer;
+    unsigned char msg[3] = {2, (unsigned char)channel, (unsigned char)value};
+    if (jack_ringbuffer_write_space(rb) >= sizeof(msg))
+        jack_ringbuffer_write(rb, (char *)msg, sizeof(msg));
+}
 
-    pthread_setschedparam(pthread_self(), policy, &param);
+static void handleCpuRequests(void *)
+{
+    jack_ringbuffer_t *rb = ringbuffer;
 
-    /*
-    if (poll(pfd, npfd, 100000) > 0)
-            {
-              midi_action(seq_handle);
-            } */
+    unsigned char buf[3];
+    size_t count = jack_ringbuffer_peek(rb, (char *)buf, sizeof(buf));
 
-    snd_seq_event_t *ev;
+    if (count < 1)
+        return;
 
-    do {
-        while (snd_seq_event_input(seq_handle, &ev)) {
-            switch (ev->type) {
-            case SND_SEQ_EVENT_PGMCHANGE: {
-                int channel = ev->data.control.channel;
-                int value = ev->data.control.value;
-                //#ifdef _DEBUG
-                fprintf(stderr, "Programchange event on Channel %2d: %2d %5d       \r",
-                        channel, ev->data.control.param, value);
-                //#endif
-                // see if its the control channel
-                if (ev->data.control.channel == 8) {  // perform multi program change
-                    // first a range check
-                    if ((value > -1) && (value < 128)) {
-                        Schaltbrett.changeMulti(value);
-                    }
-                }
-                else if ((channel >= 0) && (channel < 8)) {
-                    // program change on the sounds
-                    if ((value > -1) && (value < 128)) {
-                        Schaltbrett.changeSound(channel, value);
-                    }
-                }
-                break;
-            }
-                /*
-                  case SND_SEQ_EVENT_CONTROLLER:
-                  {
-            #ifdef _DEBUG
-                    fprintf(stderr, "Control event on Channel %2d: %2d %5d \r",
-                            ev->data.control.channel,
-            ev->data.control.param,ev->data.control.value); #endif if
-            (ev->data.control.param==1) modulator[ev->data.control.channel][
-            16]=(float)ev->data.control.value*0.007874f; // /127.f; else if
-            (ev->data.control.param==12) modulator[ev->data.control.channel][
-            17]=(float)ev->data.control.value*0.007874f;// /127.f; break;
-                  }*/
-                /*
-                case SND_SEQ_EVENT_PITCHBEND:
-                {
-          #ifdef _DEBUG
-                   fprintf(stderr,"Pitchbender event on Channel %2d: %5d   \r",
-                          ev->data.control.channel, ev->data.control.value);
-          #endif
-                          if (ev->data.control.channel<_MULTITEMP)
-                           modulator[ev->data.control.channel][2]=(float)ev->data.control.value*0.0001221f;
-          // /8192.f; break;
-                }*/
-            }  // end of switch
-            snd_seq_free_event(ev);
-        }  // end of first while, emptying the seqdata queue
-    } while (1 == 1);  // doing forever, was (snd_seq_event_input_pending(seq_handle, 0) > 0);
-    return 0;  // why the compiler insists to have this here? Its a void function so what??
+    switch (buf[0]) {
+    case 1: // change multi
+        if (count < 2) break;
+//        Schaltbrett.changeMulti(buf[1]);
+        jack_ringbuffer_read_advance(rb, 2);
+        break;
+
+    case 2: // change program
+        if (count < 3) break;
+//        Schaltbrett.changeSound(buf[1], buf[2]);
+        jack_ringbuffer_read_advance(rb, 3);
+        break;
+
+    default:
+        assert(false);
+    }
 }
 
 /** @brief the main routine
@@ -189,6 +133,9 @@ static void *midiprocessor(void *handle)
 int main(int argc, char **argv)
 {
     printf("minieditor version %s\n", _VERSION);
+
+    ringbuffer = jack_ringbuffer_create(1024);
+
     // ------------------------ create gui --------------
     Fenster *w = Schaltbrett.make_window();
     //
@@ -229,71 +176,22 @@ int main(int argc, char **argv)
         }
     }
 
-    const char midiName[] = "MinicomputerEditor";  // signifier for midiconnections
-
     //------------------------- start engine -----------------------------
+    cpuMultiChangeHook = &cbEditorMultiChange;
+    cpuProgramChangeHook = &cbEditorProgramChange;
+
     if (cpuStart() != 0)
         return 1;
 
-    // ------------------------ midi init ---------------------------------
-    pthread_t midithread;
-    seq_handle = open_seq(midiName);
-    int npfd = snd_seq_poll_descriptors_count(seq_handle, POLLIN);
-    struct pollfd *pfd = (struct pollfd *)alloca(npfd * sizeof(struct pollfd));
-    snd_seq_poll_descriptors(seq_handle, pfd, npfd, POLLIN);
-
-    // create the thread and tell it to use Midi::work as thread function
-    int err = pthread_create(&midithread, NULL, midiprocessor, seq_handle);
-
-
-    int ac = 0;  // new argumentcount
-    // copy existing arguments, filtering out osc port arguments
-    // step one, parsing and determine the final count of arguments
-    for (i = 0; i < argc; ++i) {
-        if (strcmp(argv[i], "-port") == 0) {
-            ++i;  // skip this parameter
-            if (i < argc) {
-                int tport = atoi(argv[i]);
-                if (tport > 0) {
-                    ++i;  // skip the port number too
-                    if (i >= argc) {
-                        break;  // we are through
-                    }
-                }
-            }
-            else
-                break;  // we are through
-        }
-        else {
-            ++ac;
-        }
-    }
-
+    int ac = argc;  // new argumentcount
     if (needcolor) {
         ac += 4;  // add 2 more arguments and their values
     }
     char *av[ac];  // the new array
-
     for (i = 0; i < argc; ++i)  // now actually copying it
     {
-        if (strcmp(argv[i], "-port") == 0) {
-            ++i;  // skip this parameter
-            if (i < argc) {
-                int tport = atoi(argv[i]);
-                if (tport > 0) {
-                    ++i;  // skip the port number too
-                    if (i >= argc) {
-                        break;  // we are through
-                    }
-                }
-            }
-            else
-                break;  // we are through
-        }
-        else {
-            av[i] = argv[i];
-            printf("%s\n", argv[i]);
-        }
+        av[i] = argv[i];
+        printf("%s\n", argv[i]);
     }
 
     if (needcolor)  // add the arguments in case they are needed
@@ -312,14 +210,12 @@ int main(int argc, char **argv)
     /* an address to send messages to. sometimes it is better to let the server
      * pick a port number for you by passing NULL as the last argument */
 
+    Fl::add_timeout(0.1, &handleCpuRequests);
 
     // lo_send(t, "/a/b/c/d", "f",10.f);
     int result = Fl::run();
     cpuStop();
-    /* waiting for the midi thread to shutdown carefully */
-    pthread_cancel(midithread);
-    /* release Alsa Midi connection */
-    snd_seq_close(seq_handle);
+    jack_ringbuffer_free(ringbuffer);
     return result;
 }
 
