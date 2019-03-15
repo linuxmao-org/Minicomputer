@@ -150,11 +150,11 @@ msgstr "vraiment charger le son choisi"
 
 #: editor/syntheditor.cxx:1527
 msgid "add Saw"
-msgstr "ajouter dent-de-scie"
+msgstr "dent-de-scie additive"
 
 #: editor/syntheditor.cxx:1528
 msgid "add Square"
-msgstr "ajouter carré"
+msgstr "carré additif"
 
 #: editor/syntheditor.cxx:1668 editor/syntheditor.cxx:1689
 #: editor/syntheditor.cxx:1710 editor/syntheditor.cxx:1731
@@ -238,7 +238,7 @@ msgstr "nettoyer filtre"
 
 #: editor/syntheditor.cxx:1526
 msgid "comb"
-msgstr ""
+msgstr "peigne"
 
 #: editor/syntheditor.cxx:3191
 msgid "current parameter"
@@ -332,11 +332,11 @@ msgstr "fréquence fixe"
 
 #: editor/syntheditor.cxx:1884
 msgid "fm out amp modulator"
-msgstr ""
+msgstr "modulateur amp sortie fm"
 
 #: editor/syntheditor.cxx:1621 editor/syntheditor.cxx:1808
 msgid "fm output  vol"
-msgstr ""
+msgstr "vol sortie fm"
 
 #: editor/syntheditor.cxx:1719 editor/syntheditor.cxx:1905
 msgid "freq modulator 1"
@@ -438,7 +438,7 @@ msgstr "osc 1"
 
 #: editor/syntheditor.cxx:1456 editor/syntheditor.cxx:1488
 msgid "osc 1 fm out"
-msgstr ""
+msgstr "sortie fm osc 1"
 
 #: editor/syntheditor.cxx:1459 editor/syntheditor.cxx:1491
 msgid "osc 2"
@@ -446,7 +446,7 @@ msgstr "osc 2"
 
 #: editor/syntheditor.cxx:1457 editor/syntheditor.cxx:1489
 msgid "osc 2 fm out"
-msgstr ""
+msgstr "sortie fm osc 2"
 
 #: editor/syntheditor.cxx:3057
 msgid "osc1  vol"
