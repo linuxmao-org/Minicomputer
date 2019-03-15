@@ -18,7 +18,6 @@
 
 #include "syntheditor.h"
 #include "communicate.h"
-#include "widgets.h"
 static Fl_RGB_Image image_miniMini(idata_miniMini, 191, 99, 3, 0);
 // gcc -o synthEditor2 syntheditor.cxx -lfltk -llo
 Fl_Widget *Knob[8][_PARACOUNT];
@@ -1584,7 +1583,7 @@ Fenster *UserInterface::make_window()
                         d->labelcolor(FL_BACKGROUND2_COLOR);
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(21, 20, 34, 34, "frequency");
+                        Mw_Dial *o = new Mw_Dial(21, 20, 34, 34, "frequency");
                         o->labelsize(8);
                         o->maximum(1000);
                         o->argument(1);
@@ -1613,7 +1612,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][2] = o;
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(79, 179, 25, 25, "fm output  vol");
+                        Mw_Dial *o = new Mw_Dial(79, 179, 25, 25, "fm output  vol");
                         o->labelsize(8);
                         o->argument(13);
                         // o->maximum(1000);
@@ -1660,7 +1659,7 @@ Fenster *UserInterface::make_window()
                         miniDisplay[i][1] = o;
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(260, 97, 25, 25, "amount");
+                        Mw_Dial *o = new Mw_Dial(260, 97, 25, 25, "amount");
                         o->labelsize(8);
                         o->argument(9);
                         o->minimum(-1);
@@ -1681,7 +1680,7 @@ Fenster *UserInterface::make_window()
                         auswahl[i][o->argument()] = o;
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(260, 133, 25, 25, "amount");
+                        Mw_Dial *o = new Mw_Dial(260, 133, 25, 25, "amount");
                         o->labelsize(8);
                         o->argument(11);
                         o->minimum(-1);
@@ -1702,7 +1701,7 @@ Fenster *UserInterface::make_window()
                         auswahl[i][o->argument()] = o;
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(247, 23, 25, 25, "amount");
+                        Mw_Dial *o = new Mw_Dial(247, 23, 25, 25, "amount");
                         o->labelsize(8);
                         o->argument(5);
                         o->minimum(-1000);
@@ -1723,7 +1722,7 @@ Fenster *UserInterface::make_window()
                         auswahl[i][o->argument()] = o;
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(248, 59, 25, 25, "amount");
+                        Mw_Dial *o = new Mw_Dial(248, 59, 25, 25, "amount");
                         o->labelsize(8);
                         o->argument(7);
                         o->minimum(-1000);
@@ -1771,7 +1770,7 @@ Fenster *UserInterface::make_window()
                         d->labelcolor(FL_BACKGROUND2_COLOR);
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(21, 244, 34, 34, "frequency");
+                        Mw_Dial *o = new Mw_Dial(21, 244, 34, 34, "frequency");
                         o->labelsize(8);
                         o->argument(16);
                         o->maximum(1000);
@@ -1800,7 +1799,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(79, 403, 25, 25, "fm output  vol");
+                        Mw_Dial *o = new Mw_Dial(79, 403, 25, 25, "fm output  vol");
                         o->labelsize(8);
                         o->argument(28);
                         //  o->maximum(1000);
@@ -1846,7 +1845,7 @@ Fenster *UserInterface::make_window()
                         miniDisplay[i][3] = o;
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(260, 321, 25, 25, "amount");
+                        Mw_Dial *o = new Mw_Dial(260, 321, 25, 25, "amount");
                         o->labelsize(8);
                         o->argument(23);
                         o->minimum(-1);
@@ -1867,7 +1866,7 @@ Fenster *UserInterface::make_window()
                         auswahl[i][o->argument()] = o;
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(260, 357, 25, 25, "amount");
+                        Mw_Dial *o = new Mw_Dial(260, 357, 25, 25, "amount");
                         o->labelsize(8);
                         o->argument(25);
                         o->minimum(-1);
@@ -1888,7 +1887,7 @@ Fenster *UserInterface::make_window()
                         auswahl[i][o->argument()] = o;
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(247, 247, 25, 25, "amount");
+                        Mw_Dial *o = new Mw_Dial(247, 247, 25, 25, "amount");
                         o->labelsize(8);
                         o->argument(19);
                         o->minimum(-1000);
@@ -1909,7 +1908,7 @@ Fenster *UserInterface::make_window()
                         auswahl[i][o->argument()] = o;
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(248, 283, 25, 25, "amount");
+                        Mw_Dial *o = new Mw_Dial(248, 283, 25, 25, "amount");
                         o->labelsize(8);
                         o->argument(21);
                         o->minimum(-1000);
@@ -1989,7 +1988,7 @@ Fenster *UserInterface::make_window()
                             */
                         }
                         {
-                            Fl_Dial *o = f1q1 = new Fl_Dial(415, 33, 25, 25, "q");
+                            Mw_Dial *o = f1q1 = new Mw_Dial(415, 33, 25, 25, "q");
                             o->labelsize(8);
                             o->argument(31);
                             o->minimum(0.9);
@@ -1999,7 +1998,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = f1vol1 = new Fl_Dial(425, 70, 20, 20, "vol");
+                            Mw_Dial *o = f1vol1 = new Mw_Dial(425, 70, 20, 20, "vol");
                             o->labelsize(8);
                             o->argument(32);
                             o->callback((Fl_Callback *)callback);
@@ -2028,7 +2027,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = f1q2 = new Fl_Dial(531, 32, 25, 25, "q");
+                            Mw_Dial *o = f1q2 = new Mw_Dial(531, 32, 25, 25, "q");
                             o->labelsize(8);
 
                             o->argument(34);
@@ -2039,7 +2038,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = f1vol2 = new Fl_Dial(541, 70, 20, 20, "vol");
+                            Mw_Dial *o = f1vol2 = new Mw_Dial(541, 70, 20, 20, "vol");
                             o->labelsize(8);
                             o->labelsize(8);
                             o->minimum(-1);
@@ -2083,7 +2082,7 @@ Fenster *UserInterface::make_window()
                         o->end();
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(418, 360, 60, 57, "morph");
+                        Mw_Dial *o = new Mw_Dial(418, 360, 60, 57, "morph");
                         o->type(1);
                         o->labelsize(8);
                         o->maximum(0.5f);
@@ -2092,7 +2091,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(326, 392, 25, 25, "amount");
+                        Mw_Dial *o = new Mw_Dial(326, 392, 25, 25, "amount");
                         o->labelsize(8);
                         o->minimum(-2);
                         o->maximum(2);
@@ -2112,7 +2111,7 @@ Fenster *UserInterface::make_window()
                         auswahl[i][o->argument()] = o;
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(551, 392, 25, 25, "amount");
+                        Mw_Dial *o = new Mw_Dial(551, 392, 25, 25, "amount");
                         o->labelsize(8);
                         o->argument(48);
                         o->minimum(-2);
@@ -2153,7 +2152,7 @@ Fenster *UserInterface::make_window()
                             o->callback((Fl_Callback *)callback);
                         }
                         {
-                            Fl_Dial *o = f1q1 = new Fl_Dial(415, 137, 25, 25, "q");
+                            Mw_Dial *o = f1q1 = new Mw_Dial(415, 137, 25, 25, "q");
                             o->labelsize(8);
                             o->argument(41);
                             o->minimum(0.9);
@@ -2163,7 +2162,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = f1vol1 = new Fl_Dial(425, 174, 20, 20, "vol");
+                            Mw_Dial *o = f1vol1 = new Mw_Dial(425, 174, 20, 20, "vol");
                             o->labelsize(8);
                             o->argument(42);
                             o->callback((Fl_Callback *)callback);
@@ -2190,7 +2189,7 @@ Fenster *UserInterface::make_window()
                             o->callback((Fl_Callback *)callback);
                         }
                         {
-                            Fl_Dial *o = f1q2 = new Fl_Dial(531, 136, 25, 25, "q");
+                            Mw_Dial *o = f1q2 = new Mw_Dial(531, 136, 25, 25, "q");
                             o->labelsize(8);
                             o->labelsize(8);
                             o->argument(44);
@@ -2201,7 +2200,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = f1vol2 = new Fl_Dial(541, 174, 20, 20, "vol");
+                            Mw_Dial *o = f1vol2 = new Mw_Dial(541, 174, 20, 20, "vol");
                             o->labelsize(8);
                             o->labelsize(8);
                             o->argument(45);
@@ -2268,7 +2267,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = f1q1 = new Fl_Dial(415, 243, 25, 25, "q");
+                            Mw_Dial *o = f1q1 = new Mw_Dial(415, 243, 25, 25, "q");
                             o->labelsize(8);
                             o->argument(51);
                             o->minimum(0.9);
@@ -2278,7 +2277,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = f1vol1 = new Fl_Dial(425, 280, 20, 20, "vol");
+                            Mw_Dial *o = f1vol1 = new Mw_Dial(425, 280, 20, 20, "vol");
                             o->labelsize(8);
                             o->argument(52);
                             o->maximum(1);
@@ -2303,7 +2302,7 @@ Fenster *UserInterface::make_window()
                             o->callback((Fl_Callback *)callback);
                         }
                         {
-                            Fl_Dial *o = f1q2 = new Fl_Dial(531, 242, 25, 25, "q");
+                            Mw_Dial *o = f1q2 = new Mw_Dial(531, 242, 25, 25, "q");
                             o->labelsize(8);
                             o->argument(54);
                             o->minimum(0.9);
@@ -2313,7 +2312,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = f1vol2 = new Fl_Dial(541, 280, 20, 20, "vol");
+                            Mw_Dial *o = f1vol2 = new Mw_Dial(541, 280, 20, 20, "vol");
                             o->labelsize(8);
                             o->labelsize(8);
                             o->argument(55);
@@ -2381,7 +2380,7 @@ Fenster *UserInterface::make_window()
                         o->color(FL_FOREGROUND_COLOR);
                         o->labelsize(8);
                         {
-                            Fl_Dial *o = new Fl_Dial(618, 37, 25, 25, "A");
+                            Mw_Dial *o = new Mw_Dial(618, 37, 25, 25, "A");
                             o->labelsize(8);
                             o->argument(60);
                             o->minimum(0.2);
@@ -2390,7 +2389,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = new Fl_Dial(648, 37, 25, 25, "D");
+                            Mw_Dial *o = new Mw_Dial(648, 37, 25, 25, "D");
                             o->labelsize(8);
                             o->argument(61);
                             o->minimum(0.15);
@@ -2401,7 +2400,7 @@ Fenster *UserInterface::make_window()
                         }
 
                         {
-                            Fl_Dial *o = new Fl_Dial(678, 37, 25, 25, "S");
+                            Mw_Dial *o = new Mw_Dial(678, 37, 25, 25, "S");
                             o->labelsize(8);
                             o->argument(62);
                             // o->minimum(0);
@@ -2410,7 +2409,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = new Fl_Dial(708, 37, 25, 25, "R");
+                            Mw_Dial *o = new Mw_Dial(708, 37, 25, 25, "R");
                             o->labelsize(8);
                             o->argument(63);
                             o->minimum(0.15);
@@ -2437,7 +2436,7 @@ Fenster *UserInterface::make_window()
                         o->color(FL_FOREGROUND_COLOR);
                         o->labelsize(8);
                         {
-                            Fl_Dial *o = new Fl_Dial(618, 96, 25, 25, "A");
+                            Mw_Dial *o = new Mw_Dial(618, 96, 25, 25, "A");
                             o->labelsize(8);
                             o->argument(65);
                             o->minimum(0.2);
@@ -2446,7 +2445,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = new Fl_Dial(648, 96, 25, 25, "D");
+                            Mw_Dial *o = new Mw_Dial(648, 96, 25, 25, "D");
                             o->labelsize(8);
                             o->argument(66);
                             o->minimum(0.15);
@@ -2455,14 +2454,14 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = new Fl_Dial(678, 96, 25, 25, "S");
+                            Mw_Dial *o = new Mw_Dial(678, 96, 25, 25, "S");
                             o->labelsize(8);
                             o->argument(67);
                             o->callback((Fl_Callback *)callback);
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = new Fl_Dial(708, 96, 25, 25, "R");
+                            Mw_Dial *o = new Mw_Dial(708, 96, 25, 25, "R");
                             o->labelsize(8);
                             o->argument(68);
                             o->minimum(0.15);
@@ -2489,7 +2488,7 @@ Fenster *UserInterface::make_window()
                         o->color(FL_FOREGROUND_COLOR);
                         o->labelsize(8);
                         {
-                            Fl_Dial *o = new Fl_Dial(618, 153, 25, 25, "A");
+                            Mw_Dial *o = new Mw_Dial(618, 153, 25, 25, "A");
                             o->labelsize(8);
                             o->argument(70);
                             o->minimum(0.2);
@@ -2498,7 +2497,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = new Fl_Dial(648, 153, 25, 25, "D");
+                            Mw_Dial *o = new Mw_Dial(648, 153, 25, 25, "D");
                             o->labelsize(8);
                             o->argument(71);
                             o->minimum(0.15);
@@ -2507,14 +2506,14 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = new Fl_Dial(678, 153, 25, 25, "S");
+                            Mw_Dial *o = new Mw_Dial(678, 153, 25, 25, "S");
                             o->labelsize(8);
                             o->argument(72);
                             o->callback((Fl_Callback *)callback);
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = new Fl_Dial(708, 153, 25, 25, "R");
+                            Mw_Dial *o = new Mw_Dial(708, 153, 25, 25, "R");
                             o->labelsize(8);
                             o->argument(73);
                             o->minimum(0.15);
@@ -2541,7 +2540,7 @@ Fenster *UserInterface::make_window()
                         o->color(FL_FOREGROUND_COLOR);
                         o->labelsize(8);
                         {
-                            Fl_Dial *o = new Fl_Dial(618, 210, 25, 25, "A");
+                            Mw_Dial *o = new Mw_Dial(618, 210, 25, 25, "A");
                             o->labelsize(8);
                             o->argument(75);
                             o->minimum(0.2);
@@ -2550,7 +2549,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = new Fl_Dial(648, 210, 25, 25, "D");
+                            Mw_Dial *o = new Mw_Dial(648, 210, 25, 25, "D");
                             o->labelsize(8);
                             o->argument(76);
                             o->minimum(0.15);
@@ -2559,14 +2558,14 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = new Fl_Dial(678, 210, 25, 25, "S");
+                            Mw_Dial *o = new Mw_Dial(678, 210, 25, 25, "S");
                             o->labelsize(8);
                             o->argument(77);
                             o->callback((Fl_Callback *)callback);
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = new Fl_Dial(708, 210, 25, 25, "R");
+                            Mw_Dial *o = new Mw_Dial(708, 210, 25, 25, "R");
                             o->labelsize(8);
                             o->argument(78);
                             o->minimum(0.15);
@@ -2593,7 +2592,7 @@ Fenster *UserInterface::make_window()
                         o->color(FL_FOREGROUND_COLOR);
                         o->labelsize(8);
                         {
-                            Fl_Dial *o = new Fl_Dial(618, 269, 25, 25, "A");
+                            Mw_Dial *o = new Mw_Dial(618, 269, 25, 25, "A");
                             o->labelsize(8);
                             o->argument(80);
                             o->minimum(0.2);
@@ -2602,7 +2601,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = new Fl_Dial(648, 269, 25, 25, "D");
+                            Mw_Dial *o = new Mw_Dial(648, 269, 25, 25, "D");
                             o->labelsize(8);
                             o->argument(81);
                             o->minimum(0.15);
@@ -2611,14 +2610,14 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = new Fl_Dial(678, 269, 25, 25, "S");
+                            Mw_Dial *o = new Mw_Dial(678, 269, 25, 25, "S");
                             o->labelsize(8);
                             o->argument(82);
                             o->callback((Fl_Callback *)callback);
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = new Fl_Dial(708, 269, 25, 25, "R");
+                            Mw_Dial *o = new Mw_Dial(708, 269, 25, 25, "R");
                             o->labelsize(8);
                             o->argument(83);
                             o->minimum(0.15);
@@ -2645,7 +2644,7 @@ Fenster *UserInterface::make_window()
                         o->color(FL_FOREGROUND_COLOR);
                         o->labelsize(8);
                         {
-                            Fl_Dial *o = new Fl_Dial(618, 330, 25, 25, "A");
+                            Mw_Dial *o = new Mw_Dial(618, 330, 25, 25, "A");
                             o->labelsize(8);
                             o->argument(85);
                             o->minimum(0.2);
@@ -2655,7 +2654,7 @@ Fenster *UserInterface::make_window()
                             o->callback((Fl_Callback *)callback);
                         }
                         {
-                            Fl_Dial *o = new Fl_Dial(648, 330, 25, 25, "D");
+                            Mw_Dial *o = new Mw_Dial(648, 330, 25, 25, "D");
                             o->labelsize(8);
                             o->argument(86);
                             o->minimum(0.15);
@@ -2664,14 +2663,14 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = new Fl_Dial(678, 330, 25, 25, "S");
+                            Mw_Dial *o = new Mw_Dial(678, 330, 25, 25, "S");
                             o->labelsize(8);
                             o->argument(87);
                             o->callback((Fl_Callback *)callback);
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Dial *o = new Fl_Dial(708, 330, 25, 25, "R");
+                            Mw_Dial *o = new Mw_Dial(708, 330, 25, 25, "R");
                             o->labelsize(8);
                             o->argument(88);
                             o->minimum(0.15);
@@ -2866,7 +2865,7 @@ Fenster *UserInterface::make_window()
                     }
                     // amplitude envelope
                     {
-                        Fl_Dial *o = new Fl_Dial(844, 103, 25, 25, "A");
+                        Mw_Dial *o = new Mw_Dial(844, 103, 25, 25, "A");
                         o->labelsize(8);
                         o->argument(102);
                         o->minimum(0.20);
@@ -2875,7 +2874,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(874, 103, 25, 25, "D");
+                        Mw_Dial *o = new Mw_Dial(874, 103, 25, 25, "D");
                         o->labelsize(8);
                         o->argument(103);
                         o->minimum(0.15);
@@ -2884,14 +2883,14 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(904, 103, 25, 25, "S");
+                        Mw_Dial *o = new Mw_Dial(904, 103, 25, 25, "S");
                         o->labelsize(8);
                         o->argument(104);
                         o->callback((Fl_Callback *)callback);
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(934, 103, 25, 25, "R");
+                        Mw_Dial *o = new Mw_Dial(934, 103, 25, 25, "R");
                         o->labelsize(8);
                         o->argument(105);
                         o->minimum(0.15);
@@ -2900,7 +2899,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(930, 58, 25, 25, "mod amount");
+                        Mw_Dial *o = new Mw_Dial(930, 58, 25, 25, "mod amount");
                         o->labelsize(8);
                         o->argument(100);
                         o->callback((Fl_Callback *)callback);
@@ -2939,7 +2938,7 @@ Fenster *UserInterface::make_window()
                       o->textsize(8);
                     }*/
                     {
-                        Fl_Dial *o = new Fl_Dial(844, 150, 25, 25, "id vol");
+                        Mw_Dial *o = new Mw_Dial(844, 150, 25, 25, "id vol");
                         o->labelsize(8);
                         o->argument(101);
                         o->minimum(0);
@@ -2950,7 +2949,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(874, 150, 25, 25, "aux 1");
+                        Mw_Dial *o = new Mw_Dial(874, 150, 25, 25, "aux 1");
                         o->labelsize(8);
                         o->argument(108);
                         o->minimum(0);
@@ -2961,7 +2960,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(904, 150, 25, 25, "aux 2");
+                        Mw_Dial *o = new Mw_Dial(904, 150, 25, 25, "aux 2");
                         o->labelsize(8);
                         o->argument(109);
                         o->minimum(0);
@@ -2972,7 +2971,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(934, 150, 25, 25, "mix vol");
+                        Mw_Dial *o = new Mw_Dial(934, 150, 25, 25, "mix vol");
                         o->labelsize(8);
                         o->argument(106);
                         o->minimum(0);
@@ -3007,7 +3006,7 @@ Fenster *UserInterface::make_window()
                         d->labelcolor(FL_BACKGROUND2_COLOR);
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(930, 288, 25, 25, "mod amount");
+                        Mw_Dial *o = new Mw_Dial(930, 288, 25, 25, "mod amount");
                         o->labelsize(8);
                         o->argument(110);
                         o->callback((Fl_Callback *)callback);
@@ -3026,21 +3025,21 @@ Fenster *UserInterface::make_window()
                         auswahl[i][o->argument()] = o;
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(844, 288, 25, 25, "delay time");
+                        Mw_Dial *o = new Mw_Dial(844, 288, 25, 25, "delay time");
                         o->labelsize(8);
                         o->argument(111);
                         o->callback((Fl_Callback *)callback);
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(874, 330, 25, 25, "feedback");
+                        Mw_Dial *o = new Mw_Dial(874, 330, 25, 25, "feedback");
                         o->labelsize(8);
                         o->argument(112);
                         o->callback((Fl_Callback *)callback);
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Dial *o = new Fl_Dial(950, 330, 25, 25, "volume");
+                        Mw_Dial *o = new Mw_Dial(950, 330, 25, 25, "volume");
                         o->labelsize(8);
                         o->argument(113);
                         o->callback((Fl_Callback *)callback);
@@ -3049,7 +3048,7 @@ Fenster *UserInterface::make_window()
                     o->end();
                 }
                 {
-                    Fl_Dial *o = new Fl_Dial(295, 191, 25, 25, "osc1  vol");
+                    Mw_Dial *o = new Mw_Dial(295, 191, 25, 25, "osc1  vol");
                     o->labelsize(8);
                     o->align(FL_ALIGN_TOP);
                     o->argument(14);
@@ -3057,14 +3056,14 @@ Fenster *UserInterface::make_window()
                     Knob[i][o->argument()] = o;
                 }
                 {
-                    Fl_Dial *o = new Fl_Dial(295, 252, 25, 25, "osc2  vol");
+                    Mw_Dial *o = new Mw_Dial(295, 252, 25, 25, "osc2  vol");
                     o->labelsize(8);
                     o->argument(29);
                     o->callback((Fl_Callback *)callback);
                     Knob[i][o->argument()] = o;
                 }
                 {
-                    Fl_Dial *o = new Fl_Dial(950, 228, 25, 25, "to delay");
+                    Mw_Dial *o = new Mw_Dial(950, 228, 25, 25, "to delay");
                     o->labelsize(8);
                     o->argument(114);
                     o->callback((Fl_Callback *)callback);
