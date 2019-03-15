@@ -33,7 +33,8 @@ target_include_directories(minicomputer PRIVATE "${FLTK_INCLUDE_DIR}")
 target_link_libraries(minicomputer PRIVATE ${FLTK_LIBRARIES})
 
 add_executable(minicomputerCPU
-  "cpu/main.c")
+  "cpu/cpu.cpp"
+  "cpu/main.cpp")
 target_link_pkgconfig(minicomputerCPU JACK "jack" PRIVATE)
 target_link_pkgconfig(minicomputerCPU LO "liblo" PRIVATE)
 target_link_pkgconfig(minicomputerCPU ASOUND "alsa" PRIVATE)
