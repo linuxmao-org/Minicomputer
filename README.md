@@ -11,6 +11,8 @@ Ce programme est une version améliorée de [Minicomputer 1.41](http://minicompu
 - gestion du MIDI par interface JACK
 - amélioration de la robustesse générale du code
 
+[Page de documentation sur linuxmao.org](http://linuxmao.org/minicomputer)
+
 ----
 
 :us: __Industrial grade digital synthesizer for Linux__
@@ -21,3 +23,5 @@ This program is an improved fork of [Minicomputer 1.41](http://minicomputer.sour
 - no manual setup required
 - MIDI support through JACK interface
 - improved general code robustness
+
+[Documentation page on linuxmao.org](http://linuxmao.org/minicomputer) :fr: in French
