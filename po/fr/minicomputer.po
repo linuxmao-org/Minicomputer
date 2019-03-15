@@ -414,7 +414,7 @@ msgstr "modulateurs"
 
 #: editor/syntheditor.cxx:2091
 msgid "morph"
-msgstr "moprh"
+msgstr "morph"
 
 #: editor/syntheditor.cxx:2109
 msgid "morph mod 1"
