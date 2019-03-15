@@ -20,7 +20,6 @@
 #define CPU_H_
 
 #include <alsa/asoundlib.h>
-#include <lo/lo.h>
 
 // defines
 #define _MODCOUNT 32
@@ -30,6 +29,9 @@
 #define TableSize 4096
 #define tabM 4095
 #define tabF 4096.f
+
+int cpuStart();
+void cpuStop();
 
 void cpuInit(float sampleRate);
 
@@ -42,7 +44,5 @@ void cpuHandleMidi(snd_seq_event_t *ev);
 
 int cpuReceiveChoice(int voice, int i, int value);
 int cpuReceiveParameter(int voice, int i, float value);
-
-void cpuInstallOscMethods(lo_server_thread st);
 
 #endif

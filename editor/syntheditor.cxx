@@ -3223,7 +3223,7 @@ Fenster::~Fenster()
 
     printf("guittt");
     fflush(stdout);
-    sendClose(1);
+    //sendClose(1);
     //~Fl_Double_Window();
 }
 /**

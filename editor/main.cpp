@@ -20,30 +20,27 @@
 #include <cstdlib>
 //#include <unistd.h>
 #include <cstring>
-#include <lo/lo.h>
 #include <alsa/asoundlib.h>
 #include <pthread.h>
 #include "../common.h"
+#include "../cpu/cpu.h"
 #include "Memory.h"
 #include "syntheditor.h"
+#include "communicate.h"
 snd_seq_t *open_seq();
 snd_seq_t *seq_handle;
-int npfd;
-struct pollfd *pfd;
-char midiName[64] = "MinicomputerEditor";  // signifier for midiconnections, to be filled with OSC port number
-lo_address t;
-bool transmit = false;
+static bool transmit = false;
 // some common definitions
 
 Memory Speicher;
 UserInterface Schaltbrett;
+
 /** open an Alsa Midiport for accepting programchanges and later more...
  *
  * @return handle to Alsaseq
  */
-snd_seq_t *open_seq()
+static snd_seq_t *open_seq(const char *midiName)
 {
-
     snd_seq_t *seq_handle;
     int portid;
 
@@ -224,51 +221,25 @@ int main(int argc, char **argv)
     // check color settings in arguments and add some if missing
     bool needcolor = true;  // true means user didnt give some so I need to take care myself
     int i;
-    char OscPort[] = _OSCPORT;  // default value for OSC port
-    char *oport = OscPort;
     if (argc > 1) {
         for (i = 0; i < argc; ++i) {
             if ((strcmp(argv[i], "-bg") == 0) || (strcmp(argv[i], "-fg") == 0)) {
                 needcolor = false;
             }
-            else if (strcmp(argv[i], "-port") == 0)  // got a OSC port argument
-            {
-                ++i;  // looking for the next entry
-                if (i < argc) {
-                    int tport = atoi(argv[i]);
-                    if (tport > 0)
-                        oport = argv[i];  // overwrite the default for the OSCPort
-                }
-                else
-                    break;  // we are through
-            }
         }
     }
 
-    // ------------------------ osc init ---------------------------------
-    t = lo_address_new(NULL, oport);
-    printf("\n\nosc port %s\n", oport);
-    sprintf(midiName, "miniEditor%s", oport);  // store globally a unique name
-// -------------------------------------------------------------------
-#ifdef _BUNDLE
-    //------------------------- start engine -----------------------------
-    std::string engineName;  // the name of the core program + given port, if any.
-    if (strcmp(oport, "7770") == 0)  // is default port?
-    {
-        engineName = std::string(argv[0]) + "CPU &";
-    }
-    else  // no default so add parameter
-    {
-        engineName = std::string(argv[0]) + "CPU -port " + oport + " &";
-    }
+    const char midiName[] = "MinicomputerEditor";  // signifier for midiconnections
 
-    system(engineName.c_str());  // actual start
-#endif
+    //------------------------- start engine -----------------------------
+    if (cpuStart() != 0)
+        return 1;
+
     // ------------------------ midi init ---------------------------------
     pthread_t midithread;
-    seq_handle = open_seq();
-    npfd = snd_seq_poll_descriptors_count(seq_handle, POLLIN);
-    pfd = (struct pollfd *)alloca(npfd * sizeof(struct pollfd));
+    seq_handle = open_seq(midiName);
+    int npfd = snd_seq_poll_descriptors_count(seq_handle, POLLIN);
+    struct pollfd *pfd = (struct pollfd *)alloca(npfd * sizeof(struct pollfd));
     snd_seq_poll_descriptors(seq_handle, pfd, npfd, POLLIN);
 
     // create the thread and tell it to use Midi::work as thread function
@@ -344,7 +315,7 @@ int main(int argc, char **argv)
 
     // lo_send(t, "/a/b/c/d", "f",10.f);
     int result = Fl::run();
-    lo_send(t, "/Minicomputer/quit", "i", 1);
+    cpuStop();
     /* waiting for the midi thread to shutdown carefully */
     pthread_cancel(midithread);
     /* release Alsa Midi connection */
@@ -359,18 +330,14 @@ void enableTransmit(bool enable)
 
 void sendParameter(int voicenumber, int parameter, float value)
 {
-    if (transmit)
-        lo_send(t, "/Minicomputer", "iif", voicenumber, parameter, value);
+    if (!transmit) return;
+    //lo_send(t, "/Minicomputer", "iif", voicenumber, parameter, value);
+    cpuReceiveParameter(voicenumber, parameter, value);
 }
 
 void sendChoice(int voicenumber, int choice, int value)
 {
-    if (transmit)
-        lo_send(t, "/Minicomputer/choice", "iii", voicenumber, choice, value);
-}
-
-void sendClose(int value)
-{
-    if (transmit)
-        lo_send(t, "/Minicomputer/close", "i", value);
+    if (!transmit) return;
+    //lo_send(t, "/Minicomputer/choice", "iii", voicenumber, choice, value);
+    cpuReceiveChoice(voicenumber, choice, value);
 }

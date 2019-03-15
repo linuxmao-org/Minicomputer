@@ -25,7 +25,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <lo/lo.h>
 #include <string.h>
 #include <alsa/asoundlib.h>
 #include <pthread.h>
@@ -33,20 +32,13 @@
 // some common definitions
 #include "../common.h"
 
-jack_port_t *port[_MULTITEMP + 4];  // _multitemp * ports + 2 mix and 2 aux
-char jackName[64] = "Minicomputer";  // signifier for audio and midiconnections, to be filled with OSC port number
-snd_seq_t *open_seq();
-snd_seq_t *seq_handle;
-int npfd;
-struct pollfd *pfd;
+static jack_client_t *client;
+static jack_port_t *port[_MULTITEMP + 4];  // _multitemp * ports + 2 mix and 2 aux
+static snd_seq_t *seq_handle;
+static pthread_t midithread;
 /* a flag which will be set by our signal handler when
  * it's time to exit */
-int quit = 0;
-jack_port_t *inbuf;
-jack_client_t *client;
-
-jack_nframes_t bufsize;
-int done = 0;
+static volatile int quit = 0;
 
 // void midi_action(snd_seq_t *seq_handle);
 
@@ -54,7 +46,7 @@ int done = 0;
  *
  * \return handle on alsa seq
  */
-snd_seq_t *open_seq()
+static snd_seq_t *open_seq(const char *jackName)
 {
 
     snd_seq_t *seq_handle;
@@ -111,11 +103,6 @@ snd_seq_t *open_seq()
     return (seq_handle);
 }
 
-// some forward declarations
-static inline void error(int num, const char *m, const char *path);
-static inline int quit_handler(const char *path, const char *types, lo_arg **argv,
-                               int argc, void *data, void *user_data);
-
 
 /** @brief the audio processing function from jack
  *
@@ -146,16 +133,6 @@ int process(jack_nframes_t nframes, void *arg)
     return 0;  // thanks to Sean Bolton who was the first pointing to a bug when I returned 1
 }
 
-
-/** @brief the signal handler
- *
- * its used here only for quitting
- * @param the signal
- */
-void signalled(int signal)
-{
-    quit = 1;
-}
 
 /** @brief handling the midi messages in an extra thread
  *
@@ -218,66 +195,17 @@ static void *midiprocessor(void *handle)
  * @param pointer to array of the arguments
  * @return int the result, should be 0 if program terminates nicely
  */
-int main(int argc, char **argv)
+int cpuStart()
 {
     printf("minicomputer version %s\n", _VERSION);
-    // ------------------------ decide the oscport number -------------------------
-    char OscPort[] = _OSCPORT;  // default value for OSC port
-    char *oport = OscPort;  // pointer of the OSC port string
-    int i;
-    // process the arguments
-    if (argc > 1) {
-        for (i = 0; i < argc; ++i) {
-            if (strcmp(argv[i], "-port") == 0)  // got a OSC port argument
-            {
-                ++i;  // looking for the next entry
-                if (i < argc) {
-                    int tport = atoi(argv[i]);
-                    if (tport > 0)
-                        oport = argv[i];  // overwrite the default for the OSCPort
-                }
-                else
-                    break;  // we are through
-            }
-        }
-    }
 
+    const char jackName[] = "Minicomputer";  // signifier for audio and midiconnections
 
-    printf("osc port %s\n", oport);
-    sprintf(jackName, "Minicomputer%s", oport);  // store globally a unique name
-
-    // ------------------------ midi init ---------------------------------
-    pthread_t midithread;
-    seq_handle = open_seq();
-    npfd = snd_seq_poll_descriptors_count(seq_handle, POLLIN);
-    pfd = (struct pollfd *)alloca(npfd * sizeof(struct pollfd));
-    snd_seq_poll_descriptors(seq_handle, pfd, npfd, POLLIN);
-
-    // create the thread and tell it to use Midi::work as thread function
-    int err = pthread_create(&midithread, NULL, midiprocessor, seq_handle);
-
-    // ------------------------ OSC Init ------------------------------------
-    /* start a new server on port definied where oport points to */
-    lo_server_thread st = lo_server_thread_new(oport, error);
-
-    cpuInstallOscMethods(st);
-
-    /* add method that will match the path Minicomputer/quit with one integer */
-    lo_server_thread_add_method(st, "/Minicomputer/quit", "i", quit_handler, NULL);
-
-    lo_server_thread_start(st);
-
-    /* setup our signal handler signalled() above, so
-     * we can exit cleanly (see end of main()) */
-    signal(SIGINT, signalled);
-
-    /* naturally we need to become a jack client
-     * prefered with a unique name, so lets add the OSC port to it*/
+    /* naturally we need to become a jack client */
     client = jack_client_open(jackName, JackNoStartServer, NULL);
     if (!client) {
-        printf("couldn't connect to jack server. Either it's not running or "
-               "the client name is already taken\n");
-        exit(1);
+        printf("couldn't connect to jack server, is it running?\n");
+        return 1;
     }
 
     /* we register the output ports and tell jack these are
@@ -317,21 +245,32 @@ int main(int argc, char **argv)
      * a callback function (see process() above)
      * which will then get called by jack once per process cycle */
     jack_set_process_callback(client, process, 0);
-    bufsize = jack_get_buffer_size(client);
+    //jack_nframes_t bufsize = jack_get_buffer_size(client);
 
     cpuInit((float)jack_get_sample_rate(client));
 
     /* tell jack that we are ready to do our thing */
-    jack_activate(client);
-
-    /* wait until this app receives a SIGINT (i.e. press
-     * ctrl-c in the terminal) see signalled() above */
-    while (quit == 0) {
-        // operate midi
-        /* let's not waste cycles by busy waiting */
-        sleep(1);
-        // printf("quit:%i %i\n",quit,done);
+    if (jack_activate(client) != 0) {
+        jack_client_close(client);
+        return 1;
     }
+
+    // ------------------------ midi init ---------------------------------
+    seq_handle = open_seq(jackName);
+    int npfd = snd_seq_poll_descriptors_count(seq_handle, POLLIN);
+    struct pollfd *pfd = (struct pollfd *)alloca(npfd * sizeof(struct pollfd));
+    snd_seq_poll_descriptors(seq_handle, pfd, npfd, POLLIN);
+
+    // create the thread and tell it to use Midi::work as thread function
+    int err = pthread_create(&midithread, NULL, midiprocessor, seq_handle);
+
+    return 0;
+}
+
+void cpuStop()
+{
+    quit = 1;
+
     /* so we shall quit, eh? ok, cleanup time. otherwise
      * jack would probably produce an xrun
      * on shutdown */
@@ -351,40 +290,4 @@ int main(int argc, char **argv)
     /* done !! */
     printf("close minicomputer\n");
     fflush(stdout);
-    return 0;
 }
-// ******************************************** OSC handling for editors ***********************
-//!\name OSC routines
-//!{
-/** @brief OSC error handler
- *
- * @param num errornumber
- * @param pointer msg errormessage
- * @param pointer path where it occured
- */
-static inline void error(int num, const char *msg, const char *path)
-{
-    printf("liblo server error %d in path %s: %s\n", num, path, msg);
-    fflush(stdout);
-}
-
-/** message handler for quit messages
- *
- * @param pointer path osc path
- * @param pointer types
- * @param argv pointer to array of arguments
- * @param argc amount of arguments
- * @param pointer data
- * @param pointer user_data
- * @return int 0 if everything is ok, 1 means message is not fully handled
- */
-static inline int quit_handler(const char *path, const char *types, lo_arg **argv,
-                               int argc, void *data, void *user_data)
-{
-    done = 1;
-    quit = 1;
-    printf("about to shutdown minicomputer core\n");
-    fflush(stdout);
-    return 0;
-}
-//!}

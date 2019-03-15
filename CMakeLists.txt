@@ -26,19 +26,17 @@ endfunction()
 add_executable(minicomputer
   "editor/main.cpp"
   "editor/Memory.cpp"
-  "editor/syntheditor.cxx")
-target_link_pkgconfig(minicomputer LO "liblo" PRIVATE)
+  "editor/syntheditor.cxx"
+  "cpu/cpu.cpp"
+  "cpu/main.cpp")
+target_link_pkgconfig(minicomputer JACK "jack" PRIVATE)
 target_link_pkgconfig(minicomputer ASOUND "alsa" PRIVATE)
 target_include_directories(minicomputer PRIVATE "${FLTK_INCLUDE_DIR}")
 target_link_libraries(minicomputer PRIVATE ${FLTK_LIBRARIES})
-
-add_executable(minicomputerCPU
-  "cpu/cpu.cpp"
-  "cpu/main.cpp")
-target_link_pkgconfig(minicomputerCPU JACK "jack" PRIVATE)
-target_link_pkgconfig(minicomputerCPU LO "liblo" PRIVATE)
-target_link_pkgconfig(minicomputerCPU ASOUND "alsa" PRIVATE)
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   find_library(MATH_LIBRARY "m")
-  target_link_libraries(minicomputerCPU PRIVATE "${MATH_LIBRARY}")
+  target_link_libraries(minicomputer PRIVATE "${MATH_LIBRARY}")
 endif()
+
+include(FindThreads)
+target_link_libraries(minicomputer PRIVATE "${CMAKE_THREAD_LIBS_INIT}")

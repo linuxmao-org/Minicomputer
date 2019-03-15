@@ -51,10 +51,8 @@
 //#include <unistd.h>
 #include <cstring>
 #include <math.h>
-#include <lo/lo.h>
 #include <FL/Fl_Image.H>
 #include "../common.h"
-extern lo_address t;
 extern Memory Speicher;
 
 /*
