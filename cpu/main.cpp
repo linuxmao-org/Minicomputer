@@ -383,7 +383,7 @@ static inline int quit_handler(const char *path, const char *types, lo_arg **arg
 {
     done = 1;
     quit = 1;
-    printf("about to sutdown minicomputer core \n");
+    printf("about to shutdown minicomputer core\n");
     fflush(stdout);
     return 0;
 }
