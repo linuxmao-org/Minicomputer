@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <unistd.h>
+#include <sys/stat.h>
 #include "Memory.h"
 /**
  * constructor
@@ -38,32 +40,14 @@ Memory::Memory()
 		sprintf(multis[i].name,"%i untitled",i);
 		//strcpy(multis[i].name,zeichenkette);
 	}
-	//gotFolder = false;
-	// first determine where to save
-	//if (gotFolder == false)
-	//{
-	char kommand[1200];
-		gotFolder = true;
-		if (getenv("HOME") == NULL)
-		{
-			strcpy(folder,""); // ok, $HOME is not set so save it just HERE
-		}
-		else
-		{ 
-			string t = getenv("HOME");
-			sprintf(folder,"%s/.miniComputer",t.c_str());
-			if (access(folder, R_OK) != 0)
-			{
-				sprintf(kommand,"mkdir %s",folder);
-				system(kommand);
-		        	cout<<kommand<<endl;
-			}
-		}
-		#ifdef _DEBUG
-		cout<<"command:"<<kommand<<" folder:"<<folder;
-		#endif
-	//}
-
+	const char *home = getenv("HOME");
+	if (!home)
+		folder = ""; // ok, $HOME is not set so save it just HERE
+	else
+	{
+		folder = std::string(home) + "/.miniComputer";
+		mkdir(folder.c_str(), 0755);
+	}
 }
 /**
  * destructor
@@ -114,13 +98,10 @@ unsigned int Memory::getChoice(unsigned int voice)
  * but depricated binary format with is just a memory dump
  * and not extensible and the textformat, which takes more space
  * on harddisk but is human editable and extensible
- * per default the binary format is switched off and can
- * be enabled with the _BINFILE option in common.h
  * the filenames are fix
  */
 void Memory::save()
 {
-char kommand[1200];
 	    /*ofstream ofs("minicomputerMemory.mcm", std::ios::binary);
   //boost::archive::text_oarchive oa(ofs);
 	for (int i=0;i<139;i++)
@@ -131,36 +112,12 @@ char kommand[1200];
   //oa << sounds[i];
 	}
   ofs.close();*/
-  //................................binary format, depricated! ............................
-#ifdef _BINFILE
-FILE *fh; // file handle
-
-    system("mv minicomputerMemory.mcm minicomputerMemory.bak");// make a backup
-    if ((fh=fopen("minicomputerMemory.mcm","wb")) ==NULL)
-	{
-		printf("cant open file minicomputerMemory.mcm\n");
-		
-	}
-	else
-	{
-	for (int i=0;i<512;++i) // dump the whole stuff to disk
-	{
-		if ((fwrite(&sounds[i],sizeof(patch),1,fh)) == -1)
-			{
-         		printf("cant write into minicomputerMemory.mcm\n");
-         		break;
-			}
-			fseek(fh,0,SEEK_END);
-	}
-	fclose(fh);
-	}
-#endif	
 // *************************************************************
 // new fileoutput as textfile with a certain coding which is
 // documented in the docs
-	sprintf(kommand,"%s/minicomputerMemory.temp",folder);
+	std::string temp = folder + "/minicomputerMemory.temp";
 
-ofstream File (kommand); // temporary file
+ofstream File (temp.c_str()); // temporary file
 int p,j;
 for (int i=0;i<512;++i)
  {  
@@ -179,14 +136,15 @@ for (int i=0;i<512;++i)
  }// end of for i
 
 File.close();
-	sprintf(kommand,"%s/minicomputerMemory.txt",folder);
-	if (access(kommand, R_OK) == 0) // check if there a previous file which need to be backed up
+
+	std::string path = folder + "/minicomputerMemory.txt";
+	if (access(path.c_str(), R_OK) == 0) // check if there a previous file which need to be backed up
 	{
-		sprintf(kommand,"mv %s/minicomputerMemory.txt %s/minicomputerMemory.txt.bak",folder,folder);
-  		system(kommand);// make a backup
+		std::string bak = path + ".bak";
+		unlink(bak.c_str());
+		rename(path.c_str(), bak.c_str());// make a backup
 	}
-	sprintf(kommand,"mv %s/minicomputerMemory.temp %s/minicomputerMemory.txt",folder,folder);
-  	system(kommand);// commit the file finally
+	rename(temp.c_str(), path.c_str());// commit the file finally
 }
 
 /**
@@ -196,59 +154,32 @@ File.close();
  */
 void Memory::load()
 {
-	/*ifstream ifs("minicomputerMemory.mcm", std::ios::binary);
-  // boost::archive::text_iarchive ia(ifs, std::ios::binary);
-	for (int i=0;i<139;i++)
-	{
-		ifs>>sounds[0].parameter[i];
-		 //ia >> sounds[i];
-//		 string name;
-//		ifs.read((char *)name, sizeof(name));
-//		sounds[0].name=name;
-	}
-	ifs.close();
-	printf("so ...\n");
-	choice=2;*/
-// the depricated binary format, enabled with the _BINFILE parameter in common.h
-#ifdef _BINFILE
-	FILE *fh; // file handle
-    if ((fh=fopen("minicomputerMemory.mcm","rb")) ==NULL)
-	{
-		printf("cant open file minicomputerMemory.mcm\n");
-		
-	}
-	else
-	{
-	for (int i=0;i<512;++i) //read the whole stuff into memory
-	{
-		if ((fread(&sounds[i],sizeof(patch),1,fh)) == -1)
-			{
-         		printf("cant read  minicomputerMemory.mcm\n");
-         		break;
-			}
-			
-			//if (fseek(fh,sizeof(patch),SEEK_CUR)==-1)
-			//	{
-			//		break;
-			//	}
-	}
-	fclose(fh);
-	}
-#endif
+std::string path = folder + "/minicomputerMemory.txt";
+printf("loading %s",path.c_str());
+ifstream File (path.c_str());
+if (File.is_open())
+	loadFromStream(File);
+else
+{
+	std::string mem (
+		#include "InitMemory.dat"
+	);
+	std::istringstream stream (mem);
+	loadFromStream(stream);
+}
+}
+void Memory::loadFromStream(std::istream &stream)
+{
 // *************************************************************
 // new fileinput in textformat which is the way to go
-char path[1200];
-sprintf(path,"%s/minicomputerMemory.txt",folder);
-printf("loading %s",path);
-ifstream File (path);
 
 string str,sParameter,sValue;
 float fValue;
 int iParameter,i2Parameter;
 int current=-1;
 unsigned int j;
-getline(File,str);
-while (File)
+getline(stream,str);
+while (stream)
 {
 	sParameter="";
 	sValue = "";
@@ -307,26 +238,8 @@ while (File)
 
 	}
 
-	getline(File,str);// get the next line of the file
-/*
-for (int i=0;i<512;++i)
-	{
-	File<< "["<<i<<"]" <<endl;
-	File<< "'"<<sounds[i].name<<"'"<<endl;
-	
-	for (p=0;p<9;++p)
-	{
-		for (j=0;j<2;++j)
-			File<< "<"<< p << ";" << j << ":" <<sounds[i].freq[p][j]<<">"<<endl;
-	}
-	for (p=0;p<17;++p)
-		File<< "{"<< p << ":"<<sounds[i].choice[p]<<"}"<<endl;
-	for (p=0;p<139;++p)
-		File<< "("<< p << ":"<<sounds[i].parameter[p]<<")"<<endl;
-	}
-*/
+	getline(stream,str);// get the next line of the file
 }
-File.close();
 }
 
 /** export a single sound to a textfile
@@ -438,36 +351,12 @@ save();
  */
 void Memory::saveMulti()
 {
-	char kommand[1200];
       int i;
-      //************* the binary depricated fileformat
-#ifdef _BINFILE      
-	FILE *fh; // file handle
-  	system("minicomputerMulti.mcm minicomputerMulti.bak");
-	if ((fh=fopen("minicomputerMulti.mcm","wb")) ==NULL)
-	{
-		printf("cant open file minicomputerMulti.mcm\n");
-		
-	}
-	else
-	{
-	for (int i=0;i<128;++i) // write the 128 multis
-	{
-		if ((fwrite(&multis[i],sizeof(multi),1,fh)) == -1)
-			{
-         		printf("cant write into minicomputerMulti.mcm\n");
-         		break;
-			}
-			fseek(fh,0,SEEK_END);
-	}
-	fclose(fh);
-	}
-#endif
 //---------------------- new textformat
 // first write in temporary file, just in case
 
-sprintf(kommand,"%s/minicomputerMulti.temp",folder);
-ofstream File (kommand); // temporary file
+std::string temp = folder + "/minicomputerMulti.temp";
+ofstream File (temp.c_str()); // temporary file
 
 int p,j;
 for (i=0;i<128;++i)// write the whole 128 multis
@@ -484,65 +373,48 @@ for (i=0;i<128;++i)// write the whole 128 multis
 }
 
 File.close();// done
-	
-	sprintf(kommand,"%s/minicomputerMulti.txt",folder);
-	if (access(kommand, R_OK) == 0) // check if there a previous file which need to be backed up
- 	{
-		sprintf(kommand,"mv %s/minicomputerMulti.txt %s/minicomputerMulti.txt.bak",folder,folder);
-  		system(kommand);// make a backup of the original file
-  	}
-  sprintf(kommand,"mv %s/minicomputerMulti.temp %s/minicomputerMulti.txt",folder,folder);
-  system(kommand);// commit the file
+
+	std::string path = folder + "/minicomputerMulti.txt";
+	if (access(path.c_str(), R_OK) == 0) // check if there a previous file which need to be backed up
+	{
+		std::string bak = path + ".bak";
+		unlink(bak.c_str());
+		rename(path.c_str(), bak.c_str());// make a backup
+	}
+	rename(temp.c_str(), path.c_str());// commit the file
 }
 /**
  * load the multitemperal setups which are stored in an extrafile
- * supports the depricated binary format, enabled via _BINFILE in common.h
  * and the new textformat
  * @see Memory::load
  * @see Memory::save
  */
 void Memory::loadMulti()
 {
-//***************** the depricated binary format, only for my personal backwards compatility
-#ifdef _BINFILE
-int i;
-FILE *fh; // file handle
-    if ((fh=fopen("minicomputerMulti.mcm","rb")) ==NULL)
-	{
-		printf("cant open file minicomputerMulti.mcm\n");
-		
-	}
-	else
-	{
-	for (i=0;i<128;++i)// load all the setups
-	{
-		if ((fread(&multis[i],sizeof(multi),1,fh)) == -1)
-			{
-         		printf("cant read  minicomputerMulti.mcm\n");
-         		break;
-			}
-			
-			/*if (fseek(fh,sizeof(patch),SEEK_CUR)==-1)
-				{
-					break;
-				}*/
-	}
-	fclose(fh);
-	}
-#endif
+std::string path = folder + "/minicomputerMulti.txt";
+ifstream File (path.c_str());
+if (File.is_open())
+	loadMultiFromStream (File);
+else
+{
+	std::string mem (
+		#include "InitMulti.dat"
+	);
+	std::istringstream stream (mem);
+	loadMultiFromStream(stream);
+}
+}
+void Memory::loadMultiFromStream(std::istream &stream)
+{
 // *********************************** the new text format **********************
 string str,sValue,sParameter;
 int iParameter,i2Parameter;
 float fValue;
 
-char path[1200];
-sprintf(path,"%s/minicomputerMulti.txt",folder);
-
-ifstream File (path);
-getline(File,str);// get the first line from the file
+getline(stream,str);// get the first line from the file
 int current=0;
 unsigned int j;
-while (File)// as long there is anything in the file
+while (stream)// as long there is anything in the file
 {
 	// reset some variables
 	sParameter="";
@@ -595,9 +467,8 @@ while (File)// as long there is anything in the file
 
 	}// end of switch
 
-	getline(File,str);// get the next line
+	getline(stream,str);// get the next line
 }// end of while (file)
-File.close();// done
 }
 
 /**

@@ -21,9 +21,6 @@
 // vectorize calculations
 //#define _VECTOR
 
-// 'old' binary fileformat, switched off per default
-//#define _BINFILE
-
 // not customizable options ----------------------------------
 // amount of parameters per patch
 #define _PARACOUNT 139

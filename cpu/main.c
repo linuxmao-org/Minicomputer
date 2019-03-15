@@ -1282,7 +1282,7 @@ int i;
 	init();
 	/* naturally we need to become a jack client
 	 * prefered with a unique name, so lets add the OSC port to it*/
-	client = jack_client_new(jackName);
+	client = jack_client_open(jackName, JackNoStartServer, NULL);
 	if (!client) {
 		printf("couldn't connect to jack server. Either it's not running or the client name is already taken\n");
 		exit(1);

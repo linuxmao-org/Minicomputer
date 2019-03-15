@@ -261,17 +261,17 @@ int main(int argc, char **argv)
 // -------------------------------------------------------------------
 #ifdef _BUNDLE
 //------------------------- start engine -----------------------------
-	char engineName[32];// the name of the core program + given port, if any.
+	std::string engineName;// the name of the core program + given port, if any.
 	if (strcmp(oport,"7770")==0) // is default port?
 	{
-		sprintf(engineName,"minicomputerCPU &");
+		engineName = std::string(argv[0]) + "CPU &";
 	}
 	else // no default so add parameter
 	{
-		sprintf(engineName,"minicomputerCPU -port %s &",oport);
+		engineName = std::string(argv[0]) + "CPU -port " + oport + " &";
 	}
-	
-	system(engineName);// actual start
+
+	system(engineName.c_str());// actual start
 #endif
 // ------------------------ midi init ---------------------------------
   pthread_t midithread;
@@ -346,10 +346,10 @@ int main(int argc, char **argv)
 
   if (needcolor) // add the arguments in case they are needed
   {
-  	char bg[]="-bg";
-	char bgv[]="grey";
-	char fg[]="-fg";
-	char fgv[]="black";
+	static char bg[]="-bg";
+	static char bgv[]="grey";
+	static char fg[]="-fg";
+	static char fgv[]="black";
 	av[ac-4] = bg;
 	av[ac-3] = bgv;
 	av[ac-2] = fg;

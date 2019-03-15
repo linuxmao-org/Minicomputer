@@ -64,8 +64,10 @@ public:
 	Memory();
 	void save();
 	void load();
+	void loadFromStream(std::istream &stream);
 	void saveMulti();
 	void loadMulti();
+	void loadMultiFromStream(std::istream &stream);
 	void store(patch Sound);
 	void overwrite(patch Sound);
 	void importSound(string filename,unsigned int current);// import a single sound
@@ -81,8 +83,7 @@ public:
 	private:
 	unsigned int choice[8];
 	bool parseNumbers(string &str,int &iParameter,int &i2Parameter,float &fValue);
-	char folder[1024]; // the directory to write stuff in
-	bool gotFolder;
+	std::string folder; // the directory to write stuff in
 };
 
 #endif /*MEMORY_H_*/
