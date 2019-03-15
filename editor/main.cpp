@@ -34,6 +34,7 @@ static bool transmit = false;
 Memory Speicher;
 UserInterface Schaltbrett;
 static jack_ringbuffer_t *ringbuffer = NULL;
+static const double timeoutCpuRequests = 0.1;
 
 /*
 Fl_Double_Window* make_window() {
@@ -101,27 +102,28 @@ static void handleCpuRequests(void *)
     jack_ringbuffer_t *rb = ringbuffer;
 
     unsigned char buf[3];
-    size_t count = jack_ringbuffer_peek(rb, (char *)buf, sizeof(buf));
+    size_t count;
 
-    if (count < 1)
-        return;
+    while ((count = jack_ringbuffer_peek(rb, (char *)buf, sizeof(buf))) > 0) {
+        switch (buf[0]) {
+        case 1: // change multi
+            if (count < 2) break;
+            Schaltbrett.changeMulti(buf[1]);
+            jack_ringbuffer_read_advance(rb, 2);
+            break;
 
-    switch (buf[0]) {
-    case 1: // change multi
-        if (count < 2) break;
-//        Schaltbrett.changeMulti(buf[1]);
-        jack_ringbuffer_read_advance(rb, 2);
-        break;
+        case 2: // change program
+            if (count < 3) break;
+            Schaltbrett.changeSound(buf[1], buf[2]);
+            jack_ringbuffer_read_advance(rb, 3);
+            break;
 
-    case 2: // change program
-        if (count < 3) break;
-//        Schaltbrett.changeSound(buf[1], buf[2]);
-        jack_ringbuffer_read_advance(rb, 3);
-        break;
-
-    default:
-        assert(false);
+        default:
+            assert(false);
+        }
     }
+
+    Fl::repeat_timeout(timeoutCpuRequests, &handleCpuRequests);
 }
 
 /** @brief the main routine
@@ -210,7 +212,7 @@ int main(int argc, char **argv)
     /* an address to send messages to. sometimes it is better to let the server
      * pick a port number for you by passing NULL as the last argument */
 
-    Fl::add_timeout(0.1, &handleCpuRequests);
+    Fl::add_timeout(timeoutCpuRequests, &handleCpuRequests);
 
     // lo_send(t, "/a/b/c/d", "f",10.f);
     int result = Fl::run();
