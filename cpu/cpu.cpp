@@ -1080,49 +1080,22 @@ void cpuHandleMidi(snd_seq_event_t *ev)
     }  // end of switch
 }
 
-/** catch any incoming messages and display them. returning 1 means that the
- * message has not been fully handled and the server should try other methods
- *
- * @param pointer path osc path
- * @param pointer types
- * @param argv pointer to array of arguments
- * @param argc amount of arguments
- * @param pointer data
- * @param pointer user_data
- * @return int 0 if everything is ok, 1 means message is not fully handled
- * */
-static inline int generic_handler(const char *path, const char *types, lo_arg **argv,
-                                  int argc, void *data, void *user_data)
+int cpuReceiveChoice(int voice, int i, int value)
 {
-    if ((argv[0]->i < _MULTITEMP) && (argv[1]->i < _CHOICEMAX)) {
-
-        choice[argv[0]->i][argv[1]->i] = argv[2]->i;
+    if ((voice < _MULTITEMP) && (i < _CHOICEMAX)) {
+        choice[voice][i] = value;
         return 0;
     }
     else
         return 1;
 }
 
-/** specific message handler
- *
- * @param pointer path osc path
- * @param pointer types
- * @param argv pointer to array of arguments
- * @param argc amount of arguments
- * @param pointer data
- * @param pointer user_data
- * @return int 0 if everything is ok, 1 means message is not fully handled
- */
-static inline int foo_handler(const char *path, const char *types, lo_arg **argv,
-                              int argc, void *data, void *user_data)
+int cpuReceiveParameter(int voice, int i, float value)
 {
-    /* example showing pulling the argument values out of the argv array */
-    int voice = argv[0]->i;
-    int i = argv[1]->i;
     if ((voice < _MULTITEMP) && (i > 0) && (i < _PARACOUNT)) {
-        parameter[voice][i] = argv[2]->f;
+        parameter[voice][i] = value;
         // if ((i==2)||(i==17))
-        //	parameter[voice][i]=1.f-argv[2]->f;
+        //	parameter[voice][i]=1.f-value;
     }
 
     // if ((i==10) && (parameter[10]!=0)) parameter[10]=1000.f;
@@ -1148,131 +1121,164 @@ static inline int foo_handler(const char *path, const char *types, lo_arg **argv
     }
 
     case 60:
-        EG[voice][1][1] = argv[2]->f;
+        EG[voice][1][1] = value;
         break;
     case 61:
-        EG[voice][1][2] = argv[2]->f;
+        EG[voice][1][2] = value;
         break;
     case 62:
-        EG[voice][1][3] = argv[2]->f;
+        EG[voice][1][3] = value;
         break;
     case 63:
-        EG[voice][1][4] = argv[2]->f;
+        EG[voice][1][4] = value;
         break;
     case 64: {
-        EGrepeat[voice][1] = (argv[2]->f > 0) ? 1 : 0;
+        EGrepeat[voice][1] = (value > 0) ? 1 : 0;
         if (EGrepeat[voice][1] > 0)
             egStart(voice, 1);
         break;
     }
     case 65:
-        EG[voice][2][1] = argv[2]->f;
+        EG[voice][2][1] = value;
         break;
     case 66:
-        EG[voice][2][2] = argv[2]->f;
+        EG[voice][2][2] = value;
         break;
     case 67:
-        EG[voice][2][3] = argv[2]->f;
+        EG[voice][2][3] = value;
         break;
     case 68:
-        EG[voice][2][4] = argv[2]->f;
+        EG[voice][2][4] = value;
         break;
     case 69: {
-        EGrepeat[voice][2] = (argv[2]->f > 0) ? 1 : 0;
+        EGrepeat[voice][2] = (value > 0) ? 1 : 0;
         if (EGrepeat[voice][2] > 0)
             egStart(voice, 2);
         break;
     }
     case 70:
-        EG[voice][3][1] = argv[2]->f;
+        EG[voice][3][1] = value;
         break;
     case 71:
-        EG[voice][3][2] = argv[2]->f;
+        EG[voice][3][2] = value;
         break;
     case 72:
-        EG[voice][3][3] = argv[2]->f;
+        EG[voice][3][3] = value;
         break;
     case 73:
-        EG[voice][3][4] = argv[2]->f;
+        EG[voice][3][4] = value;
         break;
     case 74: {
-        EGrepeat[voice][3] = (argv[2]->f > 0) ? 1 : 0;
+        EGrepeat[voice][3] = (value > 0) ? 1 : 0;
         if (EGrepeat[voice][3] > 0)
             egStart(voice, 3);
         break;
     }
     case 75:
-        EG[voice][4][1] = argv[2]->f;
+        EG[voice][4][1] = value;
         break;
     case 76:
-        EG[voice][4][2] = argv[2]->f;
+        EG[voice][4][2] = value;
         break;
     case 77:
-        EG[voice][4][3] = argv[2]->f;
+        EG[voice][4][3] = value;
         break;
     case 78:
-        EG[voice][4][4] = argv[2]->f;
+        EG[voice][4][4] = value;
         break;
     case 79: {
-        EGrepeat[voice][4] = (argv[2]->f > 0) ? 1 : 0;
+        EGrepeat[voice][4] = (value > 0) ? 1 : 0;
         if (EGrepeat[voice][4] > 0)
             egStart(voice, 4);
         break;
     }
     case 80:
-        EG[voice][5][1] = argv[2]->f;
+        EG[voice][5][1] = value;
         break;
     case 81:
-        EG[voice][5][2] = argv[2]->f;
+        EG[voice][5][2] = value;
         break;
     case 82:
-        EG[voice][5][3] = argv[2]->f;
+        EG[voice][5][3] = value;
         break;
     case 83:
-        EG[voice][5][4] = argv[2]->f;
+        EG[voice][5][4] = value;
         break;
     case 84: {
-        EGrepeat[voice][5] = (argv[2]->f > 0) ? 1 : 0;
+        EGrepeat[voice][5] = (value > 0) ? 1 : 0;
         if (EGrepeat[voice][5] > 0)
             egStart(voice, 5);
         break;
     }
     case 85:
-        EG[voice][6][1] = argv[2]->f;
+        EG[voice][6][1] = value;
         break;
     case 86:
-        EG[voice][6][2] = argv[2]->f;
+        EG[voice][6][2] = value;
         break;
     case 87:
-        EG[voice][6][3] = argv[2]->f;
+        EG[voice][6][3] = value;
         break;
     case 88:
-        EG[voice][6][4] = argv[2]->f;
+        EG[voice][6][4] = value;
         break;
     case 89: {
-        EGrepeat[voice][6] = (argv[2]->f > 0) ? 1 : 0;
+        EGrepeat[voice][6] = (value > 0) ? 1 : 0;
         if (EGrepeat[voice][6] > 0)
             egStart(voice, 6);
         break;
     }
     case 102:
-        EG[voice][0][1] = argv[2]->f;
+        EG[voice][0][1] = value;
         break;
     case 103:
-        EG[voice][0][2] = argv[2]->f;
+        EG[voice][0][2] = value;
         break;
     case 104:
-        EG[voice][0][3] = argv[2]->f;
+        EG[voice][0][3] = value;
         break;
     case 105:
-        EG[voice][0][4] = argv[2]->f;
+        EG[voice][0][4] = value;
         break;
     }
     // float g=parameter[30]*parameter[56]+parameter[33]*(1.0f-parameter[56]);
 #ifdef _DEBUG
-    printf("%i %i %f \n", voice, i, argv[2]->f);
+    printf("%i %i %f \n", voice, i, value);
 #endif
     return 0;
+}
+
+/** catch any incoming messages and display them. returning 1 means that the
+ * message has not been fully handled and the server should try other methods
+ *
+ * @param pointer path osc path
+ * @param pointer types
+ * @param argv pointer to array of arguments
+ * @param argc amount of arguments
+ * @param pointer data
+ * @param pointer user_data
+ * @return int 0 if everything is ok, 1 means message is not fully handled
+ * */
+static inline int generic_handler(const char *path, const char *types, lo_arg **argv,
+                                  int argc, void *data, void *user_data)
+{
+    return cpuReceiveChoice(argv[0]->i, argv[1]->i, argv[2]->i);
+}
+
+/** specific message handler
+ *
+ * @param pointer path osc path
+ * @param pointer types
+ * @param argv pointer to array of arguments
+ * @param argc amount of arguments
+ * @param pointer data
+ * @param pointer user_data
+ * @return int 0 if everything is ok, 1 means message is not fully handled
+ */
+static inline int foo_handler(const char *path, const char *types, lo_arg **argv,
+                              int argc, void *data, void *user_data)
+{
+    return cpuReceiveParameter(argv[0]->i, argv[1]->i, argv[2]->f);
 }
 
 void cpuInstallOscMethods(lo_server_thread st)

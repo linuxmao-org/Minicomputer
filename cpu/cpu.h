@@ -40,6 +40,9 @@ void cpuProcess(unsigned nframes,
 
 void cpuHandleMidi(snd_seq_event_t *ev);
 
+int cpuReceiveChoice(int voice, int i, int value);
+int cpuReceiveParameter(int voice, int i, float value);
+
 void cpuInstallOscMethods(lo_server_thread st);
 
 #endif
