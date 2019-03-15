@@ -34,9 +34,6 @@
 static jack_client_t *client;
 static jack_port_t *port[_MULTITEMP + 4];  // _multitemp * ports + 2 mix and 2 aux
 static jack_port_t *midiport;
-/* a flag which will be set by our signal handler when
- * it's time to exit */
-static volatile int quit = 0;
 
 // void midi_action(snd_seq_t *seq_handle);
 
@@ -151,8 +148,6 @@ int cpuStart()
 
 void cpuStop()
 {
-    quit = 1;
-
     /* so we shall quit, eh? ok, cleanup time. otherwise
      * jack would probably produce an xrun
      * on shutdown */
