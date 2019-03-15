@@ -2,7 +2,7 @@
 #define COMMON_H_
 
 // customizable options
-// OSC Port 
+// OSC Port
 #define _OSCPORT "7770"
 
 // start/stop editor with engine

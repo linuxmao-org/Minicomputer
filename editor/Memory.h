@@ -2,10 +2,10 @@
  * industrial grade digital synthesizer
  * editorsoftware
  * Copyright 2007, 2008 Malte Steiner
- * This file is part of Minicomputer, which is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This file is part of Minicomputer, which is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
  * Minicomputer is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,71 +19,69 @@
 
 #ifndef MEMORY_H_
 #define MEMORY_H_
-#include <iostream> //iostream
-#include <fstream> //fstream
-#include <sstream> //sstream
+#include <iostream>  //iostream
+#include <fstream>  //fstream
+#include <sstream>  //sstream
 // thanks to Leslie P. Polzer pointing me out to include cstring and more for gcc 4.3 onwards
-#include <cstring> //string
+#include <cstring>  //string
 //#include <boost/archive/text_oarchive.hpp>
 //#include <boost/archive/text_iarchive.hpp>
 #include <cstdio>
 #include <cstdlib>
 
 //    #include <unistd.h>
-#include <cerrno> 
+#include <cerrno>
 #include "../common.h"
 using namespace std;
 //#include "patch.h"
 /**
  * the struct of an single sound setting
  */
-typedef struct setting
-{
-	float parameter[_PARACOUNT];
-	float freq[9][2];
-	int choice[17];
-	char name[128];
+typedef struct setting {
+    float parameter[_PARACOUNT];
+    float freq[9][2];
+    int choice[17];
+    char name[128];
 } patch;
 /**
  * the struct of a multitemperal setup
  */
-typedef struct mode
-{
-	unsigned int sound[8];// sound ids for the 8 voices
-	char name[128];//the name, up to 128 letters
-	float settings[8][_MULTISETTINGS];// additional settings for volumes
+typedef struct mode {
+    unsigned int sound[8];  // sound ids for the 8 voices
+    char name[128];  // the name, up to 128 letters
+    float settings[8][_MULTISETTINGS];  // additional settings for volumes
 } multi;
 
 /**
  * the class for the whole memory
  * see Memory.cpp for more documentation
  */
-class Memory
-{
+class Memory {
 public:
-	Memory();
-	void save();
-	void load();
-	void loadFromStream(std::istream &stream);
-	void saveMulti();
-	void loadMulti();
-	void loadMultiFromStream(std::istream &stream);
-	void store(patch Sound);
-	void overwrite(patch Sound);
-	void importSound(string filename,unsigned int current);// import a single sound
-	void exportSound(string filename,unsigned int current);// export a single sound
+    Memory();
+    void save();
+    void load();
+    void loadFromStream(std::istream &stream);
+    void saveMulti();
+    void loadMulti();
+    void loadMultiFromStream(std::istream &stream);
+    void store(patch Sound);
+    void overwrite(patch Sound);
+    void importSound(string filename, unsigned int current);  // import a single sound
+    void exportSound(string filename, unsigned int current);  // export a single sound
 
-	patch temp;
-	string getName(unsigned int voice,unsigned int Eintrag);
-	virtual ~Memory();
-	patch sounds[512];
-	multi multis[128];
-	void setChoice(unsigned int voice,unsigned int i);
-	unsigned int getChoice(unsigned int voice);
-	private:
-	unsigned int choice[8];
-	bool parseNumbers(string &str,int &iParameter,int &i2Parameter,float &fValue);
-	std::string folder; // the directory to write stuff in
+    patch temp;
+    string getName(unsigned int voice, unsigned int Eintrag);
+    virtual ~Memory();
+    patch sounds[512];
+    multi multis[128];
+    void setChoice(unsigned int voice, unsigned int i);
+    unsigned int getChoice(unsigned int voice);
+
+private:
+    unsigned int choice[8];
+    bool parseNumbers(string &str, int &iParameter, int &i2Parameter, float &fValue);
+    std::string folder;  // the directory to write stuff in
 };
 
 #endif /*MEMORY_H_*/
