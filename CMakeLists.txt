@@ -37,6 +37,8 @@ target_link_libraries(minicomputer PRIVATE ${FLTK_LIBRARIES})
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   find_library(MATH_LIBRARY "m")
   target_link_libraries(minicomputer PRIVATE "${MATH_LIBRARY}")
+  find_library(DL_LIBRARY "dl")
+  target_link_libraries(minicomputer PRIVATE "${DL_LIBRARY}")
 endif()
 
 include(FindThreads)
