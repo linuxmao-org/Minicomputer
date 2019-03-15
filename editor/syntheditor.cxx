@@ -1533,6 +1533,7 @@ Fenster *UserInterface::make_window()
     currentmulti = 0;
     enableTransmit(true);
     Fenster *o = new Fenster(995, 515);
+    o->label("Minicomputer");
     // w = o;
     o->color((Fl_Color)246);
     o->user_data((void *)(this));
