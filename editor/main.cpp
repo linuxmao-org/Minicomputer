@@ -32,6 +32,7 @@ int npfd;
 struct pollfd *pfd;
 char midiName[64] = "MinicomputerEditor";  // signifier for midiconnections, to be filled with OSC port number
 lo_address t;
+bool transmit = false;
 // some common definitions
 
 Memory Speicher;
@@ -349,4 +350,27 @@ int main(int argc, char **argv)
     /* release Alsa Midi connection */
     snd_seq_close(seq_handle);
     return result;
+}
+
+void enableTransmit(bool enable)
+{
+    transmit = enable;
+}
+
+void sendParameter(int voicenumber, int parameter, float value)
+{
+    if (transmit)
+        lo_send(t, "/Minicomputer", "iif", voicenumber, parameter, value);
+}
+
+void sendChoice(int voicenumber, int choice, int value)
+{
+    if (transmit)
+        lo_send(t, "/Minicomputer/choice", "iii", voicenumber, choice, value);
+}
+
+void sendClose(int value)
+{
+    if (transmit)
+        lo_send(t, "/Minicomputer/close", "i", value);
 }

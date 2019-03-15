@@ -17,6 +17,7 @@
  */
 
 #include "syntheditor.h"
+#include "communicate.h"
 static Fl_RGB_Image image_miniMini(idata_miniMini, 191, 99, 3, 0);
 // gcc -o synthEditor2 syntheditor.cxx -lfltk -llo
 Fl_Widget *Knob[8][_PARACOUNT];
@@ -37,13 +38,11 @@ int currentParameter = 0;
 unsigned int currentsound = 0, currentmulti = 0;
 // unsigned int multi[128][8];
 // string multiname[128];
-bool transmit;
 // Fl_Chart * EG[7];
 static void choicecallback(Fl_Widget *o, void *)
 {
-    if (transmit)
-        lo_send(t, "/Minicomputer/choice", "iii", currentsound,
-                ((Fl_Choice *)o)->argument(), ((Fl_Choice *)o)->value());
+    sendChoice(currentsound,
+               ((Fl_Choice *)o)->argument(), ((Fl_Choice *)o)->value());
 }
 /* // not good:
 static void changemulti(Fl_Widget* o, void*)
@@ -216,13 +215,12 @@ static void callback(Fl_Widget *o, void *)
         // now actually process parameter
         switch (currentParameter) {
         case 256: {
-            lo_send(t, "/Minicomputer", "iif", currentsound, 0, 0);
+            sendParameter(currentsound, 0, 0);
             break;
         }
         case 1: {
-            if (transmit)
-                lo_send(t, "/Minicomputer", "iif", currentsound,
-                        ((Fl_Valuator *)o)->argument(), ((Fl_Valuator *)o)->value());
+            sendParameter(currentsound,
+                          ((Fl_Valuator *)o)->argument(), ((Fl_Valuator *)o)->value());
             miniDisplay[currentsound][0]->value(
                 ((Fl_Valuator *)Knob[currentsound][1])->value());
 #ifdef _DEBUG
@@ -237,8 +235,7 @@ static void callback(Fl_Widget *o, void *)
                 Knob[currentsound][3]->activate();
                 miniDisplay[currentsound][1]->activate();
                 miniDisplay[currentsound][0]->deactivate();
-                if (transmit)
-                    lo_send(t, "/Minicomputer", "iif", currentsound,
+                sendParameter(currentsound,
                             ((Fl_Light_Button *)o)->argument(), 0.f);
             }
             else {
@@ -246,8 +243,7 @@ static void callback(Fl_Widget *o, void *)
                 Knob[currentsound][1]->activate();
                 miniDisplay[currentsound][0]->activate();
                 miniDisplay[currentsound][1]->deactivate();
-                if (transmit)
-                    lo_send(t, "/Minicomputer", "iif", currentsound,
+                sendParameter(currentsound,
                             ((Fl_Light_Button *)o)->argument(), 1.f);
             }
 #ifdef _DEBUG
@@ -262,8 +258,7 @@ static void callback(Fl_Widget *o, void *)
                 Knob[currentsound][18]->activate();
                 miniDisplay[currentsound][3]->activate();
                 miniDisplay[currentsound][2]->deactivate();
-                if (transmit)
-                    lo_send(t, "/Minicomputer", "iif", currentsound,
+                sendParameter(currentsound,
                             ((Fl_Light_Button *)o)->argument(), 0.f);
             }
             else {
@@ -271,8 +266,7 @@ static void callback(Fl_Widget *o, void *)
                 Knob[currentsound][16]->activate();
                 miniDisplay[currentsound][2]->activate();
                 miniDisplay[currentsound][3]->deactivate();
-                if (transmit)
-                    lo_send(t, "/Minicomputer", "iif", currentsound,
+                sendParameter(currentsound,
                             ((Fl_Light_Button *)o)->argument(), 1.f);
             }
 #ifdef _DEBUG
@@ -283,8 +277,7 @@ static void callback(Fl_Widget *o, void *)
         }
         case 3: {
             float f = ((Fl_Positioner *)o)->xvalue() + ((Fl_Positioner *)o)->yvalue();
-            if (transmit)
-                lo_send(t, "/Minicomputer", "iif", currentsound,
+            sendParameter(currentsound,
                         ((Fl_Positioner *)o)->argument(), f);
             miniDisplay[currentsound][1]->value(f);
 #ifdef _DEBUG
@@ -297,8 +290,7 @@ static void callback(Fl_Widget *o, void *)
             ((Fl_Positioner*)o)->yvalue(); lo_send(t, "/Minicomputer",
             "if",((Fl_Positioner*)o)->argument(),f); miniDisplay[2]->value( f);
             printf("%li : %g     \r", ((Fl_Positioner*)o)->argument(),f);*/
-            if (transmit)
-                lo_send(t, "/Minicomputer", "iif", currentsound,
+            sendParameter(currentsound,
                         ((Fl_Valuator *)o)->argument(), ((Fl_Valuator *)o)->value());
             miniDisplay[currentsound][2]->value(((Fl_Valuator *)o)->value());  // Knob[16])->value() );
 #ifdef _DEBUG
@@ -309,8 +301,7 @@ static void callback(Fl_Widget *o, void *)
         }
         case 18: {
             float f = ((Fl_Positioner *)o)->xvalue() + ((Fl_Positioner *)o)->yvalue();
-            if (transmit)
-                lo_send(t, "/Minicomputer", "iif", currentsound,
+            sendParameter(currentsound,
                         ((Fl_Positioner *)o)->argument(), f);
             miniDisplay[currentsound][3]->value(f);
 #ifdef _DEBUG
@@ -324,13 +315,11 @@ static void callback(Fl_Widget *o, void *)
         case 4:  // boost button
         case 15: {
             if (((Fl_Light_Button *)o)->value() == 0) {
-                if (transmit)
-                    lo_send(t, "/Minicomputer", "iif", currentsound,
+                sendParameter(currentsound,
                             ((Fl_Light_Button *)o)->argument(), 1.f);
             }
             else {
-                if (transmit)
-                    lo_send(t, "/Minicomputer", "iif", currentsound,
+                sendParameter(currentsound,
                             ((Fl_Light_Button *)o)->argument(), 100.f);
             }
 #ifdef _DEBUG
@@ -348,13 +337,11 @@ static void callback(Fl_Widget *o, void *)
         case 89:
         case 115: {
             if (((Fl_Light_Button *)o)->value() == 0) {
-                if (transmit)
-                    lo_send(t, "/Minicomputer", "iif", currentsound,
+                sendParameter(currentsound,
                             ((Fl_Light_Button *)o)->argument(), 0.f);
             }
             else {
-                if (transmit)
-                    lo_send(t, "/Minicomputer", "iif", currentsound,
+                sendParameter(currentsound,
                             ((Fl_Light_Button *)o)->argument(), 1.f);
             }
 #ifdef _DEBUG
@@ -410,8 +397,7 @@ static void callback(Fl_Widget *o, void *)
         case 105: {
             float tr = (((Fl_Valuator *)o)->value());  /// 200.f;//exp(((Fl_Valuator*)o)->value())/200.f;
             tr *= tr * tr / 2.f;  // tr * tr*20.f;//48000.0f;//trtr*tr/2;
-            if (transmit)
-                lo_send(t, "/Minicomputer", "iif", currentsound,
+            sendParameter(currentsound,
                         ((Fl_Valuator *)o)->argument(), tr);
 #ifdef _DEBUG
             printf("eg %li : %g     \r", ((Fl_Valuator *)o)->argument(), tr);
@@ -422,8 +408,7 @@ static void callback(Fl_Widget *o, void *)
         //************************************ filter cuts *****************************
         case 30: {
             float f = ((Fl_Positioner *)o)->xvalue() + ((Fl_Positioner *)o)->yvalue();
-            if (transmit)
-                lo_send(t, "/Minicomputer", "iif", currentsound,
+            sendParameter(currentsound,
                         ((Fl_Positioner *)o)->argument(), f);
 #ifdef _DEBUG
             printf("%li : %g     \r", ((Fl_Positioner *)o)->argument(), f);
@@ -433,8 +418,7 @@ static void callback(Fl_Widget *o, void *)
         }
         case 33: {
             float f = ((Fl_Positioner *)o)->xvalue() + ((Fl_Positioner *)o)->yvalue();
-            if (transmit)
-                lo_send(t, "/Minicomputer", "iif", currentsound,
+            sendParameter(currentsound,
                         ((Fl_Positioner *)o)->argument(), f);
 #ifdef _DEBUG
             printf("%li : %g     \r", ((Fl_Positioner *)o)->argument(), f);
@@ -444,8 +428,7 @@ static void callback(Fl_Widget *o, void *)
         }
         case 40: {
             float f = ((Fl_Positioner *)o)->xvalue() + ((Fl_Positioner *)o)->yvalue();
-            if (transmit)
-                lo_send(t, "/Minicomputer", "iif", currentsound,
+            sendParameter(currentsound,
                         ((Fl_Positioner *)o)->argument(), f);
 #ifdef _DEBUG
             printf("%li : %g     \r", ((Fl_Positioner *)o)->argument(), f);
@@ -455,8 +438,7 @@ static void callback(Fl_Widget *o, void *)
         }
         case 43: {
             float f = ((Fl_Positioner *)o)->xvalue() + ((Fl_Positioner *)o)->yvalue();
-            if (transmit)
-                lo_send(t, "/Minicomputer", "iif", currentsound,
+            sendParameter(currentsound,
                         ((Fl_Positioner *)o)->argument(), f);
 #ifdef _DEBUG
             printf("%li : %g     \r", ((Fl_Positioner *)o)->argument(), f);
@@ -479,8 +461,7 @@ static void callback(Fl_Widget *o, void *)
             //	isFine = false;
             //	Argument=((Fl_Valuator*)o)->argument();
             //}*/
-            if (transmit)
-                lo_send(t, "/Minicomputer", "iif", currentsound, Argument, f);
+            sendParameter(currentsound, Argument, f);
 #ifdef _DEBUG
             printf("%i : %g     \r", Argument, f);
 #endif
@@ -492,8 +473,7 @@ static void callback(Fl_Widget *o, void *)
         }
         case 53: {
             float f = ((Fl_Positioner *)o)->xvalue() + ((Fl_Positioner *)o)->yvalue();
-            if (transmit)
-                lo_send(t, "/Minicomputer", "iif", currentsound,
+            sendParameter(currentsound,
                         ((Fl_Positioner *)o)->argument(), f);
 #ifdef _DEBUG
             printf("%li : %g     \r", ((Fl_Positioner *)o)->argument(), f);
@@ -503,8 +483,7 @@ static void callback(Fl_Widget *o, void *)
         }
         case 90: {
             float f = ((Fl_Positioner *)o)->xvalue() + ((Fl_Positioner *)o)->yvalue();
-            if (transmit)
-                lo_send(t, "/Minicomputer", "iif", currentsound,
+            sendParameter(currentsound,
                         ((Fl_Positioner *)o)->argument(), f);
 #ifdef _DEBUG
             printf("%li : %g     \r", ((Fl_Positioner *)o)->argument(), f);
@@ -513,8 +492,7 @@ static void callback(Fl_Widget *o, void *)
             break;
         }
         default: {
-            if (transmit)
-                lo_send(t, "/Minicomputer", "iif", currentsound,
+            sendParameter(currentsound,
                         ((Fl_Valuator *)o)->argument(), ((Fl_Valuator *)o)->value());
 #ifdef _DEBUG
             printf("%li : %g     \r", ((Fl_Valuator *)o)->argument(),
@@ -1166,8 +1144,7 @@ static void recall(unsigned int preset)
         }
     }
     // send a reset
-    if (transmit)
-        lo_send(t, "/Minicomputer", "iif", currentsound, 0, 0.0f);
+    sendParameter(currentsound, 0, 0.0f);
 #ifdef _DEBUG
     printf("\n");
     fflush(stdout);
@@ -1554,7 +1531,7 @@ Fenster *UserInterface::make_window()
     // {
     currentsound = 0;
     currentmulti = 0;
-    transmit = true;
+    enableTransmit(true);
     Fenster *o = new Fenster(995, 515);
     // w = o;
     o->color((Fl_Color)246);
@@ -3246,8 +3223,7 @@ Fenster::~Fenster()
 
     printf("guittt");
     fflush(stdout);
-    if (transmit)
-        lo_send(t, "/Minicomputer/close", "i", 1);
+    sendClose(1);
     //~Fl_Double_Window();
 }
 /**
