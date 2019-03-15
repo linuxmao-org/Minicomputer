@@ -18,6 +18,7 @@
 
 #include "syntheditor.h"
 #include "communicate.h"
+#include "widgets.h"
 static Fl_RGB_Image image_miniMini(idata_miniMini, 191, 99, 3, 0);
 // gcc -o synthEditor2 syntheditor.cxx -lfltk -llo
 Fl_Widget *Knob[8][_PARACOUNT];
@@ -25,8 +26,8 @@ Fl_Choice *auswahl[8][17];
 Fl_Value_Input *miniDisplay[8][13];
 Fl_Widget *tab[9];
 Fl_Input *schoice[8];
-Fl_Roller *Rollers[8];
-Fl_Roller *multiRoller;
+Mw_Roller *Rollers[8];
+Mw_Roller *multiRoller;
 Fl_Tabs *tabs;
 Fl_Button *lm, *sm;
 Fl_Value_Input *paramon;
@@ -2782,7 +2783,7 @@ Fenster *UserInterface::make_window()
                         // o->callback((Fl_Callback*)chooseCallback,NULL);
                     }
                     {
-                        Fl_Roller *o = new Fl_Roller(274, 487, 150, 14);
+                        Mw_Roller *o = new Mw_Roller(274, 487, 150, 14);
                         o->type(FL_HORIZONTAL);
                         o->tooltip("roll the list of sounds");
                         o->minimum(0);
@@ -2790,6 +2791,7 @@ Fenster *UserInterface::make_window()
                         o->step(1);
                         // o->slider_size(0.04);
                         o->box(FL_BORDER_FRAME);
+                        o->mouse_wheel_steps(512);
                         Rollers[i] = o;
                         o->callback((Fl_Callback *)rollerCallback, NULL);
                     }
@@ -3139,7 +3141,7 @@ Fenster *UserInterface::make_window()
     }
     // roller for the multis:
     {
-        Fl_Roller *o = new Fl_Roller(20, 492, 80, 10);
+        Mw_Roller *o = new Mw_Roller(20, 492, 80, 10);
         o->type(FL_HORIZONTAL);
         o->tooltip("roll the list of multis, press load button for loading or "
                    "save button for storing");
@@ -3147,6 +3149,7 @@ Fenster *UserInterface::make_window()
         o->maximum(127);
         o->step(1);
         o->box(FL_BORDER_FRAME);
+        o->mouse_wheel_steps(128);
         o->callback((Fl_Callback *)multiRollerCallback, NULL);
         multiRoller = o;
     }
