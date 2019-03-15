@@ -32,7 +32,6 @@ add_executable(minicomputer
   "cpu/cpu.cpp"
   "cpu/main.cpp")
 target_link_pkgconfig(minicomputer JACK "jack" PRIVATE)
-target_link_pkgconfig(minicomputer ASOUND "alsa" PRIVATE)
 target_include_directories(minicomputer PRIVATE "${FLTK_INCLUDE_DIR}")
 target_link_libraries(minicomputer PRIVATE ${FLTK_LIBRARIES})
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
