@@ -1,0 +1,583 @@
+# French translations for PACKAGE package.
+# Copyright (C) 2019 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#  <jp-dev@inbox.ru>, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-03-15 23:02+0100\n"
+"PO-Revision-Date: 2019-03-15 22:39+0100\n"
+"Last-Translator: Jean Pierre Cimalando <jp-dev@inbox.ru>\n"
+"Language-Team: French\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: editor/syntheditor.cxx:3110
+#, c-format
+msgid ""
+"<html><body><i><center>version %s</center></i><br><p><br>a standalone "
+"industrial grade softwaresynthesizer for Linux<br><p><br>developed by Malte "
+"Steiner 2007-2009<p>distributed as free open source software under GPL3 "
+"licence<br><p>contact:<br><center>steiner@block4.com<br>http://www.block4."
+"com<br>http://minicomputer.sourceforge.net</center></body></html>"
+msgstr ""
+
+#: editor/syntheditor.cxx:2389 editor/syntheditor.cxx:2445
+#: editor/syntheditor.cxx:2497 editor/syntheditor.cxx:2549
+#: editor/syntheditor.cxx:2601 editor/syntheditor.cxx:2653
+#: editor/syntheditor.cxx:2874
+msgid "A"
+msgstr ""
+
+#: editor/syntheditor.cxx:3101
+msgid "About Minicomputer"
+msgstr ""
+
+#: editor/syntheditor.cxx:2398 editor/syntheditor.cxx:2454
+#: editor/syntheditor.cxx:2506 editor/syntheditor.cxx:2558
+#: editor/syntheditor.cxx:2610 editor/syntheditor.cxx:2663
+#: editor/syntheditor.cxx:2883
+msgid "D"
+msgstr ""
+
+#: editor/syntheditor.cxx:2384
+msgid "EG 1"
+msgstr ""
+
+#: editor/syntheditor.cxx:2440
+msgid "EG 2"
+msgstr ""
+
+#: editor/syntheditor.cxx:2492
+msgid "EG 3"
+msgstr ""
+
+#: editor/syntheditor.cxx:2544
+msgid "EG 4"
+msgstr ""
+
+#: editor/syntheditor.cxx:2596
+msgid "EG 5"
+msgstr ""
+
+#: editor/syntheditor.cxx:2648
+msgid "EG 6"
+msgstr ""
+
+#: editor/syntheditor.cxx:1540 editor/syntheditor.cxx:1546
+#: editor/syntheditor.cxx:1551
+msgid "EG1"
+msgstr ""
+
+#: editor/syntheditor.cxx:1529
+msgid "Microcomp 1"
+msgstr ""
+
+#: editor/syntheditor.cxx:1532
+msgid "Microcomp 10"
+msgstr ""
+
+#: editor/syntheditor.cxx:1533
+msgid "Microcomp 11"
+msgstr ""
+
+#: editor/syntheditor.cxx:1534
+msgid "Microcomp 12"
+msgstr ""
+
+#: editor/syntheditor.cxx:1535
+msgid "Microcomp 13"
+msgstr ""
+
+#: editor/syntheditor.cxx:1536
+msgid "Microcomp 14"
+msgstr ""
+
+#: editor/syntheditor.cxx:1530
+msgid "Microcomp 8"
+msgstr ""
+
+#: editor/syntheditor.cxx:1531
+msgid "Microcomp 9"
+msgstr ""
+
+#: editor/syntheditor.cxx:1433
+msgid "Minicomputer"
+msgstr ""
+
+#: editor/syntheditor.cxx:3135
+msgid "Multi"
+msgstr ""
+
+#: editor/syntheditor.cxx:2418 editor/syntheditor.cxx:2470
+#: editor/syntheditor.cxx:2522 editor/syntheditor.cxx:2574
+#: editor/syntheditor.cxx:2626 editor/syntheditor.cxx:2679
+#: editor/syntheditor.cxx:2899
+msgid "R"
+msgstr ""
+
+#: editor/syntheditor.cxx:2409 editor/syntheditor.cxx:2463
+#: editor/syntheditor.cxx:2515 editor/syntheditor.cxx:2567
+#: editor/syntheditor.cxx:2619 editor/syntheditor.cxx:2672
+#: editor/syntheditor.cxx:2892
+msgid "S"
+msgstr ""
+
+#: editor/syntheditor.cxx:674 editor/syntheditor.cxx:703
+msgid "TEXT Files (*.txt)\t"
+msgstr ""
+
+#. ostringstream oss;
+#. oss<<_("about");
+#: editor/syntheditor.cxx:3085
+msgid "about"
+msgstr ""
+
+#: editor/syntheditor.cxx:2814
+msgid "actually load the chosen sound"
+msgstr ""
+
+#: editor/syntheditor.cxx:1527
+msgid "add Saw"
+msgstr ""
+
+#: editor/syntheditor.cxx:1528
+msgid "add Square"
+msgstr ""
+
+#: editor/syntheditor.cxx:1668 editor/syntheditor.cxx:1689
+#: editor/syntheditor.cxx:1710 editor/syntheditor.cxx:1731
+#: editor/syntheditor.cxx:1854 editor/syntheditor.cxx:1875
+#: editor/syntheditor.cxx:1896 editor/syntheditor.cxx:1917
+#: editor/syntheditor.cxx:2100 editor/syntheditor.cxx:2120
+msgid "amount"
+msgstr ""
+
+#: editor/syntheditor.cxx:2868
+msgid "amp"
+msgstr ""
+
+#: editor/syntheditor.cxx:1863 editor/syntheditor.cxx:2915
+msgid "amp modulator"
+msgstr ""
+
+#: editor/syntheditor.cxx:1677
+msgid "amp modulator 1"
+msgstr ""
+
+#: editor/syntheditor.cxx:1698
+msgid "amp modulator 2"
+msgstr ""
+
+#: editor/syntheditor.cxx:2958
+msgid "aux 1"
+msgstr ""
+
+#: editor/syntheditor.cxx:2969
+msgid "aux 2"
+msgstr ""
+
+#: editor/syntheditor.cxx:1524
+msgid "bit"
+msgstr ""
+
+#: editor/syntheditor.cxx:1629 editor/syntheditor.cxx:1816
+msgid "boost"
+msgstr ""
+
+#: editor/syntheditor.cxx:1470 editor/syntheditor.cxx:1502
+msgid "cc 12"
+msgstr ""
+
+#: editor/syntheditor.cxx:1477 editor/syntheditor.cxx:1509
+msgid "cc 14"
+msgstr ""
+
+#: editor/syntheditor.cxx:1478 editor/syntheditor.cxx:1510
+msgid "cc 15"
+msgstr ""
+
+#: editor/syntheditor.cxx:1479 editor/syntheditor.cxx:1511
+msgid "cc 16"
+msgstr ""
+
+#: editor/syntheditor.cxx:1480 editor/syntheditor.cxx:1512
+msgid "cc 17"
+msgstr ""
+
+#: editor/syntheditor.cxx:1473 editor/syntheditor.cxx:1505
+msgid "cc 2"
+msgstr ""
+
+#: editor/syntheditor.cxx:1474 editor/syntheditor.cxx:1506
+msgid "cc 4"
+msgstr ""
+
+#: editor/syntheditor.cxx:1475 editor/syntheditor.cxx:1507
+msgid "cc 5"
+msgstr ""
+
+#: editor/syntheditor.cxx:1476 editor/syntheditor.cxx:1508
+msgid "cc 6"
+msgstr ""
+
+#: editor/syntheditor.cxx:2363
+msgid "clear filter"
+msgstr ""
+
+#: editor/syntheditor.cxx:1526
+msgid "comb"
+msgstr ""
+
+#: editor/syntheditor.cxx:3191
+msgid "current parameter"
+msgstr ""
+
+#: editor/syntheditor.cxx:1977 editor/syntheditor.cxx:2019
+#: editor/syntheditor.cxx:2145 editor/syntheditor.cxx:2181
+#: editor/syntheditor.cxx:2260 editor/syntheditor.cxx:2296
+msgid "cut"
+msgstr ""
+
+#: editor/syntheditor.cxx:1471 editor/syntheditor.cxx:1503
+#: editor/syntheditor.cxx:3010
+msgid "delay"
+msgstr ""
+
+#: editor/syntheditor.cxx:3034
+msgid "delay time"
+msgstr ""
+
+#: editor/syntheditor.cxx:1461 editor/syntheditor.cxx:1493
+msgid "eg 1"
+msgstr ""
+
+#: editor/syntheditor.cxx:1462 editor/syntheditor.cxx:1494
+msgid "eg 2"
+msgstr ""
+
+#: editor/syntheditor.cxx:1463 editor/syntheditor.cxx:1495
+msgid "eg 3"
+msgstr ""
+
+#: editor/syntheditor.cxx:1464 editor/syntheditor.cxx:1496
+msgid "eg 4"
+msgstr ""
+
+#: editor/syntheditor.cxx:1465 editor/syntheditor.cxx:1497
+msgid "eg 5"
+msgstr ""
+
+#: editor/syntheditor.cxx:1466 editor/syntheditor.cxx:1498
+msgid "eg 6"
+msgstr ""
+
+#. o->callback((Fl_Callback*)changemulti,NULL);
+#. o->callback((Fl_Callback*)chooseMultiCallback,NULL); // for the roller
+#: editor/syntheditor.cxx:3143
+msgid "enter name for multisetup before storing it"
+msgstr ""
+
+#: editor/syntheditor.cxx:673
+#, c-format
+msgid "export %s:"
+msgstr ""
+
+#: editor/syntheditor.cxx:2845
+msgid "export sound"
+msgstr ""
+
+#: editor/syntheditor.cxx:2846
+msgid "export sound data of dialed memory slot"
+msgstr ""
+
+#: editor/syntheditor.cxx:3041
+msgid "feedback"
+msgstr ""
+
+#: editor/syntheditor.cxx:1460 editor/syntheditor.cxx:1492
+msgid "filter"
+msgstr ""
+
+#: editor/syntheditor.cxx:1972
+msgid "filter 1"
+msgstr ""
+
+#: editor/syntheditor.cxx:2140
+msgid "filter 2"
+msgstr ""
+
+#: editor/syntheditor.cxx:2255
+msgid "filter 3"
+msgstr ""
+
+#: editor/syntheditor.cxx:1967
+msgid "filters"
+msgstr ""
+
+#: editor/syntheditor.cxx:1612 editor/syntheditor.cxx:1799
+msgid "fix frequency"
+msgstr ""
+
+#: editor/syntheditor.cxx:1884
+msgid "fm out amp modulator"
+msgstr ""
+
+#: editor/syntheditor.cxx:1621 editor/syntheditor.cxx:1808
+msgid "fm output  vol"
+msgstr ""
+
+#: editor/syntheditor.cxx:1719 editor/syntheditor.cxx:1905
+msgid "freq modulator 1"
+msgstr ""
+
+#: editor/syntheditor.cxx:1740 editor/syntheditor.cxx:1926
+msgid "freq modulator 2"
+msgstr ""
+
+#: editor/syntheditor.cxx:1592 editor/syntheditor.cxx:1779
+msgid "frequency"
+msgstr ""
+
+#: editor/syntheditor.cxx:2947
+msgid "id vol"
+msgstr ""
+
+#: editor/syntheditor.cxx:2836
+msgid ""
+"import single sound to dialed memory slot, you need to load it for playing"
+msgstr ""
+
+#: editor/syntheditor.cxx:2835
+msgid "import sound"
+msgstr ""
+
+#: editor/syntheditor.cxx:3182
+msgid "load current multi"
+msgstr ""
+
+#: editor/syntheditor.cxx:3181
+msgid "load multi"
+msgstr ""
+
+#: editor/syntheditor.cxx:2813
+msgid "load sound"
+msgstr ""
+
+#: editor/syntheditor.cxx:2751 editor/syntheditor.cxx:2822
+msgid "memory"
+msgstr ""
+
+#: editor/syntheditor.cxx:1472 editor/syntheditor.cxx:1504
+msgid "midi note"
+msgstr ""
+
+#: editor/syntheditor.cxx:2991
+msgid "mix pan"
+msgstr ""
+
+#: editor/syntheditor.cxx:2980
+msgid "mix vol"
+msgstr ""
+
+#: editor/syntheditor.cxx:2908 editor/syntheditor.cxx:3015
+msgid "mod amount"
+msgstr ""
+
+#: editor/syntheditor.cxx:2700
+msgid "mod osc"
+msgstr ""
+
+#: editor/syntheditor.cxx:1469 editor/syntheditor.cxx:1501
+msgid "mod wheel"
+msgstr ""
+
+#: editor/syntheditor.cxx:1467 editor/syntheditor.cxx:1499
+msgid "modulation osc"
+msgstr ""
+
+#: editor/syntheditor.cxx:2378
+msgid "modulators"
+msgstr ""
+
+#: editor/syntheditor.cxx:2091
+msgid "morph"
+msgstr ""
+
+#: editor/syntheditor.cxx:2109
+msgid "morph mod 1"
+msgstr ""
+
+#: editor/syntheditor.cxx:2129
+msgid "morph mod 2"
+msgstr ""
+
+#: editor/syntheditor.cxx:3162
+msgid "multiset"
+msgstr ""
+
+#: editor/syntheditor.cxx:1453 editor/syntheditor.cxx:1485
+msgid "none"
+msgstr ""
+
+#: editor/syntheditor.cxx:1458 editor/syntheditor.cxx:1490
+msgid "osc 1"
+msgstr ""
+
+#: editor/syntheditor.cxx:1456 editor/syntheditor.cxx:1488
+msgid "osc 1 fm out"
+msgstr ""
+
+#: editor/syntheditor.cxx:1459 editor/syntheditor.cxx:1491
+msgid "osc 2"
+msgstr ""
+
+#: editor/syntheditor.cxx:1457 editor/syntheditor.cxx:1489
+msgid "osc 2 fm out"
+msgstr ""
+
+#: editor/syntheditor.cxx:3057
+msgid "osc1  vol"
+msgstr ""
+
+#: editor/syntheditor.cxx:3065
+msgid "osc2  vol"
+msgstr ""
+
+#: editor/syntheditor.cxx:1587
+msgid "oscillator 1"
+msgstr ""
+
+#: editor/syntheditor.cxx:1774
+msgid "oscillator 2"
+msgstr ""
+
+#: editor/syntheditor.cxx:702
+#, c-format
+msgid "overwrite %s:"
+msgstr ""
+
+#: editor/syntheditor.cxx:3173
+msgid "overwrite this multi"
+msgstr ""
+
+#: editor/syntheditor.cxx:1455 editor/syntheditor.cxx:1487
+msgid "pitch bend"
+msgstr ""
+
+#: editor/syntheditor.cxx:1997 editor/syntheditor.cxx:2036
+#: editor/syntheditor.cxx:2161 editor/syntheditor.cxx:2198
+#: editor/syntheditor.cxx:2276 editor/syntheditor.cxx:2311
+msgid "q"
+msgstr ""
+
+#: editor/syntheditor.cxx:1521
+msgid "ramp down"
+msgstr ""
+
+#: editor/syntheditor.cxx:1520
+msgid "ramp up"
+msgstr ""
+
+#: editor/syntheditor.cxx:2428 editor/syntheditor.cxx:2480
+#: editor/syntheditor.cxx:2532 editor/syntheditor.cxx:2584
+#: editor/syntheditor.cxx:2636 editor/syntheditor.cxx:2689
+msgid "repeat"
+msgstr ""
+
+#: editor/syntheditor.cxx:2364
+msgid "reset the filter"
+msgstr ""
+
+#: editor/syntheditor.cxx:3151
+msgid ""
+"roll the list of multis, press load button for loading or save button for "
+"storing"
+msgstr ""
+
+#: editor/syntheditor.cxx:2793
+msgid "roll the list of sounds"
+msgstr ""
+
+#: editor/syntheditor.cxx:1519
+msgid "sine"
+msgstr ""
+
+#: editor/syntheditor.cxx:2775
+msgid "sound"
+msgstr ""
+
+#: editor/syntheditor.cxx:1566
+msgid "sound "
+msgstr ""
+
+#: editor/syntheditor.cxx:1525
+msgid "spike"
+msgstr ""
+
+#: editor/syntheditor.cxx:1523
+msgid "square"
+msgstr ""
+
+#: editor/syntheditor.cxx:3172
+msgid "store multi"
+msgstr ""
+
+#: editor/syntheditor.cxx:2805
+msgid "store sound"
+msgstr ""
+
+#: editor/syntheditor.cxx:2806
+msgid "store this sound on current entry"
+msgstr ""
+
+#: editor/syntheditor.cxx:1951
+msgid "sync to osc1"
+msgstr ""
+
+#: editor/syntheditor.cxx:3022
+msgid "time modulator"
+msgstr ""
+
+#: editor/syntheditor.cxx:3072
+msgid "to delay"
+msgstr ""
+
+#: editor/syntheditor.cxx:1468 editor/syntheditor.cxx:1500
+msgid "touch"
+msgstr ""
+
+#: editor/syntheditor.cxx:1522
+msgid "tri"
+msgstr ""
+
+#: editor/syntheditor.cxx:1645 editor/syntheditor.cxx:1825
+#: editor/syntheditor.cxx:2706
+msgid "tune"
+msgstr ""
+
+#: editor/syntheditor.cxx:1454 editor/syntheditor.cxx:1486
+#: editor/syntheditor.cxx:1541 editor/syntheditor.cxx:1547
+#: editor/syntheditor.cxx:1552
+msgid "velocity"
+msgstr ""
+
+#: editor/syntheditor.cxx:2007 editor/syntheditor.cxx:2047
+#: editor/syntheditor.cxx:2171 editor/syntheditor.cxx:2209
+#: editor/syntheditor.cxx:2286 editor/syntheditor.cxx:2321
+msgid "vol"
+msgstr ""
+
+#: editor/syntheditor.cxx:3048
+msgid "volume"
+msgstr ""
+
+#: editor/syntheditor.cxx:1754 editor/syntheditor.cxx:1938
+#: editor/syntheditor.cxx:2722
+msgid "waveform"
+msgstr ""

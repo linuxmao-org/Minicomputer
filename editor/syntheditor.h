@@ -82,8 +82,6 @@ public:
     Fenster *make_window();
     void changeMulti(int pgm);
     void changeSound(int channel, int pgm);
-    static Fl_Menu_Item menu_pitch[];
-    static Fl_Menu_Item menu_pitch1[];
     Mw_Dial *f1cut1;
     Mw_Dial *f1q1;
     Mw_Dial *f1vol1;
@@ -103,10 +101,6 @@ public:
     Mw_Dial *f3q2;
     Mw_Dial *f3vol2;
 
-    static Fl_Menu_Item menu_morph[];
-    static Fl_Menu_Item menu_amod[];
-    static Fl_Menu_Item menu_fmod[];
-    static Fl_Menu_Item menu_wave[];
     Fl_Input *soundchoice[8];
     Fl_Input *multichoice;
 

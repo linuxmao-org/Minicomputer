@@ -18,6 +18,8 @@
 
 #include "syntheditor.h"
 #include "communicate.h"
+#include "utility.h"
+#include "i18n.h"
 static Fl_RGB_Image image_miniMini(idata_miniMini, 191, 99, 3, 0);
 // gcc -o synthEditor2 syntheditor.cxx -lfltk -llo
 Fl_Widget *Knob[8][_PARACOUNT];
@@ -668,10 +670,9 @@ static void exportSound(Fl_File_Chooser *w, void *userdata)
  */
 static void exportPressed(Fl_Widget *o, void *)
 {
-    char warn[256];
-    sprintf(warn, "export %s:", schoice[currentsound]->value());
-    Fl_File_Chooser *fc = new Fl_File_Chooser(".", "TEXT Files (*.txt)\t",
-                                              Fl_File_Chooser::CREATE, warn);
+    std::string warn = astrprintf(_("export %s:"), schoice[currentsound]->value());
+    Fl_File_Chooser *fc = new Fl_File_Chooser(".", _("TEXT Files (*.txt)\t"),
+                                              Fl_File_Chooser::CREATE, warn.c_str());
     // fc->callback(exportSound); // not practical, is called to often
     fc->textsize(9);
     fc->show();
@@ -698,10 +699,9 @@ static void exportPressed(Fl_Widget *o, void *)
  */
 static void importPressed(Fl_Widget *o, void *)
 {
-    char warn[256];
-    sprintf(warn, "overwrite %s:", schoice[currentsound]->value());
-    Fl_File_Chooser *fc = new Fl_File_Chooser(".", "TEXT Files (*.txt)\t",
-                                              Fl_File_Chooser::SINGLE, warn);
+    std::string warn = astrprintf(_("overwrite %s:"), schoice[currentsound]->value());
+    Fl_File_Chooser *fc = new Fl_File_Chooser(".", _("TEXT Files (*.txt)\t"),
+                                              Fl_File_Chooser::SINGLE, warn.c_str());
     fc->textsize(9);
     fc->show();
     while (fc->shown())
@@ -1372,109 +1372,6 @@ void UserInterface::changeSound(int channel, int pgm)
         Fl::unlock();
     }
 }
-/**
- * predefined menue with all modulation sources
- */
-Fl_Menu_Item UserInterface::menu_amod[] = {
-    {"none", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"velocity", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"pitch bend", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"osc 1 fm out", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"osc 2 fm out", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"osc 1", 0, 0, 0, FL_MENU_INVISIBLE, FL_NORMAL_LABEL, 0, 8, 0},
-    {"osc 2", 0, 0, 0, FL_MENU_INVISIBLE, FL_NORMAL_LABEL, 0, 8, 0},
-    {"filter", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"eg 1", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"eg 2", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"eg 3", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"eg 4", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"eg 5", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"eg 6", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"modulation osc", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"touch", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"mod wheel", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"cc 12", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"delay", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"midi note", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"cc 2", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"cc 4", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"cc 5", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"cc 6", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"cc 14", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"cc 15", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"cc 16", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"cc 17", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0}};
-// redundant for now...
-Fl_Menu_Item UserInterface::menu_fmod[] = {
-    {"none", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"velocity", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"pitch bend", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"osc 1 fm out", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"osc 2 fm out", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"osc 1", 0, 0, 0, FL_MENU_INVISIBLE, FL_NORMAL_LABEL, 0, 8, 0},
-    {"osc 2", 0, 0, 0, FL_MENU_INVISIBLE, FL_NORMAL_LABEL, 0, 8, 0},
-    {"filter", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"eg 1", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"eg 2", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"eg 3", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"eg 4", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"eg 5", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"eg 6", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"modulation osc", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"touch", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"mod wheel", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"cc 12", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"delay", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"midi note", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"cc 2", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"cc 4", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"cc 5", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"cc 6", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"cc 14", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"cc 15", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"cc 16", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"cc 17", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0}};
-/**
- * waveform list for menue
- */
-Fl_Menu_Item UserInterface::menu_wave[] = {
-    {"sine", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"ramp up", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"ramp down", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"tri", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"square", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"bit", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"spike", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"comb", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"add Saw", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"add Square", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"Microcomp 1", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"Microcomp 8", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"Microcomp 9", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"Microcomp 10", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"Microcomp 11", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"Microcomp 12", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"Microcomp 13", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {"Microcomp 14", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0}};
-
-Fl_Menu_Item UserInterface::menu_pitch[] = {{"EG1", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 14, 0},
-                                            {"velocity", 0, 0, 0, 0,
-                                             FL_NORMAL_LABEL, 0, 14, 0},
-                                            {0, 0, 0, 0, 0, 0, 0, 0, 0}};
-
-
-Fl_Menu_Item UserInterface::menu_pitch1[] = {{"EG1", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 14, 0},
-                                             {"velocity", 0, 0, 0, 0,
-                                              FL_NORMAL_LABEL, 0, 14, 0},
-                                             {0, 0, 0, 0, 0, 0, 0, 0, 0}};
-
-Fl_Menu_Item UserInterface::menu_morph[] = {{"EG1", 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 14, 0},
-                                            {"velocity", 0, 0, 0, 0,
-                                             FL_NORMAL_LABEL, 0, 14, 0},
-                                            {0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
 /*
 Fl_SteinerKnob::Fl_SteinerKnob(int x, int y, int w, int h, const char *label)
@@ -1533,7 +1430,7 @@ Fenster *UserInterface::make_window()
     currentmulti = 0;
     enableTransmit(true);
     Fenster *o = new Fenster(995, 515);
-    o->label("Minicomputer");
+    o->label(_("Minicomputer"));
     // w = o;
     o->color((Fl_Color)246);
     o->user_data((void *)(this));
@@ -1548,6 +1445,115 @@ Fenster *UserInterface::make_window()
         Knob[currentsound][i] = NULL;
     }
 
+    // menus ---------------------------------------------------------------------
+    /**
+     * predefined menue with all modulation sources
+     */
+    static Fl_Menu_Item menu_amod[] = {
+        {_("none"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("velocity"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("pitch bend"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("osc 1 fm out"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("osc 2 fm out"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("osc 1"), 0, 0, 0, FL_MENU_INVISIBLE, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("osc 2"), 0, 0, 0, FL_MENU_INVISIBLE, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("filter"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("eg 1"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("eg 2"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("eg 3"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("eg 4"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("eg 5"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("eg 6"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("modulation osc"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("touch"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("mod wheel"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("cc 12"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("delay"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("midi note"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("cc 2"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("cc 4"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("cc 5"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("cc 6"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("cc 14"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("cc 15"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("cc 16"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("cc 17"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0}};
+
+    // redundant for now...
+    static Fl_Menu_Item menu_fmod[] = {
+        {_("none"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("velocity"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("pitch bend"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("osc 1 fm out"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("osc 2 fm out"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("osc 1"), 0, 0, 0, FL_MENU_INVISIBLE, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("osc 2"), 0, 0, 0, FL_MENU_INVISIBLE, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("filter"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("eg 1"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("eg 2"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("eg 3"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("eg 4"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("eg 5"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("eg 6"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("modulation osc"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("touch"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("mod wheel"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("cc 12"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("delay"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("midi note"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("cc 2"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("cc 4"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("cc 5"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("cc 6"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("cc 14"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("cc 15"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("cc 16"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("cc 17"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0}};
+
+    /**
+     * waveform list for menue
+     */
+    static Fl_Menu_Item menu_wave[] = {
+        {_("sine"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("ramp up"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("ramp down"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("tri"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("square"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("bit"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("spike"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("comb"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("add Saw"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("add Square"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("Microcomp 1"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("Microcomp 8"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("Microcomp 9"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("Microcomp 10"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("Microcomp 11"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("Microcomp 12"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("Microcomp 13"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {_("Microcomp 14"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 8, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0}};
+
+#if 0
+    static Fl_Menu_Item menu_pitch[] = {{_("EG1"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 14, 0},
+                                        {_("velocity"), 0, 0, 0, 0,
+                                         FL_NORMAL_LABEL, 0, 14, 0},
+                                        {0, 0, 0, 0, 0, 0, 0, 0, 0}};
+
+
+    static Fl_Menu_Item menu_pitch1[] = {{_("EG1"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 14, 0},
+                                         {_("velocity"), 0, 0, 0, 0,
+                                          FL_NORMAL_LABEL, 0, 14, 0},
+                                         {0, 0, 0, 0, 0, 0, 0, 0, 0}};
+
+    static Fl_Menu_Item menu_morph[] = {{_("EG1"), 0, 0, 0, 0, FL_NORMAL_LABEL, 0, 14, 0},
+                                        {_("velocity"), 0, 0, 0, 0,
+                                         FL_NORMAL_LABEL, 0, 14, 0},
+                                        {0, 0, 0, 0, 0, 0, 0, 0, 0}};
+#endif
+
     // tabs beginning ------------------------------------------------------------
     {
         Fl_Tabs *o = new Fl_Tabs(0, 0, 995, 515);
@@ -1557,7 +1563,7 @@ Fenster *UserInterface::make_window()
         {
             {
                 ostringstream oss;
-                oss << "sound " << (i + 1);  // create name for tab
+                oss << _("sound ") << (i + 1);  // create name for tab
                 tablabel[i] = oss.str();
                 Fl_Group *o = new Fl_Group(1, 10, 995, 515, tablabel[i].c_str());
                 o->color((Fl_Color)246);
@@ -1578,12 +1584,12 @@ Fenster *UserInterface::make_window()
                     o->box(FL_ROUNDED_FRAME);
                     o->color(FL_BACKGROUND2_COLOR);
                     {
-                        Fl_Box *d = new Fl_Box(145, 210, 30, 22, "oscillator 1");
+                        Fl_Box *d = new Fl_Box(145, 210, 30, 22, _("oscillator 1"));
                         d->labelsize(8);
                         d->labelcolor(FL_BACKGROUND2_COLOR);
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(21, 20, 34, 34, "frequency");
+                        Mw_Dial *o = new Mw_Dial(21, 20, 34, 34, _("frequency"));
                         o->labelsize(8);
                         o->maximum(1000);
                         o->argument(1);
@@ -1603,7 +1609,7 @@ Fenster *UserInterface::make_window()
                     }
                     {
                         Fl_Light_Button *o =
-                            new Fl_Light_Button(20, 92, 66, 19, "fix frequency");
+                            new Fl_Light_Button(20, 92, 66, 19, _("fix frequency"));
                         o->box(FL_BORDER_BOX);
                         o->selection_color((Fl_Color)89);
                         o->labelsize(8);
@@ -1612,7 +1618,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][2] = o;
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(79, 179, 25, 25, "fm output  vol");
+                        Mw_Dial *o = new Mw_Dial(79, 179, 25, 25, _("fm output  vol"));
                         o->labelsize(8);
                         o->argument(13);
                         // o->maximum(1000);
@@ -1620,7 +1626,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Light_Button *o = new Fl_Light_Button(80, 27, 40, 15, "boost");
+                        Fl_Light_Button *o = new Fl_Light_Button(80, 27, 40, 15, _("boost"));
                         o->box(FL_BORDER_BOX);
                         o->selection_color((Fl_Color)89);
                         o->labelsize(8);
@@ -1629,14 +1635,14 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     /*{ Fl_Dial* o = new Fl_SteinerKnob(20, 121, 34, 34,
-                    "tune"); o->labelsize(8); o->minimum(0.5); o->maximum(16);
+                    _("tune")); o->labelsize(8); o->minimum(0.5); o->maximum(16);
                       o->argument(3);
                       o->callback((Fl_Callback*)callback);
                       Knob[3] = o;
                     }*/
 
                     {
-                        Fl_Positioner *o = new Fl_Positioner(15, 121, 40, 80, "tune");
+                        Fl_Positioner *o = new Fl_Positioner(15, 121, 40, 80, _("tune"));
                         o->xbounds(0, 16);
                         o->ybounds(1, 0);
                         o->box(FL_BORDER_BOX);
@@ -1659,7 +1665,7 @@ Fenster *UserInterface::make_window()
                         miniDisplay[i][1] = o;
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(260, 97, 25, 25, "amount");
+                        Mw_Dial *o = new Mw_Dial(260, 97, 25, 25, _("amount"));
                         o->labelsize(8);
                         o->argument(9);
                         o->minimum(-1);
@@ -1668,7 +1674,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Choice *o = new Fl_Choice(134, 102, 120, 15, "amp modulator 1");
+                        Fl_Choice *o = new Fl_Choice(134, 102, 120, 15, _("amp modulator 1"));
                         o->box(FL_BORDER_BOX);
                         o->down_box(FL_BORDER_BOX);
                         o->labelsize(8);
@@ -1680,7 +1686,7 @@ Fenster *UserInterface::make_window()
                         auswahl[i][o->argument()] = o;
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(260, 133, 25, 25, "amount");
+                        Mw_Dial *o = new Mw_Dial(260, 133, 25, 25, _("amount"));
                         o->labelsize(8);
                         o->argument(11);
                         o->minimum(-1);
@@ -1689,7 +1695,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Choice *o = new Fl_Choice(134, 138, 120, 15, "amp modulator 2");
+                        Fl_Choice *o = new Fl_Choice(134, 138, 120, 15, _("amp modulator 2"));
                         o->box(FL_BORDER_BOX);
                         o->down_box(FL_BORDER_BOX);
                         o->labelsize(8);
@@ -1701,7 +1707,7 @@ Fenster *UserInterface::make_window()
                         auswahl[i][o->argument()] = o;
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(247, 23, 25, 25, "amount");
+                        Mw_Dial *o = new Mw_Dial(247, 23, 25, 25, _("amount"));
                         o->labelsize(8);
                         o->argument(5);
                         o->minimum(-1000);
@@ -1710,7 +1716,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Choice *o = new Fl_Choice(122, 28, 120, 15, "freq modulator 1");
+                        Fl_Choice *o = new Fl_Choice(122, 28, 120, 15, _("freq modulator 1"));
                         o->box(FL_BORDER_BOX);
                         o->down_box(FL_BORDER_BOX);
                         o->labelsize(8);
@@ -1722,7 +1728,7 @@ Fenster *UserInterface::make_window()
                         auswahl[i][o->argument()] = o;
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(248, 59, 25, 25, "amount");
+                        Mw_Dial *o = new Mw_Dial(248, 59, 25, 25, _("amount"));
                         o->labelsize(8);
                         o->argument(7);
                         o->minimum(-1000);
@@ -1731,7 +1737,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Choice *o = new Fl_Choice(122, 64, 120, 15, "freq modulator 2");
+                        Fl_Choice *o = new Fl_Choice(122, 64, 120, 15, _("freq modulator 2"));
                         o->box(FL_BORDER_BOX);
                         o->down_box(FL_BORDER_BOX);
                         o->labelsize(8);
@@ -1745,7 +1751,7 @@ Fenster *UserInterface::make_window()
 
 
                     {
-                        Fl_Choice *j = new Fl_Choice(120, 184, 120, 15, "waveform");
+                        Fl_Choice *j = new Fl_Choice(120, 184, 120, 15, _("waveform"));
                         j->box(FL_BORDER_BOX);
                         j->down_box(FL_BORDER_BOX);
                         j->labelsize(8);
@@ -1765,12 +1771,12 @@ Fenster *UserInterface::make_window()
                     o->box(FL_ROUNDED_FRAME);
                     o->color(FL_BACKGROUND2_COLOR);
                     {
-                        Fl_Box *d = new Fl_Box(145, 431, 30, 22, "oscillator 2");
+                        Fl_Box *d = new Fl_Box(145, 431, 30, 22, _("oscillator 2"));
                         d->labelsize(8);
                         d->labelcolor(FL_BACKGROUND2_COLOR);
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(21, 244, 34, 34, "frequency");
+                        Mw_Dial *o = new Mw_Dial(21, 244, 34, 34, _("frequency"));
                         o->labelsize(8);
                         o->argument(16);
                         o->maximum(1000);
@@ -1790,7 +1796,7 @@ Fenster *UserInterface::make_window()
                     }
                     {
                         Fl_Light_Button *o =
-                            new Fl_Light_Button(20, 316, 66, 19, "fix frequency");
+                            new Fl_Light_Button(20, 316, 66, 19, _("fix frequency"));
                         o->box(FL_BORDER_BOX);
                         o->selection_color((Fl_Color)89);
                         o->labelsize(8);
@@ -1799,7 +1805,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(79, 403, 25, 25, "fm output  vol");
+                        Mw_Dial *o = new Mw_Dial(79, 403, 25, 25, _("fm output  vol"));
                         o->labelsize(8);
                         o->argument(28);
                         //  o->maximum(1000);
@@ -1807,7 +1813,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][28] = o;
                     }
                     {
-                        Fl_Light_Button *o = new Fl_Light_Button(80, 251, 40, 15, "boost");
+                        Fl_Light_Button *o = new Fl_Light_Button(80, 251, 40, 15, _("boost"));
                         o->box(FL_BORDER_BOX);
                         o->selection_color((Fl_Color)89);
                         o->labelsize(8);
@@ -1816,7 +1822,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Positioner *o = new Fl_Positioner(15, 345, 40, 80, "tune");
+                        Fl_Positioner *o = new Fl_Positioner(15, 345, 40, 80, _("tune"));
                         o->xbounds(0, 16);
                         o->ybounds(1, 0);
                         o->box(FL_BORDER_BOX);
@@ -1827,7 +1833,7 @@ Fenster *UserInterface::make_window()
                         o->callback((Fl_Callback *)callback);
 
                         /*Fl_Dial* o = new Fl_SteinerKnob(20, 345, 34, 34,
-                        "tune"); o->labelsize(8); o->minimum(0.5);
+                        _("tune")); o->labelsize(8); o->minimum(0.5);
                         o->maximum(16);
                         o->argument(18);
                         o->callback((Fl_Callback*)callback);*/
@@ -1845,7 +1851,7 @@ Fenster *UserInterface::make_window()
                         miniDisplay[i][3] = o;
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(260, 321, 25, 25, "amount");
+                        Mw_Dial *o = new Mw_Dial(260, 321, 25, 25, _("amount"));
                         o->labelsize(8);
                         o->argument(23);
                         o->minimum(-1);
@@ -1854,7 +1860,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Choice *o = new Fl_Choice(134, 326, 120, 15, "amp modulator");
+                        Fl_Choice *o = new Fl_Choice(134, 326, 120, 15, _("amp modulator"));
                         o->box(FL_BORDER_BOX);
                         o->down_box(FL_BORDER_BOX);
                         o->labelsize(8);
@@ -1866,7 +1872,7 @@ Fenster *UserInterface::make_window()
                         auswahl[i][o->argument()] = o;
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(260, 357, 25, 25, "amount");
+                        Mw_Dial *o = new Mw_Dial(260, 357, 25, 25, _("amount"));
                         o->labelsize(8);
                         o->argument(25);
                         o->minimum(-1);
@@ -1875,7 +1881,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Choice *o = new Fl_Choice(134, 362, 120, 15, "fm out amp modulator");
+                        Fl_Choice *o = new Fl_Choice(134, 362, 120, 15, _("fm out amp modulator"));
                         o->box(FL_BORDER_BOX);
                         o->down_box(FL_BORDER_BOX);
                         o->labelsize(8);
@@ -1887,7 +1893,7 @@ Fenster *UserInterface::make_window()
                         auswahl[i][o->argument()] = o;
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(247, 247, 25, 25, "amount");
+                        Mw_Dial *o = new Mw_Dial(247, 247, 25, 25, _("amount"));
                         o->labelsize(8);
                         o->argument(19);
                         o->minimum(-1000);
@@ -1896,7 +1902,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Choice *o = new Fl_Choice(122, 252, 120, 15, "freq modulator 1");
+                        Fl_Choice *o = new Fl_Choice(122, 252, 120, 15, _("freq modulator 1"));
                         o->box(FL_BORDER_BOX);
                         o->down_box(FL_BORDER_BOX);
                         o->labelsize(8);
@@ -1908,7 +1914,7 @@ Fenster *UserInterface::make_window()
                         auswahl[i][o->argument()] = o;
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(248, 283, 25, 25, "amount");
+                        Mw_Dial *o = new Mw_Dial(248, 283, 25, 25, _("amount"));
                         o->labelsize(8);
                         o->argument(21);
                         o->minimum(-1000);
@@ -1917,7 +1923,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Choice *o = new Fl_Choice(122, 288, 120, 15, "freq modulator 2");
+                        Fl_Choice *o = new Fl_Choice(122, 288, 120, 15, _("freq modulator 2"));
                         o->box(FL_BORDER_BOX);
                         o->down_box(FL_BORDER_BOX);
                         o->labelsize(8);
@@ -1929,7 +1935,7 @@ Fenster *UserInterface::make_window()
                         auswahl[i][o->argument()] = o;
                     }
                     {
-                        Fl_Choice *o = new Fl_Choice(120, 408, 120, 15, "waveform");
+                        Fl_Choice *o = new Fl_Choice(120, 408, 120, 15, _("waveform"));
                         o->box(FL_BORDER_BOX);
                         o->down_box(FL_BORDER_BOX);
                         o->labelsize(8);
@@ -1942,7 +1948,7 @@ Fenster *UserInterface::make_window()
                     }
                     {
                         Fl_Light_Button *o =
-                            new Fl_Light_Button(220, 430, 65, 15, "sync to osc1");
+                            new Fl_Light_Button(220, 430, 65, 15, _("sync to osc1"));
                         o->box(FL_BORDER_BOX);
                         o->selection_color((Fl_Color)89);
                         o->labelsize(8);
@@ -1958,17 +1964,17 @@ Fenster *UserInterface::make_window()
                     o->box(FL_ROUNDED_FRAME);
                     o->color(FL_BACKGROUND2_COLOR);
                     {
-                        Fl_Box *d = new Fl_Box(312, 225, 277, 435, "filters");
+                        Fl_Box *d = new Fl_Box(312, 225, 277, 435, _("filters"));
                         d->labelsize(8);
                         d->labelcolor(FL_BACKGROUND2_COLOR);
                     }
                     {
-                        Fl_Group *o = new Fl_Group(330, 28, 239, 92, "filter 1");
+                        Fl_Group *o = new Fl_Group(330, 28, 239, 92, _("filter 1"));
                         o->box(FL_ROUNDED_FRAME);
                         o->color(FL_FOREGROUND_COLOR);
                         o->labelsize(8);
                         {
-                            Fl_Positioner *o = new Fl_Positioner(340, 31, 70, 79, "cut");
+                            Fl_Positioner *o = new Fl_Positioner(340, 31, 70, 79, _("cut"));
                             o->xbounds(0, 9000);
                             o->ybounds(499, 0);
                             o->selection_color(0);
@@ -1981,14 +1987,14 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
 
                             /* Fl_Dial* o = f1cut1 = new Fl_SteinerKnob(344, 51,
-                            34, 34, "cut"); o->labelsize(8); o->argument(30);
+                            34, 34, _("cut")); o->labelsize(8); o->argument(30);
                                 o->maximum(10000);
                             o->value(50);
                             o->callback((Fl_Callback*)callback);
                             */
                         }
                         {
-                            Mw_Dial *o = f1q1 = new Mw_Dial(415, 33, 25, 25, "q");
+                            Mw_Dial *o = f1q1 = new Mw_Dial(415, 33, 25, 25, _("q"));
                             o->labelsize(8);
                             o->argument(31);
                             o->minimum(0.9);
@@ -1998,7 +2004,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = f1vol1 = new Mw_Dial(425, 70, 20, 20, "vol");
+                            Mw_Dial *o = f1vol1 = new Mw_Dial(425, 70, 20, 20, _("vol"));
                             o->labelsize(8);
                             o->argument(32);
                             o->callback((Fl_Callback *)callback);
@@ -2010,7 +2016,7 @@ Fenster *UserInterface::make_window()
 
 
                         {
-                            Fl_Positioner *o = new Fl_Positioner(456, 31, 70, 79, "cut");
+                            Fl_Positioner *o = new Fl_Positioner(456, 31, 70, 79, _("cut"));
                             o->xbounds(0, 9000);
                             o->ybounds(499, 0);
                             o->box(FL_BORDER_BOX);
@@ -2020,14 +2026,14 @@ Fenster *UserInterface::make_window()
                             o->yvalue(20);
                             o->callback((Fl_Callback *)callback);
                             /* Fl_Dial* o = f1cut2 = new Fl_SteinerKnob(481, 50,
-                             34, 34, "cut"); o->labelsize(8); o->value(50);
+                             34, 34, _("cut")); o->labelsize(8); o->value(50);
                                 o->maximum(10000);
                              o->callback((Fl_Callback*)callback);*/
                             o->argument(33);
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = f1q2 = new Mw_Dial(531, 32, 25, 25, "q");
+                            Mw_Dial *o = f1q2 = new Mw_Dial(531, 32, 25, 25, _("q"));
                             o->labelsize(8);
 
                             o->argument(34);
@@ -2038,7 +2044,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = f1vol2 = new Mw_Dial(541, 70, 20, 20, "vol");
+                            Mw_Dial *o = f1vol2 = new Mw_Dial(541, 70, 20, 20, _("vol"));
                             o->labelsize(8);
                             o->labelsize(8);
                             o->minimum(-1);
@@ -2074,15 +2080,15 @@ Fenster *UserInterface::make_window()
                         }
                         /*
                             { Fl_Button* o = new Fl_Button(426, 35, 45, 15,
-                           "copy ->"); o->box(FL_BORDER_BOX); o->labelsize(8);
+                           _("copy ->")); o->box(FL_BORDER_BOX); o->labelsize(8);
                             }
-                            { Fl_Button* o = new Fl_Button(426, 59, 45, 15, "<-
-                           copy"); o->box(FL_BORDER_BOX); o->labelsize(8);
+                            { Fl_Button* o = new Fl_Button(426, 59, 45, 15, _("<-
+                           copy")); o->box(FL_BORDER_BOX); o->labelsize(8);
                             }*/
                         o->end();
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(418, 360, 60, 57, "morph");
+                        Mw_Dial *o = new Mw_Dial(418, 360, 60, 57, _("morph"));
                         o->type(1);
                         o->labelsize(8);
                         o->maximum(0.5f);
@@ -2091,7 +2097,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(326, 392, 25, 25, "amount");
+                        Mw_Dial *o = new Mw_Dial(326, 392, 25, 25, _("amount"));
                         o->labelsize(8);
                         o->minimum(-2);
                         o->maximum(2);
@@ -2100,7 +2106,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Choice *o = new Fl_Choice(325, 366, 85, 15, "morph mod 1");
+                        Fl_Choice *o = new Fl_Choice(325, 366, 85, 15, _("morph mod 1"));
                         o->down_box(FL_BORDER_BOX);
                         o->labelsize(8);
                         o->textsize(8);
@@ -2111,7 +2117,7 @@ Fenster *UserInterface::make_window()
                         auswahl[i][o->argument()] = o;
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(551, 392, 25, 25, "amount");
+                        Mw_Dial *o = new Mw_Dial(551, 392, 25, 25, _("amount"));
                         o->labelsize(8);
                         o->argument(48);
                         o->minimum(-2);
@@ -2120,7 +2126,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Choice *o = new Fl_Choice(492, 366, 85, 15, "morph mod 2");
+                        Fl_Choice *o = new Fl_Choice(492, 366, 85, 15, _("morph mod 2"));
                         o->down_box(FL_BORDER_BOX);
                         o->labelsize(8);
                         o->textsize(8);
@@ -2131,12 +2137,12 @@ Fenster *UserInterface::make_window()
                         auswahl[i][o->argument()] = o;
                     }
                     {
-                        Fl_Group *o = new Fl_Group(330, 132, 239, 92, "filter 2");
+                        Fl_Group *o = new Fl_Group(330, 132, 239, 92, _("filter 2"));
                         o->box(FL_ROUNDED_FRAME);
                         o->color(FL_FOREGROUND_COLOR);
                         o->labelsize(8);
                         {
-                            Fl_Positioner *o = new Fl_Positioner(340, 135, 70, 79, "cut");
+                            Fl_Positioner *o = new Fl_Positioner(340, 135, 70, 79, _("cut"));
                             o->xbounds(0, 7000);
                             o->ybounds(499, 0);
                             o->selection_color(0);
@@ -2144,7 +2150,7 @@ Fenster *UserInterface::make_window()
                             o->xstep(500);
                             o->labelsize(8);
                             /*Fl_Dial* o = f1cut1 = new Fl_SteinerKnob(344, 155,
-                              34, 34, "cut"); o->labelsize(8); o->labelsize(8);
+                              34, 34, _("cut")); o->labelsize(8); o->labelsize(8);
                                o->value(50);
                               o->maximum(10000);*/
                             o->argument(40);
@@ -2152,7 +2158,7 @@ Fenster *UserInterface::make_window()
                             o->callback((Fl_Callback *)callback);
                         }
                         {
-                            Mw_Dial *o = f1q1 = new Mw_Dial(415, 137, 25, 25, "q");
+                            Mw_Dial *o = f1q1 = new Mw_Dial(415, 137, 25, 25, _("q"));
                             o->labelsize(8);
                             o->argument(41);
                             o->minimum(0.9);
@@ -2162,7 +2168,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = f1vol1 = new Mw_Dial(425, 174, 20, 20, "vol");
+                            Mw_Dial *o = f1vol1 = new Mw_Dial(425, 174, 20, 20, _("vol"));
                             o->labelsize(8);
                             o->argument(42);
                             o->callback((Fl_Callback *)callback);
@@ -2172,7 +2178,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Positioner *o = new Fl_Positioner(456, 135, 70, 79, "cut");
+                            Fl_Positioner *o = new Fl_Positioner(456, 135, 70, 79, _("cut"));
                             o->xbounds(0, 7000);
                             o->ybounds(499, 0);
                             o->selection_color(0);
@@ -2181,7 +2187,7 @@ Fenster *UserInterface::make_window()
                             o->labelsize(8);
 
                             /*Fl_Dial* o = f1cut2 = new Fl_SteinerKnob(481, 154,
-                              34, 34, "cut"); o->labelsize(8); o->labelsize(8);
+                              34, 34, _("cut")); o->labelsize(8); o->labelsize(8);
                                o->value(50);
                               o->maximum(10000);*/
                             o->argument(43);
@@ -2189,7 +2195,7 @@ Fenster *UserInterface::make_window()
                             o->callback((Fl_Callback *)callback);
                         }
                         {
-                            Mw_Dial *o = f1q2 = new Mw_Dial(531, 136, 25, 25, "q");
+                            Mw_Dial *o = f1q2 = new Mw_Dial(531, 136, 25, 25, _("q"));
                             o->labelsize(8);
                             o->labelsize(8);
                             o->argument(44);
@@ -2200,7 +2206,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = f1vol2 = new Mw_Dial(541, 174, 20, 20, "vol");
+                            Mw_Dial *o = f1vol2 = new Mw_Dial(541, 174, 20, 20, _("vol"));
                             o->labelsize(8);
                             o->labelsize(8);
                             o->argument(45);
@@ -2234,24 +2240,24 @@ Fenster *UserInterface::make_window()
                         }
                         /*
                             { Fl_Button* o = new Fl_Button(426, 139, 45, 15,
-                          "copy ->"); o->box(FL_BORDER_BOX); o->labelsize(8);
+                          _("copy ->")); o->box(FL_BORDER_BOX); o->labelsize(8);
                               o->argument(21);
                             //o->callback((Fl_Callback*)copycallback);
                             }
-                            { Fl_Button* o = new Fl_Button(426, 163, 45, 15, "<-
-                          copy"); o->box(FL_BORDER_BOX); o->labelsize(8);
+                            { Fl_Button* o = new Fl_Button(426, 163, 45, 15, _("<-
+                          copy")); o->box(FL_BORDER_BOX); o->labelsize(8);
                               o->argument(22);
                           //o->callback((Fl_Callback*)copycallback);
                             }*/
                         o->end();
                     }
                     {
-                        Fl_Group *o = new Fl_Group(330, 238, 239, 92, "filter 3");
+                        Fl_Group *o = new Fl_Group(330, 238, 239, 92, _("filter 3"));
                         o->box(FL_ROUNDED_FRAME);
                         o->color(FL_FOREGROUND_COLOR);
                         o->labelsize(8);
                         {
-                            Fl_Positioner *o = new Fl_Positioner(340, 241, 70, 79, "cut");
+                            Fl_Positioner *o = new Fl_Positioner(340, 241, 70, 79, _("cut"));
                             o->xbounds(0, 7000);
                             o->ybounds(499, 0);
                             o->selection_color(0);
@@ -2259,7 +2265,7 @@ Fenster *UserInterface::make_window()
                             o->xstep(500);
                             o->labelsize(8);
                             /* Fl_Dial* o = f1cut1 = new Fl_SteinerKnob(344,
-                              261, 34, 34, "cut"); o->labelsize(8);
+                              261, 34, 34, _("cut")); o->labelsize(8);
                               o->value(50);
                               o->maximum(10000);*/
                             o->argument(50);
@@ -2267,7 +2273,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = f1q1 = new Mw_Dial(415, 243, 25, 25, "q");
+                            Mw_Dial *o = f1q1 = new Mw_Dial(415, 243, 25, 25, _("q"));
                             o->labelsize(8);
                             o->argument(51);
                             o->minimum(0.9);
@@ -2277,7 +2283,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = f1vol1 = new Mw_Dial(425, 280, 20, 20, "vol");
+                            Mw_Dial *o = f1vol1 = new Mw_Dial(425, 280, 20, 20, _("vol"));
                             o->labelsize(8);
                             o->argument(52);
                             o->maximum(1);
@@ -2287,7 +2293,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Fl_Positioner *o = new Fl_Positioner(456, 241, 70, 79, "cut");
+                            Fl_Positioner *o = new Fl_Positioner(456, 241, 70, 79, _("cut"));
                             o->xbounds(0, 7000);
                             o->ybounds(499, 0);
                             o->selection_color(0);
@@ -2295,14 +2301,14 @@ Fenster *UserInterface::make_window()
                             o->xstep(500);
                             o->labelsize(8);
                             /*Fl_Dial* o = f1cut2 = new Fl_SteinerKnob(481, 260,
-                              34, 34, "cut"); o->labelsize(8); o->value(50);
+                              34, 34, _("cut")); o->labelsize(8); o->value(50);
                               o->maximum(10000);*/
                             o->argument(53);
                             Knob[i][o->argument()] = o;
                             o->callback((Fl_Callback *)callback);
                         }
                         {
-                            Mw_Dial *o = f1q2 = new Mw_Dial(531, 242, 25, 25, "q");
+                            Mw_Dial *o = f1q2 = new Mw_Dial(531, 242, 25, 25, _("q"));
                             o->labelsize(8);
                             o->argument(54);
                             o->minimum(0.9);
@@ -2312,7 +2318,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = f1vol2 = new Mw_Dial(541, 280, 20, 20, "vol");
+                            Mw_Dial *o = f1vol2 = new Mw_Dial(541, 280, 20, 20, _("vol"));
                             o->labelsize(8);
                             o->labelsize(8);
                             o->argument(55);
@@ -2346,16 +2352,16 @@ Fenster *UserInterface::make_window()
                         }
                         /*
                             { Fl_Button* o = new Fl_Button(426, 245, 45, 15,
-                           "copy ->"); o->box(FL_BORDER_BOX); o->labelsize(8);
+                           _("copy ->")); o->box(FL_BORDER_BOX); o->labelsize(8);
                             }
-                            { Fl_Button* o = new Fl_Button(426, 269, 45, 15, "<-
-                           copy"); o->box(FL_BORDER_BOX); o->labelsize(8);
+                            { Fl_Button* o = new Fl_Button(426, 269, 45, 15, _("<-
+                           copy")); o->box(FL_BORDER_BOX); o->labelsize(8);
                             }*/
                         o->end();
                     }
                     {
-                        Fl_Button *o = new Fl_Button(486, 430, 50, 15, "clear filter");
-                        o->tooltip("reset the filter");
+                        Fl_Button *o = new Fl_Button(486, 430, 50, 15, _("clear filter"));
+                        o->tooltip(_("reset the filter"));
                         o->box(FL_BORDER_BOX);
                         o->labelsize(8);
                         o->labelcolor((Fl_Color)186);
@@ -2369,18 +2375,18 @@ Fenster *UserInterface::make_window()
                     o->box(FL_ROUNDED_FRAME);
                     o->color(FL_BACKGROUND2_COLOR);
                     {
-                        Fl_Box *d = new Fl_Box(595, 225, 210, 432, "modulators");
+                        Fl_Box *d = new Fl_Box(595, 225, 210, 432, _("modulators"));
                         d->labelsize(8);
                         d->labelcolor(FL_BACKGROUND2_COLOR);
                     }
                     // ----------- knobs for envelope generator 1 ---------------
                     {
-                        Fl_Group *o = new Fl_Group(608, 31, 200, 45, "EG 1");
+                        Fl_Group *o = new Fl_Group(608, 31, 200, 45, _("EG 1"));
                         o->box(FL_ROUNDED_FRAME);
                         o->color(FL_FOREGROUND_COLOR);
                         o->labelsize(8);
                         {
-                            Mw_Dial *o = new Mw_Dial(618, 37, 25, 25, "A");
+                            Mw_Dial *o = new Mw_Dial(618, 37, 25, 25, _("A"));
                             o->labelsize(8);
                             o->argument(60);
                             o->minimum(0.2);
@@ -2389,7 +2395,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = new Mw_Dial(648, 37, 25, 25, "D");
+                            Mw_Dial *o = new Mw_Dial(648, 37, 25, 25, _("D"));
                             o->labelsize(8);
                             o->argument(61);
                             o->minimum(0.15);
@@ -2400,7 +2406,7 @@ Fenster *UserInterface::make_window()
                         }
 
                         {
-                            Mw_Dial *o = new Mw_Dial(678, 37, 25, 25, "S");
+                            Mw_Dial *o = new Mw_Dial(678, 37, 25, 25, _("S"));
                             o->labelsize(8);
                             o->argument(62);
                             // o->minimum(0);
@@ -2409,7 +2415,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = new Mw_Dial(708, 37, 25, 25, "R");
+                            Mw_Dial *o = new Mw_Dial(708, 37, 25, 25, _("R"));
                             o->labelsize(8);
                             o->argument(63);
                             o->minimum(0.15);
@@ -2419,7 +2425,7 @@ Fenster *UserInterface::make_window()
                         }
                         {
                             Fl_Light_Button *o =
-                                new Fl_Light_Button(744, 42, 55, 15, "repeat");
+                                new Fl_Light_Button(744, 42, 55, 15, _("repeat"));
                             o->box(FL_BORDER_BOX);
                             o->selection_color((Fl_Color)89);
                             o->labelsize(8);
@@ -2431,12 +2437,12 @@ Fenster *UserInterface::make_window()
                     }
                     // ----------- knobs for envelope generator 2 ---------------
                     {
-                        Fl_Group *o = new Fl_Group(608, 90, 200, 45, "EG 2");
+                        Fl_Group *o = new Fl_Group(608, 90, 200, 45, _("EG 2"));
                         o->box(FL_ROUNDED_FRAME);
                         o->color(FL_FOREGROUND_COLOR);
                         o->labelsize(8);
                         {
-                            Mw_Dial *o = new Mw_Dial(618, 96, 25, 25, "A");
+                            Mw_Dial *o = new Mw_Dial(618, 96, 25, 25, _("A"));
                             o->labelsize(8);
                             o->argument(65);
                             o->minimum(0.2);
@@ -2445,7 +2451,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = new Mw_Dial(648, 96, 25, 25, "D");
+                            Mw_Dial *o = new Mw_Dial(648, 96, 25, 25, _("D"));
                             o->labelsize(8);
                             o->argument(66);
                             o->minimum(0.15);
@@ -2454,14 +2460,14 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = new Mw_Dial(678, 96, 25, 25, "S");
+                            Mw_Dial *o = new Mw_Dial(678, 96, 25, 25, _("S"));
                             o->labelsize(8);
                             o->argument(67);
                             o->callback((Fl_Callback *)callback);
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = new Mw_Dial(708, 96, 25, 25, "R");
+                            Mw_Dial *o = new Mw_Dial(708, 96, 25, 25, _("R"));
                             o->labelsize(8);
                             o->argument(68);
                             o->minimum(0.15);
@@ -2471,7 +2477,7 @@ Fenster *UserInterface::make_window()
                         }
                         {
                             Fl_Light_Button *o =
-                                new Fl_Light_Button(744, 101, 55, 15, "repeat");
+                                new Fl_Light_Button(744, 101, 55, 15, _("repeat"));
                             o->box(FL_BORDER_BOX);
                             o->selection_color((Fl_Color)89);
                             o->labelsize(8);
@@ -2483,12 +2489,12 @@ Fenster *UserInterface::make_window()
                     }
                     // ----------- knobs for envelope generator 3 ---------------
                     {
-                        Fl_Group *o = new Fl_Group(608, 147, 200, 45, "EG 3");
+                        Fl_Group *o = new Fl_Group(608, 147, 200, 45, _("EG 3"));
                         o->box(FL_ROUNDED_FRAME);
                         o->color(FL_FOREGROUND_COLOR);
                         o->labelsize(8);
                         {
-                            Mw_Dial *o = new Mw_Dial(618, 153, 25, 25, "A");
+                            Mw_Dial *o = new Mw_Dial(618, 153, 25, 25, _("A"));
                             o->labelsize(8);
                             o->argument(70);
                             o->minimum(0.2);
@@ -2497,7 +2503,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = new Mw_Dial(648, 153, 25, 25, "D");
+                            Mw_Dial *o = new Mw_Dial(648, 153, 25, 25, _("D"));
                             o->labelsize(8);
                             o->argument(71);
                             o->minimum(0.15);
@@ -2506,14 +2512,14 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = new Mw_Dial(678, 153, 25, 25, "S");
+                            Mw_Dial *o = new Mw_Dial(678, 153, 25, 25, _("S"));
                             o->labelsize(8);
                             o->argument(72);
                             o->callback((Fl_Callback *)callback);
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = new Mw_Dial(708, 153, 25, 25, "R");
+                            Mw_Dial *o = new Mw_Dial(708, 153, 25, 25, _("R"));
                             o->labelsize(8);
                             o->argument(73);
                             o->minimum(0.15);
@@ -2523,7 +2529,7 @@ Fenster *UserInterface::make_window()
                         }
                         {
                             Fl_Light_Button *o =
-                                new Fl_Light_Button(744, 158, 55, 15, "repeat");
+                                new Fl_Light_Button(744, 158, 55, 15, _("repeat"));
                             o->box(FL_BORDER_BOX);
                             o->selection_color((Fl_Color)89);
                             o->labelsize(8);
@@ -2535,12 +2541,12 @@ Fenster *UserInterface::make_window()
                     }
                     // ----------- knobs for envelope generator 4 ---------------
                     {
-                        Fl_Group *o = new Fl_Group(608, 204, 200, 45, "EG 4");
+                        Fl_Group *o = new Fl_Group(608, 204, 200, 45, _("EG 4"));
                         o->box(FL_ROUNDED_FRAME);
                         o->color(FL_FOREGROUND_COLOR);
                         o->labelsize(8);
                         {
-                            Mw_Dial *o = new Mw_Dial(618, 210, 25, 25, "A");
+                            Mw_Dial *o = new Mw_Dial(618, 210, 25, 25, _("A"));
                             o->labelsize(8);
                             o->argument(75);
                             o->minimum(0.2);
@@ -2549,7 +2555,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = new Mw_Dial(648, 210, 25, 25, "D");
+                            Mw_Dial *o = new Mw_Dial(648, 210, 25, 25, _("D"));
                             o->labelsize(8);
                             o->argument(76);
                             o->minimum(0.15);
@@ -2558,14 +2564,14 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = new Mw_Dial(678, 210, 25, 25, "S");
+                            Mw_Dial *o = new Mw_Dial(678, 210, 25, 25, _("S"));
                             o->labelsize(8);
                             o->argument(77);
                             o->callback((Fl_Callback *)callback);
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = new Mw_Dial(708, 210, 25, 25, "R");
+                            Mw_Dial *o = new Mw_Dial(708, 210, 25, 25, _("R"));
                             o->labelsize(8);
                             o->argument(78);
                             o->minimum(0.15);
@@ -2575,7 +2581,7 @@ Fenster *UserInterface::make_window()
                         }
                         {
                             Fl_Light_Button *o =
-                                new Fl_Light_Button(744, 215, 55, 15, "repeat");
+                                new Fl_Light_Button(744, 215, 55, 15, _("repeat"));
                             o->box(FL_BORDER_BOX);
                             o->selection_color((Fl_Color)89);
                             o->labelsize(8);
@@ -2587,12 +2593,12 @@ Fenster *UserInterface::make_window()
                     }
                     // ----------- knobs for envelope generator 5 ---------------
                     {
-                        Fl_Group *o = new Fl_Group(608, 263, 200, 45, "EG 5");
+                        Fl_Group *o = new Fl_Group(608, 263, 200, 45, _("EG 5"));
                         o->box(FL_ROUNDED_FRAME);
                         o->color(FL_FOREGROUND_COLOR);
                         o->labelsize(8);
                         {
-                            Mw_Dial *o = new Mw_Dial(618, 269, 25, 25, "A");
+                            Mw_Dial *o = new Mw_Dial(618, 269, 25, 25, _("A"));
                             o->labelsize(8);
                             o->argument(80);
                             o->minimum(0.2);
@@ -2601,7 +2607,7 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = new Mw_Dial(648, 269, 25, 25, "D");
+                            Mw_Dial *o = new Mw_Dial(648, 269, 25, 25, _("D"));
                             o->labelsize(8);
                             o->argument(81);
                             o->minimum(0.15);
@@ -2610,14 +2616,14 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = new Mw_Dial(678, 269, 25, 25, "S");
+                            Mw_Dial *o = new Mw_Dial(678, 269, 25, 25, _("S"));
                             o->labelsize(8);
                             o->argument(82);
                             o->callback((Fl_Callback *)callback);
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = new Mw_Dial(708, 269, 25, 25, "R");
+                            Mw_Dial *o = new Mw_Dial(708, 269, 25, 25, _("R"));
                             o->labelsize(8);
                             o->argument(83);
                             o->minimum(0.15);
@@ -2627,7 +2633,7 @@ Fenster *UserInterface::make_window()
                         }
                         {
                             Fl_Light_Button *o =
-                                new Fl_Light_Button(744, 274, 55, 15, "repeat");
+                                new Fl_Light_Button(744, 274, 55, 15, _("repeat"));
                             o->box(FL_BORDER_BOX);
                             o->selection_color((Fl_Color)89);
                             o->labelsize(8);
@@ -2639,12 +2645,12 @@ Fenster *UserInterface::make_window()
                     }
                     // ------ knobs for envelope generator 6 -----
                     {
-                        Fl_Group *o = new Fl_Group(608, 324, 200, 45, "EG 6");
+                        Fl_Group *o = new Fl_Group(608, 324, 200, 45, _("EG 6"));
                         o->box(FL_ROUNDED_FRAME);
                         o->color(FL_FOREGROUND_COLOR);
                         o->labelsize(8);
                         {
-                            Mw_Dial *o = new Mw_Dial(618, 330, 25, 25, "A");
+                            Mw_Dial *o = new Mw_Dial(618, 330, 25, 25, _("A"));
                             o->labelsize(8);
                             o->argument(85);
                             o->minimum(0.2);
@@ -2654,7 +2660,7 @@ Fenster *UserInterface::make_window()
                             o->callback((Fl_Callback *)callback);
                         }
                         {
-                            Mw_Dial *o = new Mw_Dial(648, 330, 25, 25, "D");
+                            Mw_Dial *o = new Mw_Dial(648, 330, 25, 25, _("D"));
                             o->labelsize(8);
                             o->argument(86);
                             o->minimum(0.15);
@@ -2663,14 +2669,14 @@ Fenster *UserInterface::make_window()
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = new Mw_Dial(678, 330, 25, 25, "S");
+                            Mw_Dial *o = new Mw_Dial(678, 330, 25, 25, _("S"));
                             o->labelsize(8);
                             o->argument(87);
                             o->callback((Fl_Callback *)callback);
                             Knob[i][o->argument()] = o;
                         }
                         {
-                            Mw_Dial *o = new Mw_Dial(708, 330, 25, 25, "R");
+                            Mw_Dial *o = new Mw_Dial(708, 330, 25, 25, _("R"));
                             o->labelsize(8);
                             o->argument(88);
                             o->minimum(0.15);
@@ -2680,7 +2686,7 @@ Fenster *UserInterface::make_window()
                         }
                         {
                             Fl_Light_Button *o =
-                                new Fl_Light_Button(744, 335, 55, 15, "repeat");
+                                new Fl_Light_Button(744, 335, 55, 15, _("repeat"));
                             o->box(FL_BORDER_BOX);
                             o->selection_color((Fl_Color)89);
                             o->labelsize(8);
@@ -2691,13 +2697,13 @@ Fenster *UserInterface::make_window()
                         o->end();
                     }
                     {
-                        Fl_Group *o = new Fl_Group(608, 380, 200, 54, "mod osc");
+                        Fl_Group *o = new Fl_Group(608, 380, 200, 54, _("mod osc"));
                         o->box(FL_ROUNDED_FRAME);
                         o->color(FL_FOREGROUND_COLOR);
                         o->labelsize(8);
 
                         {
-                            Fl_Positioner *o = new Fl_Positioner(620, 384, 50, 40, "tune");
+                            Fl_Positioner *o = new Fl_Positioner(620, 384, 50, 40, _("tune"));
                             o->xbounds(0, 128);
                             o->ybounds(0.99, 0);
                             o->box(FL_BORDER_BOX);
@@ -2708,12 +2714,12 @@ Fenster *UserInterface::make_window()
                             o->callback((Fl_Callback *)callback);
                             Knob[i][o->argument()] = o;
                             /*Fl_Dial* o = new Fl_SteinerKnob(627, 392, 34, 34,
-                               "frequency"); o->labelsize(8);o->argument(90);
+                               _("frequency")); o->labelsize(8);o->argument(90);
                                 o->callback((Fl_Callback*)callback);
                                 o->maximum(500); */
                         }
                         {
-                            Fl_Choice *o = new Fl_Choice(680, 397, 120, 15, "waveform");
+                            Fl_Choice *o = new Fl_Choice(680, 397, 120, 15, _("waveform"));
                             o->box(FL_BORDER_BOX);
                             o->down_box(FL_BORDER_BOX);
                             o->labelsize(8);
@@ -2742,31 +2748,31 @@ Fenster *UserInterface::make_window()
 
 
                 {
-                    Fl_Group *d = new Fl_Group(5, 461, 680, 45, "memory");
+                    Fl_Group *d = new Fl_Group(5, 461, 680, 45, _("memory"));
                     d->box(FL_ROUNDED_FRAME);
                     d->color(FL_BACKGROUND2_COLOR);
                     d->labelsize(8);
                     d->labelcolor(FL_BACKGROUND2_COLOR);
                     d->begin();
-                    /* { Fl_Button* o = new Fl_Button(191, 473, 50, 19, "create
-                     bank"); o->tooltip("create a new bank after current one");
+                    /* { Fl_Button* o = new Fl_Button(191, 473, 50, 19, _("create
+                     bank")); o->tooltip(_("create a new bank after current one"));
                        o->box(FL_BORDER_BOX);
                        o->labelsize(8);
                      }
-                     { Fl_Button* o = new Fl_Button(26, 476, 53, 14, "delete
-                     bank"); o->tooltip("delete a whole bank of sounds!");
+                     { Fl_Button* o = new Fl_Button(26, 476, 53, 14, _("delete
+                     bank")); o->tooltip(_("delete a whole bank of sounds!"));
                        o->box(FL_BORDER_BOX);
                        o->labelsize(8);
                        o->labelcolor((Fl_Color)1);
                      }
-                     { Fl_Button* o = new Fl_Button(732, 475, 59, 14, "delete
-                     sound"); o->tooltip("delete current sound");
+                     { Fl_Button* o = new Fl_Button(732, 475, 59, 14, _("delete
+                     sound")); o->tooltip(_("delete current sound"));
                        o->box(FL_BORDER_BOX);
                        o->labelsize(8);
                        o->labelcolor((Fl_Color)1);
                      }*/
                     {
-                        Fl_Input *o = new Fl_Input(274, 471, 150, 14, "sound");
+                        Fl_Input *o = new Fl_Input(274, 471, 150, 14, _("sound"));
                         o->box(FL_BORDER_BOX);
                         // o->down_box(FL_BORDER_FRAME);
                         // o->color(FL_FOREGROUND_COLOR);
@@ -2784,7 +2790,7 @@ Fenster *UserInterface::make_window()
                     {
                         Mw_Roller *o = new Mw_Roller(274, 487, 150, 14);
                         o->type(FL_HORIZONTAL);
-                        o->tooltip("roll the list of sounds");
+                        o->tooltip(_("roll the list of sounds"));
                         o->minimum(0);
                         o->maximum(511);
                         o->step(1);
@@ -2796,16 +2802,16 @@ Fenster *UserInterface::make_window()
                     }
 
                     {
-                        Fl_Button *o = new Fl_Button(516, 465, 55, 19, "store sound");
-                        o->tooltip("store this sound on current entry");
+                        Fl_Button *o = new Fl_Button(516, 465, 55, 19, _("store sound"));
+                        o->tooltip(_("store this sound on current entry"));
                         o->box(FL_BORDER_BOX);
                         o->labelsize(8);
                         o->labelcolor((Fl_Color)1);
                         o->callback((Fl_Callback *)storesound, soundchoice[i]);
                     }
                     {
-                        Fl_Button *o = new Fl_Button(436, 465, 70, 19, "load sound");
-                        o->tooltip("actually load the chosen sound");
+                        Fl_Button *o = new Fl_Button(436, 465, 70, 19, _("load sound"));
+                        o->tooltip(_("actually load the chosen sound"));
                         o->box(FL_BORDER_BOX);
                         o->labelsize(8);
                         o->labelcolor((Fl_Color)186);
@@ -2813,22 +2819,22 @@ Fenster *UserInterface::make_window()
                     }
                     {
                         Fl_Value_Output *o =
-                            new Fl_Value_Output(490, 488, 20, 15, "memory");
+                            new Fl_Value_Output(490, 488, 20, 15, _("memory"));
                         o->box(FL_ROUNDED_BOX);
                         o->color(FL_BLACK);
                         o->labelsize(8);
                         o->maximum(512);
                         o->textsize(8);
                         o->textcolor(FL_RED);
-                        // char tooltip [64];
-                        // sprintf(tooltip,"accept Midi Program Change on
-                        // channel %i",i); o->tooltip(tooltip);
+                        // std::string tooltip;
+                        // tooltip = astrprintf(_("accept Midi Program Change on
+                        // channel %i"),i); o->tooltip(tooltip.c_str());
                         memDisplay[i] = o;
                     }
                     {
-                        Fl_Button *o = new Fl_Button(600, 469, 70, 12, "import sound");
-                        o->tooltip("import single sound to dialed memory slot, "
-                                   "you need to load it for playing");
+                        Fl_Button *o = new Fl_Button(600, 469, 70, 12, _("import sound"));
+                        o->tooltip(_("import single sound to dialed memory slot, "
+                                     "you need to load it for playing"));
                         o->box(FL_BORDER_BOX);
                         o->labelsize(8);
                         // o->labelcolor((Fl_Color)1);
@@ -2836,15 +2842,15 @@ Fenster *UserInterface::make_window()
                     }
 
                     {
-                        Fl_Button *o = new Fl_Button(600, 485, 70, 12, "export sound");
-                        o->tooltip("export sound data of dialed memory slot");
+                        Fl_Button *o = new Fl_Button(600, 485, 70, 12, _("export sound"));
+                        o->tooltip(_("export sound data of dialed memory slot"));
                         o->box(FL_BORDER_BOX);
                         o->labelsize(8);
                         // o->labelcolor((Fl_Color)186);
                         o->callback((Fl_Callback *)exportPressed, soundchoice[i]);
                     }
                     /*{ Fl_Input_Choice* o = new Fl_Input_Choice(83, 476, 105,
-                    14, "bank"); o->box(FL_BORDER_FRAME);
+                    14, _("bank")); o->box(FL_BORDER_FRAME);
                       o->down_box(FL_BORDER_FRAME);
                       o->color(FL_FOREGROUND_COLOR);
                       o->selection_color(FL_FOREGROUND_COLOR);
@@ -2859,13 +2865,13 @@ Fenster *UserInterface::make_window()
                     o->box(FL_ROUNDED_FRAME);
                     o->color(FL_BACKGROUND2_COLOR);
                     {
-                        Fl_Box *d = new Fl_Box(825, 164, 160, 135, "amp");
+                        Fl_Box *d = new Fl_Box(825, 164, 160, 135, _("amp"));
                         d->labelsize(8);
                         d->labelcolor(FL_BACKGROUND2_COLOR);
                     }
                     // amplitude envelope
                     {
-                        Mw_Dial *o = new Mw_Dial(844, 103, 25, 25, "A");
+                        Mw_Dial *o = new Mw_Dial(844, 103, 25, 25, _("A"));
                         o->labelsize(8);
                         o->argument(102);
                         o->minimum(0.20);
@@ -2874,7 +2880,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(874, 103, 25, 25, "D");
+                        Mw_Dial *o = new Mw_Dial(874, 103, 25, 25, _("D"));
                         o->labelsize(8);
                         o->argument(103);
                         o->minimum(0.15);
@@ -2883,14 +2889,14 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(904, 103, 25, 25, "S");
+                        Mw_Dial *o = new Mw_Dial(904, 103, 25, 25, _("S"));
                         o->labelsize(8);
                         o->argument(104);
                         o->callback((Fl_Callback *)callback);
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(934, 103, 25, 25, "R");
+                        Mw_Dial *o = new Mw_Dial(934, 103, 25, 25, _("R"));
                         o->labelsize(8);
                         o->argument(105);
                         o->minimum(0.15);
@@ -2899,14 +2905,14 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(930, 58, 25, 25, "mod amount");
+                        Mw_Dial *o = new Mw_Dial(930, 58, 25, 25, _("mod amount"));
                         o->labelsize(8);
                         o->argument(100);
                         o->callback((Fl_Callback *)callback);
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Choice *o = new Fl_Choice(844, 35, 120, 15, "amp modulator");
+                        Fl_Choice *o = new Fl_Choice(844, 35, 120, 15, _("amp modulator"));
                         o->box(FL_BORDER_BOX);
                         o->down_box(FL_BORDER_BOX);
                         o->labelsize(8);
@@ -2919,7 +2925,7 @@ Fenster *UserInterface::make_window()
                     }
                     /*
                     { Fl_Counter* o = new Fl_Counter(844, 151, 115, 14,
-                    "sound"); o->type(1); o->box(FL_BORDER_BOX);
+                    _("sound")); o->type(1); o->box(FL_BORDER_BOX);
                       o->labelsize(8);
                       o->minimum(0);
                       o->maximum(7);
@@ -2929,7 +2935,7 @@ Fenster *UserInterface::make_window()
                     //  o->callback((Fl_Callback*)voicecallback,soundchoice[0]);
                     }
                     { Fl_Counter* o = new Fl_Counter(844, 181, 115, 14,
-                    "midichannel"); o->type(1); o->box(FL_BORDER_BOX);
+                    _("midichannel")); o->type(1); o->box(FL_BORDER_BOX);
                       o->labelsize(8);
                       o->minimum(1);
                       o->maximum(16);
@@ -2938,7 +2944,7 @@ Fenster *UserInterface::make_window()
                       o->textsize(8);
                     }*/
                     {
-                        Mw_Dial *o = new Mw_Dial(844, 150, 25, 25, "id vol");
+                        Mw_Dial *o = new Mw_Dial(844, 150, 25, 25, _("id vol"));
                         o->labelsize(8);
                         o->argument(101);
                         o->minimum(0);
@@ -2949,7 +2955,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(874, 150, 25, 25, "aux 1");
+                        Mw_Dial *o = new Mw_Dial(874, 150, 25, 25, _("aux 1"));
                         o->labelsize(8);
                         o->argument(108);
                         o->minimum(0);
@@ -2960,7 +2966,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(904, 150, 25, 25, "aux 2");
+                        Mw_Dial *o = new Mw_Dial(904, 150, 25, 25, _("aux 2"));
                         o->labelsize(8);
                         o->argument(109);
                         o->minimum(0);
@@ -2971,7 +2977,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(934, 150, 25, 25, "mix vol");
+                        Mw_Dial *o = new Mw_Dial(934, 150, 25, 25, _("mix vol"));
                         o->labelsize(8);
                         o->argument(106);
                         o->minimum(0);
@@ -2982,7 +2988,7 @@ Fenster *UserInterface::make_window()
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Slider *o = new Fl_Slider(864, 200, 80, 10, "mix pan");
+                        Fl_Slider *o = new Fl_Slider(864, 200, 80, 10, _("mix pan"));
                         o->labelsize(8);
                         o->box(FL_BORDER_BOX);
                         o->argument(107);
@@ -3001,19 +3007,19 @@ Fenster *UserInterface::make_window()
                     o->box(FL_ROUNDED_FRAME);
                     o->color(FL_BACKGROUND2_COLOR);
                     {
-                        Fl_Box *d = new Fl_Box(825, 313, 160, 135, "delay");
+                        Fl_Box *d = new Fl_Box(825, 313, 160, 135, _("delay"));
                         d->labelsize(8);
                         d->labelcolor(FL_BACKGROUND2_COLOR);
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(930, 288, 25, 25, "mod amount");
+                        Mw_Dial *o = new Mw_Dial(930, 288, 25, 25, _("mod amount"));
                         o->labelsize(8);
                         o->argument(110);
                         o->callback((Fl_Callback *)callback);
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Fl_Choice *o = new Fl_Choice(844, 265, 120, 15, "time modulator");
+                        Fl_Choice *o = new Fl_Choice(844, 265, 120, 15, _("time modulator"));
                         o->box(FL_BORDER_BOX);
                         o->down_box(FL_BORDER_BOX);
                         o->labelsize(8);
@@ -3025,21 +3031,21 @@ Fenster *UserInterface::make_window()
                         auswahl[i][o->argument()] = o;
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(844, 288, 25, 25, "delay time");
+                        Mw_Dial *o = new Mw_Dial(844, 288, 25, 25, _("delay time"));
                         o->labelsize(8);
                         o->argument(111);
                         o->callback((Fl_Callback *)callback);
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(874, 330, 25, 25, "feedback");
+                        Mw_Dial *o = new Mw_Dial(874, 330, 25, 25, _("feedback"));
                         o->labelsize(8);
                         o->argument(112);
                         o->callback((Fl_Callback *)callback);
                         Knob[i][o->argument()] = o;
                     }
                     {
-                        Mw_Dial *o = new Mw_Dial(950, 330, 25, 25, "volume");
+                        Mw_Dial *o = new Mw_Dial(950, 330, 25, 25, _("volume"));
                         o->labelsize(8);
                         o->argument(113);
                         o->callback((Fl_Callback *)callback);
@@ -3048,7 +3054,7 @@ Fenster *UserInterface::make_window()
                     o->end();
                 }
                 {
-                    Mw_Dial *o = new Mw_Dial(295, 191, 25, 25, "osc1  vol");
+                    Mw_Dial *o = new Mw_Dial(295, 191, 25, 25, _("osc1  vol"));
                     o->labelsize(8);
                     o->align(FL_ALIGN_TOP);
                     o->argument(14);
@@ -3056,14 +3062,14 @@ Fenster *UserInterface::make_window()
                     Knob[i][o->argument()] = o;
                 }
                 {
-                    Mw_Dial *o = new Mw_Dial(295, 252, 25, 25, "osc2  vol");
+                    Mw_Dial *o = new Mw_Dial(295, 252, 25, 25, _("osc2  vol"));
                     o->labelsize(8);
                     o->argument(29);
                     o->callback((Fl_Callback *)callback);
                     Knob[i][o->argument()] = o;
                 }
                 {
-                    Mw_Dial *o = new Mw_Dial(950, 228, 25, 25, "to delay");
+                    Mw_Dial *o = new Mw_Dial(950, 228, 25, 25, _("to delay"));
                     o->labelsize(8);
                     o->argument(114);
                     o->callback((Fl_Callback *)callback);
@@ -3075,8 +3081,8 @@ Fenster *UserInterface::make_window()
         }  // end of for
         {
             // ostringstream oss;
-            // oss<<"about";
-            tablabel[i] = "about";  // oss.str();
+            // oss<<_("about");
+            tablabel[i] = _("about");  // oss.str();
             Fl_Group *o = new Fl_Group(1, 10, 995, 515, tablabel[i].c_str());
             o->color((Fl_Color)246);
             o->labelsize(8);
@@ -3092,18 +3098,18 @@ Fenster *UserInterface::make_window()
                 o->image(image_miniMini);
             }
             {
-                Fl_Help_View *o = new Fl_Help_View(200, 50, 600, 300, "About Minicomputer");
+                Fl_Help_View *o = new Fl_Help_View(200, 50, 600, 300, _("About Minicomputer"));
                 o->box(FL_ROUNDED_BOX);
                 o->labelsize(8);
                 o->color((Fl_Color)246);
                 // o->textcolor(FL_BACKGROUND2_COLOR);
                 o->textfont(FL_HELVETICA_BOLD);
                 o->labelcolor(FL_BACKGROUND2_COLOR);
-                char Textausgabe[400];
+                std::string Textausgabe;
                 char version[] = _VERSION;
-                sprintf(Textausgabe, "<html><body><i><center>version %s</center></i><br><p><br>a standalone industrial grade softwaresynthesizer for Linux<br><p><br>developed by Malte Steiner 2007-2009<p>distributed as free open source software under GPL3 licence<br><p>contact:<br><center>steiner@block4.com<br>http://www.block4.com<br>http://minicomputer.sourceforge.net</center></body></html>",
+                Textausgabe = astrprintf(_("<html><body><i><center>version %s</center></i><br><p><br>a standalone industrial grade softwaresynthesizer for Linux<br><p><br>developed by Malte Steiner 2007-2009<p>distributed as free open source software under GPL3 licence<br><p>contact:<br><center>steiner@block4.com<br>http://www.block4.com<br>http://minicomputer.sourceforge.net</center></body></html>"),
                         version);
-                o->value(Textausgabe);
+                o->value(Textausgabe.c_str());
             }
             o->end();
             tab[i] = o;
@@ -3113,7 +3119,7 @@ Fenster *UserInterface::make_window()
         tabs = o;
     }
     // ---------------------------------------------------------------- end of tabs
-    /*{ Fl_Chart * o = new Fl_Chart(600, 300, 70, 70, "eg");
+    /*{ Fl_Chart * o = new Fl_Chart(600, 300, 70, 70, _("eg"));
         o->bounds(0.0,1.0);
         o->type(Fl::LINE_CHART);
         o->insert(0, 0.5, NULL, 0);
@@ -3126,7 +3132,7 @@ Fenster *UserInterface::make_window()
 
     // ----------------------------------------- Multi
     {
-        Fl_Input *o = new Fl_Input(10, 476, 106, 14, "Multi");
+        Fl_Input *o = new Fl_Input(10, 476, 106, 14, _("Multi"));
         o->box(FL_BORDER_BOX);
         // o->color(FL_FOREGROUND_COLOR);
         o->labelsize(8);
@@ -3134,7 +3140,7 @@ Fenster *UserInterface::make_window()
         o->align(FL_ALIGN_TOP_LEFT);
         // o->callback((Fl_Callback*)changemulti,NULL);
         // o->callback((Fl_Callback*)chooseMultiCallback,NULL); // for the roller
-        o->tooltip("enter name for multisetup before storing it");
+        o->tooltip(_("enter name for multisetup before storing it"));
         multichoice = o;
         Multichoice = o;
     }
@@ -3142,8 +3148,8 @@ Fenster *UserInterface::make_window()
     {
         Mw_Roller *o = new Mw_Roller(20, 492, 80, 10);
         o->type(FL_HORIZONTAL);
-        o->tooltip("roll the list of multis, press load button for loading or "
-                   "save button for storing");
+        o->tooltip(_("roll the list of multis, press load button for loading or "
+                     "save button for storing"));
         o->minimum(0);
         o->maximum(127);
         o->step(1);
@@ -3153,7 +3159,7 @@ Fenster *UserInterface::make_window()
         multiRoller = o;
     }
     {
-        Fl_Value_Output *o = new Fl_Value_Output(180, 488, 20, 15, "multiset");
+        Fl_Value_Output *o = new Fl_Value_Output(180, 488, 20, 15, _("multiset"));
         o->box(FL_ROUNDED_BOX);
         o->color(FL_BLACK);
         o->labelsize(8);
@@ -3163,8 +3169,8 @@ Fenster *UserInterface::make_window()
         multiDisplay = o;
     }
     {
-        Fl_Button *o = new Fl_Button(206, 465, 55, 19, "store multi");
-        o->tooltip("overwrite this multi");
+        Fl_Button *o = new Fl_Button(206, 465, 55, 19, _("store multi"));
+        o->tooltip(_("overwrite this multi"));
         o->box(FL_BORDER_BOX);
         o->labelsize(8);
         o->labelcolor((Fl_Color)1);
@@ -3172,8 +3178,8 @@ Fenster *UserInterface::make_window()
         sm = o;
     }
     {
-        Fl_Button *o = new Fl_Button(126, 465, 70, 19, "load multi");
-        o->tooltip("load current multi");
+        Fl_Button *o = new Fl_Button(126, 465, 70, 19, _("load multi"));
+        o->tooltip(_("load current multi"));
         o->box(FL_BORDER_BOX);
         o->labelsize(8);
         o->labelcolor((Fl_Color)186);
@@ -3182,7 +3188,7 @@ Fenster *UserInterface::make_window()
     }
     // parameter tuning
     {
-        Fl_Value_Input *o = new Fl_Value_Input(710, 470, 106, 14, "current parameter");
+        Fl_Value_Input *o = new Fl_Value_Input(710, 470, 106, 14, _("current parameter"));
         // o->box(FL_BORDER_FRAME);
         o->box(FL_ROUNDED_BOX);
         // o->color(FL_FOREGROUND_COLOR);

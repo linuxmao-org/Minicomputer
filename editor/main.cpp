@@ -28,6 +28,7 @@
 #include "Memory.h"
 #include "syntheditor.h"
 #include "communicate.h"
+#include "i18n.h"
 static bool transmit = false;
 // some common definitions
 
@@ -134,6 +135,14 @@ static void handleCpuRequests(void *)
  */
 int main(int argc, char **argv)
 {
+#ifdef MINICOMPUTER_I18N
+    /* setup i18n */
+    setlocale(LC_ALL, "");
+    const char *locale_path = MINICOMPUTER_PREFIX "/share/locale/";
+    bindtextdomain("minicomputer", locale_path);
+    textdomain("minicomputer");
+#endif
+
     printf("minieditor version %s\n", _VERSION);
 
     ringbuffer = jack_ringbuffer_create(1024);

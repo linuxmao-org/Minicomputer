@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION "3.3")
 
+set(GETTEXT_TRANSLATIONS "fr")
+
 include(FindPkgConfig)
 
 set(FLTK_SKIP_OPENGL ON)
@@ -43,3 +45,39 @@ endif()
 
 include(FindThreads)
 target_link_libraries(minicomputer PRIVATE "${CMAKE_THREAD_LIBS_INIT}")
+
+target_compile_definitions(minicomputer PRIVATE "MINICOMPUTER_PREFIX=\"${CMAKE_INSTALL_PREFIX}\"")
+install(TARGETS minicomputer DESTINATION "bin")
+
+set(ENABLE_GETTEXT "" CACHE STRING "Enable gettext")
+if(ENABLE_GETTEXT STREQUAL "")
+  find_package(Intl)
+  find_package(Gettext)
+  if(Intl_FOUND AND GETTEXT_FOUND)
+    set(ENABLE_GETTEXT "ON" CACHE STRING "Enable gettext" FORCE)
+  endif()
+endif()
+if(ENABLE_GETTEXT)
+  find_package(Intl REQUIRED)
+  find_package(Gettext REQUIRED)
+endif()
+
+if(ENABLE_GETTEXT)
+  target_compile_definitions(minicomputer PRIVATE "MINICOMPUTER_I18N=1")
+  target_include_directories(minicomputer PRIVATE ${Intl_INCLUDE_DIRS})
+  target_link_libraries(minicomputer PRIVATE ${Intl_LIBRARIES})
+  foreach(translation ${GETTEXT_TRANSLATIONS})
+    gettext_process_po_files("${translation}" ALL INSTALL_DESTINATION "share/locale" PO_FILES
+      "po/${translation}/minicomputer.po")
+  endforeach()
+endif()
+
+message("!! Feature summary:")
+macro(print_feature NAME VAR)
+  if(${VAR})
+    message("!!   ${NAME}: YES")
+  else()
+    message("!!   ${NAME}: NO")
+  endif()
+endmacro()
+print_feature("gettext" ENABLE_GETTEXT)
