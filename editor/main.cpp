@@ -212,6 +212,8 @@ int main(int argc, char **argv)
     /* an address to send messages to. sometimes it is better to let the server
      * pick a port number for you by passing NULL as the last argument */
 
+    Schaltbrett.changeMulti(0);  //load the first multi at startup
+
     Fl::add_timeout(timeoutCpuRequests, &handleCpuRequests);
 
     // lo_send(t, "/a/b/c/d", "f",10.f);
