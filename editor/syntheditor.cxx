@@ -1609,7 +1609,7 @@ Fenster *UserInterface::make_window()
                     }
                     {
                         Fl_Light_Button *o =
-                            new Fl_Light_Button(20, 92, 66, 19, _("fix frequency"));
+                            new Fl_Light_Button(20, 92, 72, 19, _("fix frequency"));
                         o->box(FL_BORDER_BOX);
                         o->selection_color((Fl_Color)89);
                         o->labelsize(8);
@@ -1796,7 +1796,7 @@ Fenster *UserInterface::make_window()
                     }
                     {
                         Fl_Light_Button *o =
-                            new Fl_Light_Button(20, 316, 66, 19, _("fix frequency"));
+                            new Fl_Light_Button(20, 316, 72, 19, _("fix frequency"));
                         o->box(FL_BORDER_BOX);
                         o->selection_color((Fl_Color)89);
                         o->labelsize(8);
@@ -2360,7 +2360,7 @@ Fenster *UserInterface::make_window()
                         o->end();
                     }
                     {
-                        Fl_Button *o = new Fl_Button(486, 430, 50, 15, _("clear filter"));
+                        Fl_Button *o = new Fl_Button(480, 430, 62, 15, _("clear filter"));
                         o->tooltip(_("reset the filter"));
                         o->box(FL_BORDER_BOX);
                         o->labelsize(8);
@@ -2802,7 +2802,7 @@ Fenster *UserInterface::make_window()
                     }
 
                     {
-                        Fl_Button *o = new Fl_Button(516, 465, 55, 19, _("store sound"));
+                        Fl_Button *o = new Fl_Button(516, 465, 59, 19, _("store sound"));
                         o->tooltip(_("store this sound on current entry"));
                         o->box(FL_BORDER_BOX);
                         o->labelsize(8);
@@ -3169,7 +3169,7 @@ Fenster *UserInterface::make_window()
         multiDisplay = o;
     }
     {
-        Fl_Button *o = new Fl_Button(206, 465, 55, 19, _("store multi"));
+        Fl_Button *o = new Fl_Button(206, 465, 59, 19, _("store multi"));
         o->tooltip(_("overwrite this multi"));
         o->box(FL_BORDER_BOX);
         o->labelsize(8);

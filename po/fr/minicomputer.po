@@ -30,7 +30,7 @@ msgstr ""
 "<html><body><i><center>version %s</center></i><br><p><br>un synthétiseur "
 "logiciel autonome de qualité industrielle pour Linux<br><p><br>développé "
 "par Malte Steiner 2007-2009<p>distribué en tant que logiciel libre sous "
-"une licence GPL3<br><p>contact:<br><center>steiner@block4.com<br>http://www.block4."
+"une licence GPL3<br><p>contact :<br><center>steiner@block4.com<br>http://www.block4."
 "com<br>http://minicomputer.sourceforge.net</center></body></html>"
 
 #: editor/syntheditor.cxx:2389 editor/syntheditor.cxx:2445
@@ -234,7 +234,7 @@ msgstr ""
 
 #: editor/syntheditor.cxx:2363
 msgid "clear filter"
-msgstr "nettoyer le filter"
+msgstr "nettoyer filtre"
 
 #: editor/syntheditor.cxx:1526
 msgid "comb"
@@ -352,7 +352,7 @@ msgstr "fréquence"
 
 #: editor/syntheditor.cxx:2947
 msgid "id vol"
-msgstr "id du volume"
+msgstr "vol id"
 
 #: editor/syntheditor.cxx:2836
 msgid ""
@@ -370,11 +370,11 @@ msgstr "charger le multi courant"
 
 #: editor/syntheditor.cxx:3181
 msgid "load multi"
-msgstr "charger le multi"
+msgstr "charger multi"
 
 #: editor/syntheditor.cxx:2813
 msgid "load sound"
-msgstr "charger le son"
+msgstr "charger son"
 
 #: editor/syntheditor.cxx:2751 editor/syntheditor.cxx:2822
 msgid "memory"
@@ -390,7 +390,7 @@ msgstr "panoramique de mix"
 
 #: editor/syntheditor.cxx:2980
 msgid "mix vol"
-msgstr "volume de mix"
+msgstr "vol mix"
 
 #: editor/syntheditor.cxx:2908 editor/syntheditor.cxx:3015
 msgid "mod amount"
@@ -450,11 +450,11 @@ msgstr ""
 
 #: editor/syntheditor.cxx:3057
 msgid "osc1  vol"
-msgstr "volume osc 1"
+msgstr "vol osc 1"
 
 #: editor/syntheditor.cxx:3065
 msgid "osc2  vol"
-msgstr "volume osc 2"
+msgstr "vol osc 2"
 
 #: editor/syntheditor.cxx:1587
 msgid "oscillator 1"
@@ -535,11 +535,11 @@ msgstr "carré"
 
 #: editor/syntheditor.cxx:3172
 msgid "store multi"
-msgstr "stocker le multi"
+msgstr "stocker multi"
 
 #: editor/syntheditor.cxx:2805
 msgid "store sound"
-msgstr "stocker le son"
+msgstr "stocker son"
 
 #: editor/syntheditor.cxx:2806
 msgid "store this sound on current entry"
