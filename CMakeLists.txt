@@ -76,6 +76,7 @@ if(ENABLE_GETTEXT)
 endif()
 
 install(FILES "minicomputer.xpm" DESTINATION "${CMAKE_INSTALL_DATADIR}/pixmaps")
+install(FILES "minicomputer.desktop" DESTINATION "${CMAKE_INSTALL_DATADIR}/applications")
 
 message("!! Feature summary:")
 macro(print_feature NAME VAR)

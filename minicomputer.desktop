@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Minicomputer
+Comment=Industrial grade digital synthesizer for Linux
+Comment[fr]=Synthétiseur numérique pour Linux de qualité industrielle
+Icon=minicomputer
+Exec=minicomputer
+TryExec=minicomputer
+Categories=AudioVideo;Audio
+Type=Application
