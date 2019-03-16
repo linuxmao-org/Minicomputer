@@ -2,6 +2,7 @@
 #define WIDGETS_H_
 
 #include <Fl/Fl.H>
+#include <stdio.h>
 #include <math.h>
 
 template <class W>
@@ -49,5 +50,30 @@ typedef Mw_Widget<Fl_Roller> Mw_Roller;
 
 #include <Fl/Fl_Dial.H>
 typedef Mw_Widget<Fl_Dial> Mw_Dial;
+
+//------------------------------------------------------------------------------
+#include <Fl/Fl_Value_Output.H>
+
+class Fmt_Value_Output : public Fl_Value_Output
+{
+public:
+    Fmt_Value_Output(int x, int y, int w, int h, const char *l = 0)
+        : Fl_Value_Output(x, y, w, h, l) {}
+
+    const char *textformat() const { return format_; }
+    void textformat(const char *f) { format_ = f; }
+
+    int format(char *buffer) override
+    {
+        if (format_) {
+            sprintf(buffer, format_, value());
+            return 0;
+        }
+        return Fl_Value_Output::format(buffer);
+    }
+
+private:
+    const char *format_ = nullptr;
+};
 
 #endif // WIDGETS_H_

@@ -2821,14 +2821,16 @@ Fenster *UserInterface::make_window()
                         o->callback((Fl_Callback *)loadsound, soundchoice[i]);
                     }
                     {
-                        Fl_Value_Output *o =
-                            new Fl_Value_Output(490, 488, 20, 15, _("memory"));
+                        Fmt_Value_Output *o =
+                            new Fmt_Value_Output(490, 488, 20, 15, _("memory"));
                         o->box(FL_ROUNDED_BOX);
                         o->color(FL_BLACK);
                         o->labelsize(8);
                         o->maximum(512);
                         o->textsize(8);
                         o->textcolor(FL_RED);
+                        o->textfont(FL_HELVETICA_BOLD);
+                        o->textformat("%03.0f");
                         // std::string tooltip;
                         // tooltip = astrprintf(_("accept Midi Program Change on
                         // channel %i"),i); o->tooltip(tooltip.c_str());
@@ -3162,13 +3164,15 @@ Fenster *UserInterface::make_window()
         multiRoller = o;
     }
     {
-        Fl_Value_Output *o = new Fl_Value_Output(180, 488, 20, 15, _("multiset"));
+        Fmt_Value_Output *o = new Fmt_Value_Output(180, 488, 20, 15, _("multiset"));
         o->box(FL_ROUNDED_BOX);
         o->color(FL_BLACK);
         o->labelsize(8);
         o->maximum(512);
         o->textsize(8);
         o->textcolor(FL_RED);
+        o->textfont(FL_HELVETICA_BOLD);
+        o->textformat("%03.0f");
         multiDisplay = o;
     }
     {
