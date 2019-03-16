@@ -1427,6 +1427,7 @@ int Fl_SteinerKnob::handle(int event) {
 
 Fenster *UserInterface::make_window()
 {
+#if FL_API_VERSION >= 10303
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Wwrite-strings"
     #include "../minicomputer.xpm"
@@ -1435,6 +1436,7 @@ Fenster *UserInterface::make_window()
     Fl_Pixmap icon(minicomputer_xpm);
     Fl_RGB_Image image(&icon);
     Fl_Window::default_icon(&image);
+#endif
 
     // Fl_Double_Window* w;
     // {
