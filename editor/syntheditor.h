@@ -61,7 +61,7 @@ class Fl_SteinerKnob:public Fl_Dial
 {
     public:
     Fl_SteinerKnob(int x, int y, int w, int h, const char *label);//:Fl_Dial(x,
-y, w, h, label); int handle(int event); private: int altx;
+y, w, h, label); int handle(int event) override; private: int altx;
 };
 */
 /** custom class for window, derieved from Fl_Double_Window
@@ -74,7 +74,7 @@ public:
     Fenster(int w, int h, const char *t);
     Fenster(int w, int h);
     ~Fenster();
-    int handle(int event);
+    int handle(int event) override;
 };
 
 class UserInterface {
