@@ -10,6 +10,8 @@ set(FLTK_SKIP_IMAGES ON)
 set(FLTK_SKIP_FLUID ON)
 find_package(FLTK REQUIRED)
 
+set(CMAKE_CXX_STANDARD "11")
+
 if(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang)$")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ffast-math")

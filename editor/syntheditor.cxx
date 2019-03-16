@@ -20,6 +20,10 @@
 #include "communicate.h"
 #include "utility.h"
 #include "i18n.h"
+// the logo image
+static const unsigned char idata_miniMini[] = {
+    #include "LogoImage.dat"
+};
 static Fl_RGB_Image image_miniMini(idata_miniMini, 191, 99, 3, 0);
 // gcc -o synthEditor2 syntheditor.cxx -lfltk -llo
 Fl_Widget *Knob[8][_PARACOUNT];
@@ -1273,14 +1277,13 @@ static void storemulti(Fl_Widget *o, void *e)
     /*printf("choice %i\n",((Fl_Input_Choice*)e)->menubutton()->value());
     fflush(stdout);
     */
-    int i;
 
     if (Multichoice != NULL) {
         int t = (int)multiRoller->value();  // Multichoice->menubutton()->value();
 #ifdef _DEBUG
         printf("was:%d is:%d\n", currentmulti, t);
 #endif
-        if ((t != currentmulti) && (t > -1) && (t < 128)) {
+        if (((unsigned int)t != currentmulti) && ((unsigned int)t < 128)) {
             currentmulti = t;
         }
     }
@@ -1295,7 +1298,7 @@ static void storemulti(Fl_Widget *o, void *e)
     // Schaltbrett.soundchoice-> add(Speicher.getName(i).c_str());
     // get the knobs of the mix
 
-    for (i = 0; i < 8; ++i) {
+    for (int i = 0; i < 8; ++i) {
         Speicher.multis[currentmulti].sound[i] = Speicher.getChoice(i);
 #ifdef _DEBUG
         printf("sound slot: %d = %d\n", i, Speicher.getChoice(i));

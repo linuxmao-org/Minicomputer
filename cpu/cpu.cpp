@@ -1069,7 +1069,7 @@ void cpuHandleMidi(const unsigned char *ev, unsigned size)
                 c, note);
 #endif
         if (c < _MULTITEMP)
-            if (lastnote[c] == note) {
+            if (lastnote[c] == (unsigned int)note) {
                 egStop(c, 0);
                 if (EGrepeat[c][1] == 0)
                     egStop(c, 1);
