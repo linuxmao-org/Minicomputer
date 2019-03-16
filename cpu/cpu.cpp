@@ -22,8 +22,8 @@
 #include "../common.h"
 
 // hooks
-void (*cpuMultiChangeHook)(unsigned value) = NULL;
-void (*cpuProgramChangeHook)(unsigned channel, unsigned value) = NULL;
+void (*cpuMultiChangeHook)(unsigned value) = nullptr;
+void (*cpuProgramChangeHook)(unsigned channel, unsigned value) = nullptr;
 
 // variables
 float delayBuffer[_MULTITEMP][96000] __attribute__((aligned(16)));

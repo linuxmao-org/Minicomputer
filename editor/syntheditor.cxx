@@ -53,7 +53,7 @@ static void choicecallback(Fl_Widget *o, void *)
 /* // not good:
 static void changemulti(Fl_Widget* o, void*)
 {
-    if (Multichoice != NULL)
+    if (Multichoice != nullptr)
     {
         int t = Multichoice->menubutton()->value();
         if ((t!=currentmulti) && (t>-1) && (t<128))
@@ -86,67 +86,67 @@ static void tabcallback(Fl_Widget *o, void *)
     // %i\n",(int)((Fl_Group*)o)->argument(),*g);//currentsound); fflush(stdout);
     Fl_Widget *e = ((Fl_Tabs *)o)->value();
     if (e == tab[8]) {
-        if (multiDisplay != NULL)
+        if (multiDisplay != nullptr)
             multiDisplay->hide();
         else
             printf("there seems to be something wrong with multiroller widget");
 
-        if (multiRoller != NULL)
+        if (multiRoller != nullptr)
             multiRoller->hide();
         else
             printf("there seems to be something wrong with multiroller widget");
 
-        if (Multichoice != NULL)
+        if (Multichoice != nullptr)
             Multichoice->hide();
         else
             printf("there seems to be something wrong with multichoice widget");
-        if (sm != NULL)
+        if (sm != nullptr)
             sm->hide();
         else
             printf("there seems to be something wrong with storemultibutton "
                    "widget");
 
-        if (lm != NULL)
+        if (lm != nullptr)
             lm->hide();
         else
             printf("there seems to be something wrong with loadmultibutton "
                    "widget");
 
 
-        if (paramon != NULL)
+        if (paramon != nullptr)
             paramon->hide();
         else
             printf("there seems to be something wrong with paramon widget");
     }
     else {
-        if (multiDisplay != NULL)
+        if (multiDisplay != nullptr)
             multiDisplay->show();
         else
             printf(
                 "there seems to be something wrong with multiDisplay widget");
 
-        if (multiRoller != NULL)
+        if (multiRoller != nullptr)
             multiRoller->show();
         else
             printf("there seems to be something wrong with multiroller widget");
 
-        if (Multichoice != NULL)
+        if (Multichoice != nullptr)
             Multichoice->show();
         else
             printf("there seems to be something wrong with multichoice widget");
-        if (sm != NULL)
+        if (sm != nullptr)
             sm->show();
         else
             printf("there seems to be something wrong with storemultibutton "
                    "widget");
 
-        if (lm != NULL)
+        if (lm != nullptr)
             lm->show();
         else
             printf("there seems to be something wrong with loadmultibutton "
                    "widget");
 
-        if (paramon != NULL)
+        if (paramon != nullptr)
             paramon->show();
         else
             printf("there seems to be something wrong with paramon widget");
@@ -174,7 +174,7 @@ static void tabcallback(Fl_Widget *o, void *)
 static void callback(Fl_Widget *o, void *)
 {
     Fl::lock();
-    if (o != NULL) {
+    if (o != nullptr) {
         currentParameter = ((Fl_Valuator *)o)->argument();
 
         // show only parameter on finetune when its not a frequency
@@ -511,7 +511,7 @@ static void callback(Fl_Widget *o, void *)
 #ifdef _DEBUG
         fflush(stdout);
 #endif
-    }  // end of o != NULL
+    }  // end of o != nullptr
 
     Fl::awake();
     Fl::unlock();
@@ -532,11 +532,11 @@ static void copycallback(Fl_Widget* o, void*) {
     {
 
         ((Fl_Valuator* )Knob[currentsound][33])->value(	((Fl_Valuator*
-)Knob[currentsound][30])->value()); callback(Knob[currentsound][33],NULL);
+)Knob[currentsound][30])->value()); callback(Knob[currentsound][33],nullptr);
         ((Fl_Valuator* )Knob[currentsound][34])->value(	((Fl_Valuator*
-)Knob[currentsound][31])->value()); callback(Knob[currentsound][34],NULL);
+)Knob[currentsound][31])->value()); callback(Knob[currentsound][34],nullptr);
         ((Fl_Valuator* )Knob[currentsound][35])->value(	((Fl_Valuator*
-)Knob[currentsound][32])->value()); callback(Knob[currentsound][35],NULL);
+)Knob[currentsound][32])->value()); callback(Knob[currentsound][35],nullptr);
     }
     break;
     }
@@ -567,7 +567,7 @@ static void finetune(Fl_Widget *o, void *)
             Fl::lock();
             ((Fl_Valuator *)Knob[currentsound][currentParameter])
                 ->value(((Fl_Valuator *)o)->value());
-            callback(Knob[currentsound][currentParameter], NULL);
+            callback(Knob[currentsound][currentParameter], nullptr);
             Fl::awake();
             Fl::unlock();
             break;
@@ -582,7 +582,7 @@ static void lfoCallback(Fl_Widget* o, void*)
     int Argument = ((Fl_Valuator* )o)->argument();
     ((Fl_Positioner* )Knob[currentsound][Argument])->xvalue(Faktor);
     ((Fl_Positioner* )Knob[currentsound][Argument])->yvalue(Rem);
-    callback(Knob[currentsound][Argument],NULL);
+    callback(Knob[currentsound][Argument],nullptr);
 }
 */
 /** callback when a cutoff has changed
@@ -599,7 +599,7 @@ static void cutoffCallback(Fl_Widget *o, void *)
     int Argument = ((Fl_Valuator *)o)->argument();
     ((Fl_Positioner *)Knob[currentsound][Argument])->xvalue(Faktor);
     ((Fl_Positioner *)Knob[currentsound][Argument])->yvalue(Rem);
-    callback(Knob[currentsound][Argument], NULL);
+    callback(Knob[currentsound][Argument], nullptr);
     Fl::awake();
     Fl::unlock();
 }
@@ -617,7 +617,7 @@ static void tuneCallback(Fl_Widget *o, void *)
     int Argument = ((Fl_Valuator *)o)->argument();
     ((Fl_Positioner *)Knob[currentsound][Argument])->xvalue(Faktor);
     ((Fl_Positioner *)Knob[currentsound][Argument])->yvalue(Rem);
-    callback(Knob[currentsound][Argument], NULL);
+    callback(Knob[currentsound][Argument], nullptr);
     Fl::awake();
     Fl::unlock();
 }
@@ -664,7 +664,7 @@ static void exportSound(Fl_File_Chooser *w, void *userdata)
 {
         printf("to %d\n",w->shown());
         fflush(stdout);
-    if ((w->shown() !=1) && (w->value() != NULL))
+    if ((w->shown() !=1) && (w->value() != nullptr))
     {
         printf("export to %s\n",w->value());
         fflush(stdout);
@@ -682,7 +682,7 @@ static void exportPressed(Fl_Widget *o, void *)
     fc->show();
     while (fc->shown())
         Fl::wait();  // block until choice is done
-    if ((fc->value() != NULL)) {
+    if ((fc->value() != nullptr)) {
 #ifdef _DEBUG
         printf("export to %s\n", fc->value());
         fflush(stdout);
@@ -710,7 +710,7 @@ static void importPressed(Fl_Widget *o, void *)
     fc->show();
     while (fc->shown())
         Fl::wait();  // block until choice is done
-    if ((fc->value() != NULL)) {
+    if ((fc->value() != nullptr)) {
 #ifdef _DEBUG
         // printf("currentsound %i,roller %f, importon %i to %i :
         // %s\n",currentsound,Rollers[currentsound]->value(),((Fl_Input_Choice*)e)->menubutton()->value(),(int)memDisplay[currentsound]->value(),fc->value());//Speicher.multis[currentmulti].sound[currentsound]
@@ -783,7 +783,7 @@ static void storesound(Fl_Widget *o, void *e)
     int i;
     for (i = 0; i < _PARACOUNT; ++i)  // go through all parameters
     {
-        if (Knob[currentsound][i] != NULL) {
+        if (Knob[currentsound][i] != nullptr) {
             // int j=-1024;
             Speicher.sounds[Speicher.getChoice(currentsound)].parameter[i] =
                 ((Fl_Valuator *)Knob[currentsound][i])->value();
@@ -945,7 +945,7 @@ static void storesound(Fl_Widget *o, void *e)
     }  // end of for
 
     for (i = 0; i < 17; ++i) {
-        if (auswahl[currentsound][i] != NULL) {
+        if (auswahl[currentsound][i] != nullptr) {
             Speicher.sounds[Speicher.getChoice(currentsound)].choice[i] =
                 auswahl[currentsound][i]->value();
 #ifdef _DEBUG
@@ -994,7 +994,7 @@ static void recall(unsigned int preset)
 #endif
     Speicher.setChoice(currentsound, preset);
     for (i = 0; i < _PARACOUNT; ++i) {
-        if (Knob[currentsound][i] != NULL) {
+        if (Knob[currentsound][i] != nullptr) {
 #ifdef _DEBUG
             printf("i == %i \n", i);
             fflush(stdout);
@@ -1025,7 +1025,7 @@ static void recall(unsigned int preset)
                 else {
                     ((Fl_Light_Button *)Knob[currentsound][i])->value(1);
                 }
-                callback(Knob[currentsound][i], NULL);
+                callback(Knob[currentsound][i], nullptr);
 
                 break;
             }
@@ -1040,7 +1040,7 @@ static void recall(unsigned int preset)
                     ->xvalue(Speicher.sounds[Speicher.getChoice(currentsound)].freq[0][0]);
                 ((Fl_Positioner *)Knob[currentsound][i])
                     ->yvalue(Speicher.sounds[Speicher.getChoice(currentsound)].freq[0][1]);
-                callback(Knob[currentsound][i], NULL);
+                callback(Knob[currentsound][i], nullptr);
 
                 break;
             }
@@ -1049,7 +1049,7 @@ static void recall(unsigned int preset)
                     ->xvalue(Speicher.sounds[Speicher.getChoice(currentsound)].freq[1][0]);
                 ((Fl_Positioner *)Knob[currentsound][i])
                     ->yvalue(Speicher.sounds[Speicher.getChoice(currentsound)].freq[1][1]);
-                callback(Knob[currentsound][i], NULL);
+                callback(Knob[currentsound][i], nullptr);
                 break;
             }
             //************************************ filter cuts *****************************
@@ -1058,7 +1058,7 @@ static void recall(unsigned int preset)
                     ->xvalue(Speicher.sounds[Speicher.getChoice(currentsound)].freq[2][0]);
                 ((Fl_Positioner *)Knob[currentsound][i])
                     ->yvalue(Speicher.sounds[Speicher.getChoice(currentsound)].freq[2][1]);
-                callback(Knob[currentsound][i], NULL);
+                callback(Knob[currentsound][i], nullptr);
 
                 break;
             }
@@ -1067,7 +1067,7 @@ static void recall(unsigned int preset)
                     ->xvalue(Speicher.sounds[Speicher.getChoice(currentsound)].freq[3][0]);
                 ((Fl_Positioner *)Knob[currentsound][i])
                     ->yvalue(Speicher.sounds[Speicher.getChoice(currentsound)].freq[3][1]);
-                callback(Knob[currentsound][i], NULL);
+                callback(Knob[currentsound][i], nullptr);
 
                 break;
             }
@@ -1076,7 +1076,7 @@ static void recall(unsigned int preset)
                     ->xvalue(Speicher.sounds[Speicher.getChoice(currentsound)].freq[4][0]);
                 ((Fl_Positioner *)Knob[currentsound][i])
                     ->yvalue(Speicher.sounds[Speicher.getChoice(currentsound)].freq[4][1]);
-                callback(Knob[currentsound][i], NULL);
+                callback(Knob[currentsound][i], nullptr);
                 break;
             }
             case 43: {
@@ -1084,7 +1084,7 @@ static void recall(unsigned int preset)
                     ->xvalue(Speicher.sounds[Speicher.getChoice(currentsound)].freq[5][0]);
                 ((Fl_Positioner *)Knob[currentsound][i])
                     ->yvalue(Speicher.sounds[Speicher.getChoice(currentsound)].freq[5][1]);
-                callback(Knob[currentsound][i], NULL);
+                callback(Knob[currentsound][i], nullptr);
 
                 break;
             }
@@ -1093,7 +1093,7 @@ static void recall(unsigned int preset)
                     ->xvalue(Speicher.sounds[Speicher.getChoice(currentsound)].freq[6][0]);
                 ((Fl_Positioner *)Knob[currentsound][i])
                     ->yvalue(Speicher.sounds[Speicher.getChoice(currentsound)].freq[6][1]);
-                callback(Knob[currentsound][i], NULL);
+                callback(Knob[currentsound][i], nullptr);
 
                 break;
             }
@@ -1102,7 +1102,7 @@ static void recall(unsigned int preset)
                     ->xvalue(Speicher.sounds[Speicher.getChoice(currentsound)].freq[7][0]);
                 ((Fl_Positioner *)Knob[currentsound][i])
                     ->yvalue(Speicher.sounds[Speicher.getChoice(currentsound)].freq[7][1]);
-                callback(Knob[currentsound][i], NULL);
+                callback(Knob[currentsound][i], nullptr);
 
                 break;
             }
@@ -1111,7 +1111,7 @@ static void recall(unsigned int preset)
                     ->xvalue(Speicher.sounds[Speicher.getChoice(currentsound)].freq[8][0]);
                 ((Fl_Positioner *)Knob[currentsound][i])
                     ->yvalue(Speicher.sounds[Speicher.getChoice(currentsound)].freq[8][1]);
-                callback(Knob[currentsound][i], NULL);
+                callback(Knob[currentsound][i], nullptr);
                 break;
             }
 
@@ -1126,7 +1126,7 @@ static void recall(unsigned int preset)
             default: {
                 ((Fl_Valuator *)Knob[currentsound][i])
                     ->value(Speicher.sounds[Speicher.getChoice(currentsound)].parameter[i]);
-                callback(Knob[currentsound][i], NULL);
+                callback(Knob[currentsound][i], nullptr);
                 break;
             }
             }
@@ -1137,10 +1137,10 @@ static void recall(unsigned int preset)
     printf("so weit so gut");
 #endif
     for (i = 0; i < 17; ++i) {
-        if (auswahl[currentsound][i] != NULL) {
+        if (auswahl[currentsound][i] != nullptr) {
             auswahl[currentsound][i]->value(
                 Speicher.sounds[Speicher.getChoice(currentsound)].choice[i]);
-            choicecallback(auswahl[currentsound][i], NULL);
+            choicecallback(auswahl[currentsound][i], nullptr);
 #ifdef _DEBUG
             printf("l:%i:%i ", i,
                    Speicher.sounds[Speicher.getChoice(currentsound)].choice[i]);
@@ -1227,7 +1227,7 @@ static void loadmulti(Fl_Widget *o, void *e)
             case 0:  // knob 101
                 ((Fl_Valuator *)Knob[i][101])
                     ->value(Speicher.multis[currentmulti].settings[i][j]);
-                callback(Knob[i][101], NULL);
+                callback(Knob[i][101], nullptr);
                 break;
             case 1:  // knob 106
             case 2:  // knob 107
@@ -1241,7 +1241,7 @@ static void loadmulti(Fl_Widget *o, void *e)
 #endif
                 ((Fl_Valuator *)Knob[i][actualknob])
                     ->value(Speicher.multis[currentmulti].settings[i][j]);
-                callback(Knob[i][actualknob], NULL);
+                callback(Knob[i][actualknob], nullptr);
             } break;
             default:
                 // do nothing
@@ -1252,7 +1252,7 @@ static void loadmulti(Fl_Widget *o, void *e)
     currentsound = 0;
     // we should go to a defined state, means tab
     tabs->value(tab[0]);
-    tabcallback(tabs, NULL);
+    tabcallback(tabs, nullptr);
 
 #ifdef _DEBUG
     printf("multi choice %s\n", ((Fl_Input *)e)->value());
@@ -1278,7 +1278,7 @@ static void storemulti(Fl_Widget *o, void *e)
     fflush(stdout);
     */
 
-    if (Multichoice != NULL) {
+    if (Multichoice != nullptr) {
         int t = (int)multiRoller->value();  // Multichoice->menubutton()->value();
 #ifdef _DEBUG
         printf("was:%d is:%d\n", currentmulti, t);
@@ -1343,7 +1343,7 @@ void UserInterface::changeMulti(int pgm)
     multiRoller->value(pgm);  // set gui
     multiRoller->redraw();
     multiDisplay->value(pgm);
-    loadmulti(NULL, multichoice);
+    loadmulti(nullptr, multichoice);
     //	Fl::redraw();
     //	Fl::flush();
     Fl::awake();
@@ -1367,7 +1367,7 @@ void UserInterface::changeSound(int channel, int pgm)
         Rollers[channel]->value(pgm);  // set gui
         Rollers[channel]->redraw();
         memDisplay[channel]->value(pgm);
-        loadsound(NULL, schoice[channel]);
+        loadsound(nullptr, schoice[channel]);
         //		Fl::redraw();
         //		Fl::flush();
         currentsound = t;
@@ -1441,11 +1441,11 @@ Fenster *UserInterface::make_window()
 #ifdef _DEBUG
         printf("%i \n", i);
 #endif
-        auswahl[currentsound][i] = NULL;
+        auswahl[currentsound][i] = nullptr;
         fflush(stdout);
     }
     for (int i = 0; i < _PARACOUNT; ++i) {
-        Knob[currentsound][i] = NULL;
+        Knob[currentsound][i] = nullptr;
     }
 
     // menus ---------------------------------------------------------------------
@@ -2788,7 +2788,7 @@ Fenster *UserInterface::make_window()
                         soundchoice[i] = o;
                         schoice[i] = o;
                         d->add(o);
-                        // o->callback((Fl_Callback*)chooseCallback,NULL);
+                        // o->callback((Fl_Callback*)chooseCallback,nullptr);
                     }
                     {
                         Mw_Roller *o = new Mw_Roller(274, 487, 150, 14);
@@ -2801,7 +2801,7 @@ Fenster *UserInterface::make_window()
                         o->box(FL_BORDER_FRAME);
                         o->mouse_wheel_steps(512);
                         Rollers[i] = o;
-                        o->callback((Fl_Callback *)rollerCallback, NULL);
+                        o->callback((Fl_Callback *)rollerCallback, nullptr);
                     }
 
                     {
@@ -3125,10 +3125,10 @@ Fenster *UserInterface::make_window()
     /*{ Fl_Chart * o = new Fl_Chart(600, 300, 70, 70, _("eg"));
         o->bounds(0.0,1.0);
         o->type(Fl::LINE_CHART);
-        o->insert(0, 0.5, NULL, 0);
-        o->insert(1, 0.5, NULL, 0);
-        o->insert(2, 1, NULL, 0);
-        o->insert(3, 0.5, NULL, 0);
+        o->insert(0, 0.5, nullptr, 0);
+        o->insert(1, 0.5, nullptr, 0);
+        o->insert(2, 1, nullptr, 0);
+        o->insert(3, 0.5, nullptr, 0);
         EG[0]=o;
 
     }*/
@@ -3141,8 +3141,8 @@ Fenster *UserInterface::make_window()
         o->labelsize(8);
         o->textsize(8);
         o->align(FL_ALIGN_TOP_LEFT);
-        // o->callback((Fl_Callback*)changemulti,NULL);
-        // o->callback((Fl_Callback*)chooseMultiCallback,NULL); // for the roller
+        // o->callback((Fl_Callback*)changemulti,nullptr);
+        // o->callback((Fl_Callback*)chooseMultiCallback,nullptr); // for the roller
         o->tooltip(_("enter name for multisetup before storing it"));
         multichoice = o;
         Multichoice = o;
@@ -3158,7 +3158,7 @@ Fenster *UserInterface::make_window()
         o->step(1);
         o->box(FL_BORDER_FRAME);
         o->mouse_wheel_steps(128);
-        o->callback((Fl_Callback *)multiRollerCallback, NULL);
+        o->callback((Fl_Callback *)multiRollerCallback, nullptr);
         multiRoller = o;
     }
     {
@@ -3247,39 +3247,39 @@ int Fenster::handle(int event)
 {
     switch (event) {
     case FL_KEYBOARD:
-        if (tabs != NULL) {
+        if (tabs != nullptr) {
             switch (Fl::event_key()) {
             case FL_F + 1:
                 tabs->value(tab[0]);
-                tabcallback(tabs, NULL);
+                tabcallback(tabs, nullptr);
                 break;
             case FL_F + 2:
                 tabs->value(tab[1]);
-                tabcallback(tabs, NULL);
+                tabcallback(tabs, nullptr);
                 break;
             case FL_F + 3:
                 tabs->value(tab[2]);
-                tabcallback(tabs, NULL);
+                tabcallback(tabs, nullptr);
                 break;
             case FL_F + 4:
                 tabs->value(tab[3]);
-                tabcallback(tabs, NULL);
+                tabcallback(tabs, nullptr);
                 break;
             case FL_F + 5:
                 tabs->value(tab[4]);
-                tabcallback(tabs, NULL);
+                tabcallback(tabs, nullptr);
                 break;
             case FL_F + 6:
                 tabs->value(tab[5]);
-                tabcallback(tabs, NULL);
+                tabcallback(tabs, nullptr);
                 break;
             case FL_F + 7:
                 tabs->value(tab[6]);
-                tabcallback(tabs, NULL);
+                tabcallback(tabs, nullptr);
                 break;
             case FL_F + 8:
                 tabs->value(tab[7]);
-                tabcallback(tabs, NULL);
+                tabcallback(tabs, nullptr);
                 break;
             }  // end of switch
         }  // end of if

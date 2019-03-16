@@ -87,7 +87,7 @@ int cpuStart()
     const char jackName[] = "Minicomputer";  // signifier for audio and midiconnections
 
     /* naturally we need to become a jack client */
-    client = jack_client_open(jackName, JackNoStartServer, NULL);
+    client = jack_client_open(jackName, JackNoStartServer, nullptr);
     if (!client) {
         printf("couldn't connect to jack server, is it running?\n");
         return 1;

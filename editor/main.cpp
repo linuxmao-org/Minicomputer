@@ -34,7 +34,7 @@ static bool transmit = false;
 
 Memory Speicher;
 UserInterface Schaltbrett;
-static jack_ringbuffer_t *ringbuffer = NULL;
+static jack_ringbuffer_t *ringbuffer = nullptr;
 static const double timeoutCpuRequests = 0.1;
 
 /*
@@ -219,7 +219,7 @@ int main(int argc, char **argv)
     Fl::lock();
     w->show(ac, av);
     /* an address to send messages to. sometimes it is better to let the server
-     * pick a port number for you by passing NULL as the last argument */
+     * pick a port number for you by passing nullptr as the last argument */
 
     Schaltbrett.changeMulti(0);  //load the first multi at startup
 
