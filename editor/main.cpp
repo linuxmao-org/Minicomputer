@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <vector>
 // thanks to Leslie P. Polzer pointing me out to include cstring and more for gcc 4.3 onwards
 #include <cstdio>
 #include <cstdlib>
@@ -28,6 +29,7 @@
 #include "Memory.h"
 #include "syntheditor.h"
 #include "communicate.h"
+#include "utility.h"
 #include "i18n.h"
 static bool transmit = false;
 // some common definitions
@@ -127,6 +129,11 @@ static void handleCpuRequests(void *)
     Fl::repeat_timeout(timeoutCpuRequests, &handleCpuRequests);
 }
 
+static void usage()
+{
+    printf("usage: minicomputer [-port osc-port] [-bg color] [-fg color]\n");
+}
+
 /** @brief the main routine
  *
  * @param argc the amount of arguments
@@ -143,6 +150,39 @@ int main(int argc, char **argv)
 #endif
 
     printf("minieditor version %s\n", _VERSION);
+
+    // check color settings in arguments and add some if missing
+    bool needcolor = true;  // true means user didnt give some so I need to take care myself
+
+#ifdef MINICOMPUTER_OSC
+    int oscport = 0;
+#endif
+
+    std::vector<char *> fl_argv;
+    fl_argv.push_back(argv[0]);
+
+    for (int argi = 1; argi < argc;) {
+        char *arg = argv[argi++];
+        if (!strcmp(arg, "-fg") || !strcmp(arg, "-bg")) {
+            /* pass it to FLTK */
+            needcolor = false;
+            fl_argv.push_back(arg);
+            arg = argv[argi++];
+            if (!arg) { usage(); return 1; }
+            fl_argv.push_back(arg);
+        }
+        else if (!strcmp(arg, "-port")) {
+#ifdef MINICOMPUTER_OSC
+            arg = argv[argi++];
+            if (!arg) { usage(); return 1; }
+            oscport = atoi(arg);;
+#endif
+        }
+        else {
+            usage();
+            return 1;
+        }
+    }
 
     ringbuffer = jack_ringbuffer_create(1024);
 
@@ -175,16 +215,6 @@ int main(int argc, char **argv)
       Schaltbrett.multichoice->add(Speicher.multis[i].name);
     }*/
     // printf("weiter...\n");
-    // check color settings in arguments and add some if missing
-    bool needcolor = true;  // true means user didnt give some so I need to take care myself
-    int i;
-    if (argc > 1) {
-        for (i = 0; i < argc; ++i) {
-            if ((strcmp(argv[i], "-bg") == 0) || (strcmp(argv[i], "-fg") == 0)) {
-                needcolor = false;
-            }
-        }
-    }
 
     //------------------------- start engine -----------------------------
     cpuMultiChangeHook = &cbEditorMultiChange;
@@ -193,30 +223,30 @@ int main(int argc, char **argv)
     if (cpuStart() != 0)
         return 1;
 
-    int ac = argc;  // new argumentcount
-    if (needcolor) {
-        ac += 4;  // add 2 more arguments and their values
-    }
-    char *av[ac];  // the new array
-    for (i = 0; i < argc; ++i)  // now actually copying it
-    {
-        av[i] = argv[i];
-        printf("%s\n", argv[i]);
-    }
+#ifdef MINICOMPUTER_OSC
+    if (oscport >= 0)
+        oscport = cpuListenOsc(oscport);
+#endif
 
     if (needcolor)  // add the arguments in case they are needed
     {
-        static char bg[] = "-bg";
-        static char bgv[] = "grey";
-        static char fg[] = "-fg";
-        static char fgv[] = "black";
-        av[ac - 4] = bg;
-        av[ac - 3] = bgv;
-        av[ac - 2] = fg;
-        av[ac - 1] = fgv;
+        fl_argv.push_back((char *)"-bg");
+        fl_argv.push_back((char *)"grey");
+        fl_argv.push_back((char *)"-fg");
+        fl_argv.push_back((char *)"black");
     }
     Fl::lock();
-    w->show(ac, av);
+
+    fl_argv.push_back(nullptr);
+    w->show((int)(fl_argv.size() - 1), fl_argv.data());
+
+#ifdef MINICOMPUTER_OSC
+    if (oscport > 0) {
+        std::string caption = astrprintf("%s - %s", w->label(), cpuGetOscUrl());
+        w->copy_label(caption.c_str());
+    }
+#endif
+
     /* an address to send messages to. sometimes it is better to let the server
      * pick a port number for you by passing nullptr as the last argument */
 

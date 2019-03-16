@@ -19,6 +19,8 @@
 #ifndef CPU_H_
 #define CPU_H_
 
+#include <string>
+
 // defines
 #define _MODCOUNT 32
 #define _WAVECOUNT 32
@@ -30,6 +32,11 @@
 
 int cpuStart();
 void cpuStop();
+
+#ifdef MINICOMPUTER_OSC
+int cpuListenOsc(unsigned port);
+const char *cpuGetOscUrl();
+#endif
 
 void cpuInit(float sampleRate);
 

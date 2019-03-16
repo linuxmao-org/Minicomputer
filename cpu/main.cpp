@@ -20,12 +20,14 @@
 
 #include <jack/jack.h>
 #include <jack/midiport.h>
+#include <string>
 #include <signal.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <assert.h>
 #include <pthread.h>
 #include "cpu.h"
 // some common definitions
@@ -34,6 +36,12 @@
 static jack_client_t *client;
 static jack_port_t *port[_MULTITEMP + 4];  // _multitemp * ports + 2 mix and 2 aux
 static jack_port_t *midiport;
+
+#ifdef MINICOMPUTER_OSC
+#include <lo/lo.h>
+static lo_server_thread oscServer = nullptr;
+std::string oscServerUrl;
+#endif
 
 // void midi_action(snd_seq_t *seq_handle);
 
@@ -148,6 +156,13 @@ int cpuStart()
 
 void cpuStop()
 {
+#ifdef MINICOMPUTER_OSC
+    if (oscServer) {
+        lo_server_thread_free(oscServer);
+        oscServer = nullptr;
+    }
+#endif
+
     /* so we shall quit, eh? ok, cleanup time. otherwise
      * jack would probably produce an xrun
      * on shutdown */
@@ -160,3 +175,46 @@ void cpuStop()
     printf("close minicomputer\n");
     fflush(stdout);
 }
+
+#ifdef MINICOMPUTER_OSC
+
+static void oscError(int num, const char *msg, const char *path)
+{
+    fprintf(stderr, "OSC server error %d in path %s: %s\n", num, path, msg);
+}
+
+int cpuListenOsc(unsigned port)
+{
+    assert(!oscServer);
+
+    oscServer = lo_server_thread_new(port ? std::to_string(port).c_str() : nullptr, &oscError);
+    if (!oscServer)
+        return -1;
+
+    lo_server_thread_add_method(
+        oscServer, "/Minicomputer/choice", "iii",
+        +[](const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+             { return cpuReceiveChoice(argv[0]->i, argv[1]->i, argv[2]->i); }, nullptr);
+
+    lo_server_thread_add_method(
+        oscServer, "/Minicomputer", "iif",
+        +[](const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+             { return cpuReceiveParameter(argv[0]->i, argv[1]->i, argv[2]->f); }, nullptr);
+
+    if (lo_server_thread_start(oscServer) != 0) {
+        lo_server_thread_free(oscServer);
+        oscServer = nullptr;
+    }
+
+    char *url = lo_server_thread_get_url(oscServer);
+    oscServerUrl.assign(url);
+    free(url);
+
+    return lo_server_thread_get_port(oscServer);
+}
+
+const char *cpuGetOscUrl()
+{
+    return oscServerUrl.c_str();
+}
+#endif
