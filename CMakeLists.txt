@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION "3.3")
 
+project(Minicomputer VERSION "1.41" LANGUAGES C CXX)
+set(PROJECT_VENDOR "Linuxmao.org contributors")
+set(PROJECT_CONTACT "Linuxmao.org contributors <http://linuxmao.org/>")
+set(PROJECT_HOMEPAGE "https://github.com/linuxmao-org/Minicomputer.git")
+
 set(GETTEXT_TRANSLATIONS "fr")
 
 include(GNUInstallDirs)
@@ -100,3 +105,5 @@ macro(print_feature NAME VAR)
 endmacro()
 print_feature("OSC" ENABLE_OSC)
 print_feature("gettext" ENABLE_GETTEXT)
+
+include(CPackLists.txt)
