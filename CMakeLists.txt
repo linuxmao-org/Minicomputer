@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION "3.3")
 
 set(GETTEXT_TRANSLATIONS "fr")
 
+include(GNUInstallDirs)
 include(FindPkgConfig)
 
 set(FLTK_SKIP_OPENGL ON)
@@ -48,8 +49,8 @@ endif()
 include(FindThreads)
 target_link_libraries(minicomputer PRIVATE "${CMAKE_THREAD_LIBS_INIT}")
 
-target_compile_definitions(minicomputer PRIVATE "MINICOMPUTER_PREFIX=\"${CMAKE_INSTALL_PREFIX}\"")
-install(TARGETS minicomputer DESTINATION "bin")
+target_compile_definitions(minicomputer PRIVATE "MINICOMPUTER_LOCALEDIR=\"${CMAKE_INSTALL_FULL_LOCALEDIR}\"")
+install(TARGETS minicomputer DESTINATION "${CMAKE_INSTALL_BINDIR}")
 
 set(ENABLE_GETTEXT "" CACHE STRING "Enable gettext")
 if(ENABLE_GETTEXT STREQUAL "")
@@ -69,7 +70,7 @@ if(ENABLE_GETTEXT)
   target_include_directories(minicomputer PRIVATE ${Intl_INCLUDE_DIRS})
   target_link_libraries(minicomputer PRIVATE ${Intl_LIBRARIES})
   foreach(translation ${GETTEXT_TRANSLATIONS})
-    gettext_process_po_files("${translation}" ALL INSTALL_DESTINATION "share/locale" PO_FILES
+    gettext_process_po_files("${translation}" ALL INSTALL_DESTINATION "${CMAKE_INSTALL_LOCALEDIR}" PO_FILES
       "po/${translation}/minicomputer.po")
   endforeach()
 endif()

@@ -138,8 +138,7 @@ int main(int argc, char **argv)
 #ifdef MINICOMPUTER_I18N
     /* setup i18n */
     setlocale(LC_ALL, "");
-    const char *locale_path = MINICOMPUTER_PREFIX "/share/locale/";
-    bindtextdomain("minicomputer", locale_path);
+    bindtextdomain("minicomputer", MINICOMPUTER_LOCALEDIR);
     textdomain("minicomputer");
 #endif
 
