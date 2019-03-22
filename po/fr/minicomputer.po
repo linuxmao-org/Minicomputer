@@ -394,7 +394,7 @@ msgstr "vol mix"
 
 #: editor/syntheditor.cxx:2908 editor/syntheditor.cxx:3015
 msgid "mod amount"
-msgstr "quantité de modulation"
+msgstr "qté de modulation"
 
 #: editor/syntheditor.cxx:2700
 msgid "mod osc"
@@ -555,7 +555,7 @@ msgstr "modulateur de temps"
 
 #: editor/syntheditor.cxx:3072
 msgid "to delay"
-msgstr "vers le délai"
+msgstr "vers délai"
 
 #: editor/syntheditor.cxx:1468 editor/syntheditor.cxx:1500
 msgid "touch"

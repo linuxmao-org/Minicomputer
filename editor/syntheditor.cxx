@@ -3096,7 +3096,7 @@ Fenster *UserInterface::make_window()
                     Knob[i][o->argument()] = o;
                 }
                 {
-                    Mw_Dial *o = new Mw_Dial(950, 228, 25, 25, _("to delay"));
+                    Mw_Dial *o = new Mw_Dial(946, 228, 25, 25, _("to delay"));
                     o->labelsize(8);
                     o->argument(114);
                     o->callback((Fl_Callback *)callback);
