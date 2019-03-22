@@ -1338,6 +1338,7 @@ void UserInterface::changeMulti(int pgm)
 {
     Fl::lock();
     multichoice->value(Speicher.multis[pgm].name);
+    multichoice->position(0);  // put cursor in the beginning, otherwise the begin of the string might be invisible
     // multichoice->damage(FL_DAMAGE_ALL);
     // multichoice->redraw();
     multiRoller->value(pgm);  // set gui
