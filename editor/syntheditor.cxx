@@ -1614,6 +1614,7 @@ Fenster *UserInterface::make_window()
                     {
                         Fl_Value_Input *o = new Fl_Value_Input(16, 66, 46, 15);  // frequency display of oscillator 1
                         o->box(FL_ROUNDED_BOX);
+                        o->color(FL_BACKGROUND_COLOR);
                         o->labelsize(8);
                         o->textsize(8);
                         o->maximum(10000);
@@ -1671,6 +1672,7 @@ Fenster *UserInterface::make_window()
                     {
                         Fl_Value_Input *o = new Fl_Value_Input(62, 130, 46, 15);
                         o->box(FL_ROUNDED_BOX);
+                        o->color(FL_BACKGROUND_COLOR);
                         o->labelsize(8);
                         o->textsize(8);
                         o->maximum(10000);
@@ -1801,6 +1803,7 @@ Fenster *UserInterface::make_window()
                     {
                         Fl_Value_Input *o = new Fl_Value_Input(16, 290, 46, 15);
                         o->box(FL_ROUNDED_BOX);
+                        o->color(FL_BACKGROUND_COLOR);
                         o->labelsize(8);
                         o->textsize(8);
                         o->maximum(10000);
@@ -1857,6 +1860,7 @@ Fenster *UserInterface::make_window()
                     {
                         Fl_Value_Input *o = new Fl_Value_Input(62, 354, 46, 15);
                         o->box(FL_ROUNDED_BOX);
+                        o->color(FL_BACKGROUND_COLOR);
                         o->labelsize(8);
                         o->textsize(8);
                         o->maximum(10000);
@@ -2072,6 +2076,7 @@ Fenster *UserInterface::make_window()
                         {
                             Fl_Value_Input *o = new Fl_Value_Input(412, 100, 38, 15);
                             o->box(FL_ROUNDED_BOX);
+                            o->color(FL_BACKGROUND_COLOR);
                             o->labelsize(8);
                             o->textsize(8);
                             o->maximum(10000);
@@ -2084,6 +2089,7 @@ Fenster *UserInterface::make_window()
                         {
                             Fl_Value_Input *o = new Fl_Value_Input(528, 100, 38, 15);
                             o->box(FL_ROUNDED_BOX);
+                            o->color(FL_BACKGROUND_COLOR);
                             o->labelsize(8);
                             o->textsize(8);
                             o->maximum(10000);
@@ -2234,6 +2240,7 @@ Fenster *UserInterface::make_window()
                         {
                             Fl_Value_Input *o = new Fl_Value_Input(412, 204, 38, 15);
                             o->box(FL_ROUNDED_BOX);
+                            o->color(FL_BACKGROUND_COLOR);
                             o->labelsize(8);
                             o->maximum(10000);
                             o->argument(40);
@@ -2245,6 +2252,7 @@ Fenster *UserInterface::make_window()
                         {
                             Fl_Value_Input *o = new Fl_Value_Input(528, 204, 38, 15);
                             o->box(FL_ROUNDED_BOX);
+                            o->color(FL_BACKGROUND_COLOR);
                             o->labelsize(8);
                             o->argument(43);
                             o->maximum(10000);
@@ -2346,6 +2354,7 @@ Fenster *UserInterface::make_window()
                         {
                             Fl_Value_Input *o = new Fl_Value_Input(412, 310, 38, 15);
                             o->box(FL_ROUNDED_BOX);
+                            o->color(FL_BACKGROUND_COLOR);
                             o->labelsize(8);
                             o->maximum(10000);
                             o->step(0.01);
@@ -2357,6 +2366,7 @@ Fenster *UserInterface::make_window()
                         {
                             Fl_Value_Input *o = new Fl_Value_Input(528, 310, 38, 15);
                             o->box(FL_ROUNDED_BOX);
+                            o->color(FL_BACKGROUND_COLOR);
                             o->labelsize(8);
                             o->maximum(10000);
                             o->argument(53);
@@ -2748,6 +2758,7 @@ Fenster *UserInterface::make_window()
                         {
                             Fl_Value_Input *o = new Fl_Value_Input(690, 415, 38, 15);  // frequency display for modulation oscillator
                             o->box(FL_ROUNDED_BOX);
+                            o->color(FL_BACKGROUND_COLOR);
                             o->labelsize(8);
                             o->maximum(10000);
                             o->step(0.001);
@@ -2790,8 +2801,7 @@ Fenster *UserInterface::make_window()
                         Fl_Input *o = new Fl_Input(274, 471, 150, 14, _("sound"));
                         o->box(FL_BORDER_BOX);
                         // o->down_box(FL_BORDER_FRAME);
-                        // o->color(FL_FOREGROUND_COLOR);
-                        // o->selection_color(FL_FOREGROUND_COLOR);
+                        o->color(FL_BACKGROUND_COLOR);
                         o->labelsize(8);
                         o->textsize(8);
                         // o->menubutton()->textsize(8);
@@ -3151,7 +3161,7 @@ Fenster *UserInterface::make_window()
     {
         Fl_Input *o = new Fl_Input(10, 476, 106, 14, _("Multi"));
         o->box(FL_BORDER_BOX);
-        // o->color(FL_FOREGROUND_COLOR);
+        o->color(FL_BACKGROUND_COLOR);
         o->labelsize(8);
         o->textsize(8);
         o->align(FL_ALIGN_TOP_LEFT);
@@ -3210,8 +3220,7 @@ Fenster *UserInterface::make_window()
         Fl_Value_Input *o = new Fl_Value_Input(710, 470, 106, 14, _("current parameter"));
         // o->box(FL_BORDER_FRAME);
         o->box(FL_ROUNDED_BOX);
-        // o->color(FL_FOREGROUND_COLOR);
-        // o->selection_color(FL_FOREGROUND_COLOR);
+        o->color(FL_BACKGROUND_COLOR);
         o->labelsize(8);
         o->textsize(8);
         o->range(-2, 2);
