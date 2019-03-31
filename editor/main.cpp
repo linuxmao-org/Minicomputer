@@ -151,6 +151,8 @@ int main(int argc, char **argv)
 
     printf("minieditor version %s\n", _VERSION);
 
+    bool autoconnect = false;
+
     // check color settings in arguments and add some if missing
     bool needcolor = true;  // true means user didnt give some so I need to take care myself
 
@@ -177,6 +179,9 @@ int main(int argc, char **argv)
             if (!arg) { usage(); return 1; }
             oscport = atoi(arg);;
 #endif
+        }
+        else if (!strcmp(arg, "-a")) {
+            autoconnect = true;
         }
         else {
             usage();
@@ -222,6 +227,9 @@ int main(int argc, char **argv)
 
     if (cpuStart() != 0)
         return 1;
+
+    if (autoconnect)
+        cpuConnectSoundOutputs();
 
 #ifdef MINICOMPUTER_OSC
     if (oscport >= 0)

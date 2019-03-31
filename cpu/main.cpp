@@ -35,6 +35,7 @@
 
 static jack_client_t *client;
 static jack_port_t *port[_MULTITEMP + 4];  // _multitemp * ports + 2 mix and 2 aux
+static jack_port_t *aoutport[2];
 static jack_port_t *midiport;
 
 #ifdef MINICOMPUTER_OSC
@@ -130,8 +131,10 @@ int cpuStart()
     // would like to create mix ports last because qjackctrl tend to connect automatic the last ports
     port[8] = jack_port_register(client, "mix out left", JACK_DEFAULT_AUDIO_TYPE,
                                  JackPortIsOutput | JackPortIsTerminal, 0);
+    aoutport[0] = port[8];
     port[9] = jack_port_register(client, "mix out right", JACK_DEFAULT_AUDIO_TYPE,
                                  JackPortIsOutput | JackPortIsTerminal, 0);
+    aoutport[1] = port[9];
 
     midiport = jack_port_register(client, "midi", JACK_DEFAULT_MIDI_TYPE,
                                   JackPortIsInput | JackPortIsTerminal, 0);
@@ -174,6 +177,35 @@ void cpuStop()
     /* done !! */
     printf("close minicomputer\n");
     fflush(stdout);
+}
+
+void cpuConnectSoundOutputs()
+{
+    const char **ports = jack_get_ports(client, nullptr, JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput);
+    if (!ports)
+        return;
+
+    // identify the default device (the first one)
+    const char *dev = nullptr;
+    size_t devlen = 0;
+
+    if (ports[0]) {
+        if (const char *separator = strchr(ports[0], ':')) {
+            dev = ports[0];
+            devlen = separator - dev;
+        }
+    }
+
+    if (dev) {
+        unsigned nports = 0;
+        for (const char **p = ports, *port; nports < 2 && (port = *p); ++p) {
+            bool is_of_device = strlen(port) > devlen && port[devlen] == ':' && !memcmp(port, dev, devlen);
+            if (is_of_device)
+                jack_connect(client, jack_port_name(aoutport[nports++]), port);
+        }
+    }
+
+    jack_free(ports);
 }
 
 #ifdef MINICOMPUTER_OSC

@@ -33,6 +33,8 @@
 int cpuStart();
 void cpuStop();
 
+void cpuConnectSoundOutputs();
+
 #ifdef MINICOMPUTER_OSC
 int cpuListenOsc(unsigned port);
 const char *cpuGetOscUrl();
