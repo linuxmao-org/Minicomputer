@@ -1,7 +1,7 @@
 #ifndef WIDGETS_H_
 #define WIDGETS_H_
 
-#include <Fl/Fl.H>
+#include <FL/Fl.H>
 #include <stdio.h>
 #include <math.h>
 
@@ -45,14 +45,14 @@ private:
     int mouse_wheel_steps_ = 20;
 };
 
-#include <Fl/Fl_Roller.H>
+#include <FL/Fl_Roller.H>
 typedef Mw_Widget<Fl_Roller> Mw_Roller;
 
-#include <Fl/Fl_Dial.H>
+#include <FL/Fl_Dial.H>
 typedef Mw_Widget<Fl_Dial> Mw_Dial;
 
 //------------------------------------------------------------------------------
-#include <Fl/Fl_Value_Output.H>
+#include <FL/Fl_Value_Output.H>
 
 class Fmt_Value_Output : public Fl_Value_Output
 {
